@@ -31,8 +31,8 @@ const KPICard = ({ title, value, trend, color, icon }) => (
             <span className="text-4xl">{icon}</span>
         </div>
         <p className={`text-sm font-semibold ${color} flex items-center mt-2`}>
-             <span className="mr-1 text-base">
-                 {color.includes('green') ? '▲' : color.includes('red') ? '▼' : '●'}
+            <span className="mr-1 text-base">
+                {color.includes('green') ? '▲' : color.includes('red') ? '▼' : '●'}
             </span>
             {trend}
         </p>
@@ -82,8 +82,8 @@ const ActivityItem = ({ name, type, time, status }) => (
 
 const TeamLeaveUtilizationChart = () => {
     const chartData = [
-        { height: 40, label: 'Q1', value: '15%' }, 
-        { height: 70, label: 'Q2', value: '25%' }, 
+        { height: 40, label: 'Q1', value: '15%' },
+        { height: 70, label: 'Q2', value: '25%' },
         { height: 55, label: 'Q3', value: '20%' },
         { height: 85, label: 'Q4', value: '30%' },
     ];
@@ -93,12 +93,12 @@ const TeamLeaveUtilizationChart = () => {
             <h3 className="text-xl font-bold text-gray-800 mb-6 border-b border-gray-200 pb-3">Team Leave Utilization (Quarterly)</h3>
             <div className="flex h-64 items-end space-x-6 justify-around px-2 relative">
                 <div className="absolute top-1/2 left-0 right-0 border-t border-dashed border-gray-300"></div>
-                
+
                 {chartData.map((item, index) => (
                     <div key={index} className="flex flex-col items-center flex-grow max-w-[60px] group">
                         <div className="text-sm font-bold text-transparent group-hover:text-teal-500 transition-colors mb-2">{item.value}</div>
-                        <div 
-                            style={{ height: `${item.height}%` }} 
+                        <div
+                            style={{ height: `${item.height}%` }}
                             className={`w-10 rounded-t-lg bg-gradient-to-t from-teal-500 to-cyan-400 
                                 transition-all duration-500 shadow-lg shadow-teal-100/50 group-hover:scale-y-105 group-hover:ring-2 group-hover:ring-teal-500`}
                         ></div>

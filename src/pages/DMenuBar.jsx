@@ -24,10 +24,10 @@
 import React from "react";
 
 
-function DMenuBar(){
+function DMenuBar() {
 
     const admin
-    return(
+    return (
         <div>DMenuBar Page</div>
     );
 }

@@ -11,19 +11,19 @@ function App() {
             <Routes>
                 {/* 1. The first page (e.g., login screen) */}
                 <Route path="/" element={<LoginPage />} />
-                
+
                 {/* 2. The Dashboard Layout (parent path is /app-shell) */}
-                <Route path="/DMenuBar" element={<DMenuBar />} > 
-                    
+                <Route path="/DMenuBar" element={<DMenuBar />} >
+
                     {/* Index Route: Renders <DashBoard /> when the URL is exactly /app-shell */}
-                    <Route index element={<DashBoard />} /> 
-                    <Route path="DashBoard" element={<DashBoard />}/>
-                    
+                    <Route index element={<DashBoard />} />
+                    <Route path="DashBoard" element={<DashBoard />} />
+
                     {/* Placeholder routes for the other pages */}
                     <Route path="leaveRequests" element={<LeaveRequests />} />
                     {/* <Route path="leaveApply" element={<LeaveApply />} /> */}
                     {/* <Route path="Teamview" element={<TeamView />} /> */}
-                    
+
                 </Route>
             </Routes>
         </BrowserRouter>
