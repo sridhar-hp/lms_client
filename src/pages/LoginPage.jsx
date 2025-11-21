@@ -66,7 +66,7 @@ export default function LoginPage({ }) {
 
   const handlelogin = async (e) => {
     e.preventDefault();
-    navigate('/DMenuBar');
+    navigate('/dashboard/:role');
   };
 
   // 1. Controls the position of the 50% wide Colored Overlay Panel.
