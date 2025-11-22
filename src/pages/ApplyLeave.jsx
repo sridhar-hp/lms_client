@@ -1,7 +1,8 @@
-function LeaveApply() {
+import React from "react";
+function ApplyLeave() {
     return (
-        <div>Leave Apply Page</div>
+        <div> Apply leave  Page</div>
     );
 }
 
-export default LeaveApply;
+export default ApplyLeave;

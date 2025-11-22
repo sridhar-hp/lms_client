@@ -27,16 +27,13 @@ function DMenuBar() {
     // ];
 
     const menus = [
-        { name: "Dashboard", path: `/dashboard/${role}/home`, show: true },
-        { name: "Students Leave Requests", path: `/dashboard/${role}/studentsleaverequests`, show: true },
-        { name: "Staff Leave Requests", path: `/dashboard/${role}/staffleaveRequests`, show: true },
-        { name: "Setting", path: `/dashboard/${role}/setting`, show: true },
-        // { name: "Dashboard", path: `/dashboard/${role}/home`, show: true },
-        { name: "Apply Leave", path: `/dashboard/${role}/applyLeave`, show: true },
-        { name: "My Leave Status", path: `/dashboard/${role}/myleavestatus`, show: true },
-        // {name: "Dashboard", path: `/dashboard/${role}/home`, show: true},
-        {name: "Leave Apply", path: `/dahboard/${role}/leaveapply`, show: true},
-        // {name: "My Leave Status", path: `/dashboard/${role}/myleavestatus`, show: true},
+        { name: "Dashboard", path: `/dashboard/${role}/home`, show: true },//enta /home is should match the route in app.jsx
+        { name: "Students Leave Requests", path: `/dashboard/${role}/studentleaverequests`, show: true },//
+        { name: "Staff Leave Requests", path: `/dashboard/${role}/staffleaveRequests`, show: true },//
+        { name: "Setting", path: `/dashboard/${role}/settings`, show: true },//
+        {name: "Leave Apply", path: `/dashboard/${role}/leaveapply`, show: true},//
+        {name: "My Leave Status", path: `/dashboard/${role}/myleavestatus`, show: true},//
+        {name: "Apply Leave", path: `/dashboard/${role}/applyleave`, show: true},//
     ];
 
     // ========== Choose Menu Based on role ==========
