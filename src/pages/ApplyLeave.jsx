@@ -52,14 +52,14 @@ function ApplyLeave() {
             return newData;
         });
     };
-    
+
     const handleFileChange = (e) => {
         setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
     };
 
     // --- Validation and Submission ---
     const isBalanceExceeded = duration > selectedBalance?.balance && selectedBalance.balance !== Infinity;
-    
+
     // Added !formData.name to validation check
     const isFormInvalid = !formData.name || duration === 0 || !formData.leaveReason || isBalanceExceeded;
 
@@ -79,7 +79,7 @@ function ApplyLeave() {
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
-            
+
             {/* --- 1. Header & Context --- */}
             <header className="mb-8 pb-4 border-b border-indigo-200">
                 <h1 className="text-3xl font-extrabold text-indigo-700">🚀 Apply for Leave</h1>
@@ -90,7 +90,7 @@ function ApplyLeave() {
 
             {/* --- 2. Submission Feedback --- */}
             {submissionStatus && (
-                <div 
+                <div
                     className={`p-4 mb-6 rounded-lg font-medium ${submissionStatus.type === 'success' ? 'bg-green-100 text-green-800 border-green-400' : 'bg-red-100 text-red-800 border-red-400'} border`}
                 >
                     {submissionStatus.message}
@@ -98,7 +98,7 @@ function ApplyLeave() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-8">
-                
+
                 {/* --- Step 1: Balances Overview (Contextual Cards) --- */}
                 <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
                     <h2 className="text-xl font-bold text-gray-800 mb-4">Current Leave Balances</h2>
@@ -111,17 +111,17 @@ function ApplyLeave() {
                                     <span className="text-2xl font-bold text-gray-900">{item.balance.toFixed(1)}</span>
                                     <span className="text-sm text-gray-500 ml-1">Days Left</span>
                                 </div>
-                        ))}
+                            ))}
                     </div>
                 </section>
 
                 {/* --- Step 2: Request Details and Logic --- */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    
+
                     {/* A. Input Fields (Left/Center Columns) */}
                     <div className="lg:col-span-2 bg-white p-8 rounded-xl shadow-lg border border-gray-200 space-y-6">
                         <h2 className="text-xl font-bold text-gray-800">Request Details</h2>
-                        
+
                         {/* --- NEW NAME INPUT FIELD --- */}
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700">1. Full Name <span className="text-red-500">*</span></label>
@@ -155,7 +155,7 @@ function ApplyLeave() {
                                 ))}
                             </select>
                         </div>
-                        
+
                         {/* Dates Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
@@ -166,7 +166,7 @@ function ApplyLeave() {
                                     name="startDate"
                                     value={formData.startDate}
                                     onChange={handleChange}
-                                    min={new Date().toISOString().split('T')[0]} 
+                                    min={new Date().toISOString().split('T')[0]}
                                     required
                                     className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 />
@@ -179,7 +179,7 @@ function ApplyLeave() {
                                     name="endDate"
                                     value={formData.endDate}
                                     onChange={handleChange}
-                                    min={formData.startDate || new Date().toISOString().split('T')[0]} 
+                                    min={formData.startDate || new Date().toISOString().split('T')[0]}
                                     required
                                     className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 />
@@ -200,7 +200,7 @@ function ApplyLeave() {
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3"
                             ></textarea>
                         </div>
-                        
+
                         <div>
                             <label htmlFor="attachment" className="block text-sm font-medium text-gray-700">6. Supporting Document (Optional, e.g., Doctor's Note)</label>
                             <input
@@ -213,10 +213,10 @@ function ApplyLeave() {
                         </div>
 
                     </div>
-                    
+
                     {/* B. Summary & Action Panel (Right Column) */}
                     <div className="lg:col-span-1 space-y-6">
-                        
+
                         {/* Duration & Manager Details */}
                         <div className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-600">
                             <p className="text-sm font-medium text-gray-600">Calculated Duration:</p>
@@ -227,14 +227,14 @@ function ApplyLeave() {
 
                         {/* Financial/Balance Warning */}
                         {isBalanceExceeded && (
-                             <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md font-medium">
+                            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md font-medium">
                                 ⚠️ **Balance Overdrawn!**
                                 <p className="text-sm mt-1">
                                     This request exceeds your **{selectedBalance.type}** balance. It may automatically be converted to Unpaid Leave (LOP) or be rejected.
                                 </p>
-                             </div>
+                            </div>
                         )}
-                        
+
                         {/* Submission */}
                         <div className="pt-4 border-t border-gray-200">
                             <button
