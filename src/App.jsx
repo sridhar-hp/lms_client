@@ -18,13 +18,13 @@ function App() {
 
                 <Route path="/dashboard/:role" element={<DMenuBar />}>
                     <Route path="home" element={<DashBoard />} />
+                    <Route index element={<DashBoard />} />
                     <Route path="staffleaverequests" element={<StaffLeaveRequests />} />
                     <Route path="studentleaverequests" element={<StudentLeaveRequests />} />
                     <Route path="applyleave" element={<ApplyLeave />} />
                     <Route path="myleavestatus" element={<MyLeaveStatus />} />
-                    <Route path="leaveapply" element={<LeaveApply />} />
+                    {/* <Route path="leaveapply" element={<LeaveApply />} /> */}
                     <Route path="settings" element={<Settings />} />
-
                 </Route>
             </Routes>
         </BrowserRouter>

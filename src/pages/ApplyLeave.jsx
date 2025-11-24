@@ -1,21 +1,18 @@
 import React, { useState, useMemo } from "react";
 
 // --- Mock Data & Configuration ---
-// Fetched data should be used to inform the user's available balance
 const initialLeaveBalances = [
     { type: "Annual Leave", balance: 14.5, total: 20 },
     { type: "Sick Leave", balance: 8.0, total: 10 },
     { type: "Compensatory Off", balance: 5.0, total: 5 },
-    { type: "Unpaid Leave", balance: Infinity, total: Infinity } // Treated separately
+    { type: "Unpaid Leave", balance: Infinity, total: Infinity }
 ];
 // --- End Mock Data ---
 
 
-// Helper function (Conceptual): Calculates duration excluding weekends/holidays
+// Helper function: Calculates duration excluding weekends/holidays (Simplified)
 const calculateWorkingDays = (start, end) => {
     if (!start || !end) return 0;
-    // NOTE: In a real system, this logic MUST be robust and handle holidays and half-days.
-    // For this concept, we'll return a simple day count.
     const startDT = new Date(start);
     const endDT = new Date(end);
     const diffTime = Math.abs(endDT - startDT);
@@ -26,13 +23,14 @@ const calculateWorkingDays = (start, end) => {
 
 function ApplyLeave() {
     const [formData, setFormData] = useState({
+        name: "", // Added Name field to state
         leaveType: initialLeaveBalances[0].type,
         startDate: "",
         endDate: "",
         leaveReason: "",
         attachment: null,
     });
-    const [submissionStatus, setSubmissionStatus] = useState(null); // { type: 'success'|'error', message: '' }
+    const [submissionStatus, setSubmissionStatus] = useState(null);
     const [duration, setDuration] = useState(0);
 
     // Calculate the active balance for the selected leave type
@@ -61,20 +59,21 @@ function ApplyLeave() {
 
     // --- Validation and Submission ---
     const isBalanceExceeded = duration > selectedBalance?.balance && selectedBalance.balance !== Infinity;
-    const isFormInvalid = duration === 0 || !formData.leaveReason || isBalanceExceeded;
+    
+    // Added !formData.name to validation check
+    const isFormInvalid = !formData.name || duration === 0 || !formData.leaveReason || isBalanceExceeded;
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
         if (isFormInvalid) {
-            setSubmissionStatus({ type: 'error', message: 'Please ensure dates are selected, reason is provided, and balance is not exceeded.' });
+            setSubmissionStatus({ type: 'error', message: 'Please ensure all required fields are filled and balance is not exceeded.' });
             return;
         }
 
         // --- API Submission Simulation ---
         setSubmissionStatus({ type: 'success', message: 'Your request has been successfully submitted for approval.' });
         console.log("Submitting Leave:", { ...formData, duration });
-        // In a real app, clear the form here.
     };
 
 
@@ -123,9 +122,24 @@ function ApplyLeave() {
                     <div className="lg:col-span-2 bg-white p-8 rounded-xl shadow-lg border border-gray-200 space-y-6">
                         <h2 className="text-xl font-bold text-gray-800">Request Details</h2>
                         
+                        {/* --- NEW NAME INPUT FIELD --- */}
+                        <div>
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700">1. Full Name <span className="text-red-500">*</span></label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                                placeholder="Enter your full name"
+                                className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                        </div>
+
                         {/* Leave Type */}
                         <div>
-                            <label htmlFor="leaveType" className="block text-sm font-medium text-gray-700">1. Leave Type <span className="text-red-500">*</span></label>
+                            <label htmlFor="leaveType" className="block text-sm font-medium text-gray-700">2. Leave Type <span className="text-red-500">*</span></label>
                             <select
                                 id="leaveType"
                                 name="leaveType"
@@ -145,7 +159,7 @@ function ApplyLeave() {
                         {/* Dates Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">2. Start Date <span className="text-red-500">*</span></label>
+                                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">3. Start Date <span className="text-red-500">*</span></label>
                                 <input
                                     type="date"
                                     id="startDate"
@@ -154,11 +168,11 @@ function ApplyLeave() {
                                     onChange={handleChange}
                                     min={new Date().toISOString().split('T')[0]} 
                                     required
-                                    className="mt-1 block w-full py-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 />
                             </div>
                             <div>
-                                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">3. End Date <span className="text-red-500">*</span></label>
+                                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">4. End Date <span className="text-red-500">*</span></label>
                                 <input
                                     type="date"
                                     id="endDate"
@@ -167,14 +181,14 @@ function ApplyLeave() {
                                     onChange={handleChange}
                                     min={formData.startDate || new Date().toISOString().split('T')[0]} 
                                     required
-                                    className="mt-1 block w-full py-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 />
                             </div>
                         </div>
 
                         {/* Reason and Attachment */}
                         <div>
-                            <label htmlFor="leaveReason" className="block text-sm font-medium text-gray-700">4. Reason for Leave <span className="text-red-500">*</span></label>
+                            <label htmlFor="leaveReason" className="block text-sm font-medium text-gray-700">5. Reason for Leave <span className="text-red-500">*</span></label>
                             <textarea
                                 id="leaveReason"
                                 name="leaveReason"
@@ -188,7 +202,7 @@ function ApplyLeave() {
                         </div>
                         
                         <div>
-                            <label htmlFor="attachment" className="block text-sm font-medium text-gray-700">5. Supporting Document (Optional, e.g., Doctor's Note)</label>
+                            <label htmlFor="attachment" className="block text-sm font-medium text-gray-700">6. Supporting Document (Optional, e.g., Doctor's Note)</label>
                             <input
                                 type="file"
                                 id="attachment"
