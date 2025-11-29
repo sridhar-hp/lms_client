@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState, useMemo } from "react";
 
 // --- Mock Data & Configuration ---
@@ -11,7 +12,7 @@ const initialLeaveBalances = [
 
 
 // Helper function: Calculates duration excluding weekends/holidays (Simplified)
-const calculateWorkingDays = (start, end) => {
+const calculateWorkingDays = (start, end) => {//=
     if (!start || !end) return 0;
     const startDT = new Date(start);
     const endDT = new Date(end);
@@ -44,7 +45,7 @@ function ApplyLeave() {
         setFormData((prevData) => {
             let newData = { ...prevData, [name]: value };
 
-            if (name === "startDate" || name === "endDate" || name === "leaveType") {
+            if (name === "startDate" || name === "endDate" || name === "leaveType") {//=
                 const start = name === "startDate" ? value : prevData.startDate;
                 const end = name === "endDate" ? value : prevData.endDate;
                 setDuration(calculateWorkingDays(start, end));
@@ -77,6 +78,20 @@ function ApplyLeave() {
     };
 
 
+    //handle leave apply
+    const handleapply=async(e)=>{
+        e.preventDefault();
+try{
+        const res = await axios.post("http://localhost:5000/api/sapply",formData);
+        alert("apply done");
+
+}
+
+catch(err)
+{
+    console.log(err);
+}
+    }
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
 
@@ -148,7 +163,7 @@ function ApplyLeave() {
                                 required
                                 className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm"
                             >
-                                {initialLeaveBalances.map((type) => (
+                                {initialLeaveBalances.map((type) => (//
                                     <option key={type.type} value={type.type}>
                                         {type.type} ({type.balance === Infinity ? 'Unlimited' : `${type.balance.toFixed(1)} Days Left`})
                                     </option>
@@ -240,6 +255,7 @@ function ApplyLeave() {
                             <button
                                 type="submit"
                                 disabled={isFormInvalid}
+                                onClick={handleapply}
                                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-xl transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Submit Request for {duration} Days
