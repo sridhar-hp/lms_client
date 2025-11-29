@@ -3,42 +3,38 @@ import { NavLink, Outlet, useParams } from "react-router-dom";
 
 function DMenuBar() {
 
-    const { role } = useParams();   // role = "admin" OR "student"
+    const { Role } = useParams();   // role = "admin" OR "student"
 
     // ========== ADMIN MENUS ==========
-    // const adminMenus = [
-    //     { name: "Dashboard", path: `/dashboard/${role}/home`, show: true },
-    //     { name: "Students Leave Requests", path: `/dashboard/${role}/studentsleaverequests`, show: true },
-    //     { name: "Staff Leave Requests", path: `/dashboard/${role}/staffleaveRequests`, show: true },
-    //     { name: "Setting", path: `/dashboard/${role}/setting`, show: true },
-    // ];
+    const adminMenus = [
+        { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
+        { name: "Students Leave Requests", path: `/dashboard/${Role}/studentleaverequests`, show: true },
+        { name: "Staff Leave Requests", path: `/dashboard/${Role}/staffleaveRequests`, show: true },
+        { name: "Setting", path: `/dashboard/${Role}/setting`, show: true },
+        {name: "Logout", path: `/..`, show: true},
 
-    // // ========== STUDENT MENUS ==========
-    // const studentMenus = [
-    //     { name: "Dashboard", path: `/dashboard/${role}/home`, show: true },
-    //     { name: "Apply Leave", path: `/dashboard/${role}/applyLeave`, show: true },
-    //     { name: "My Leave Status", path: `/dashboard/${role}/leavestatus`, show: true },
-    // ];
+    ];
 
-    // const staffMenus = [
-    //     {name: "Dashboard", path: `/dashboard/${role}/home`, show: true},
-    //     {name: "Leave Apply", path: `/dahboard/${role}/leaveapply`, show: true},
-    //     {name: "My Leave Status", path: `/dashboard/${role}/myleavestatus`, show: true},
-    // ];
+    // ========== STUDENT MENUS ==========
+    const studentMenus = [
+        { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
+        { name: "Apply Leave", path: `/dashboard/${Role}/applyLeave`, show: true },
+        { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true },
+        {name: "Logout", path: `/..`, show: true},
+        
 
-    const menus = [
-        { name: "Dashboard", path: `/dashboard/${role}/home`, show: true },//enta /home is should match the route in app.jsx
-        {name: "Apply Leave", path: `/dashboard/${role}/applyleave`, show: true},//
+    ];
 
-        { name: "Students Leave Requests", path: `/dashboard/${role}/studentleaverequests`, show: true },//
-        { name: "Staff Leave Requests", path: `/dashboard/${role}/staffleaveRequests`, show: true },//
-        // {name: "Leave Apply", path: `/dashboard/${role}/leaveapply`, show: true},//
-        {name: "My Leave Status", path: `/dashboard/${role}/myleavestatus`, show: true},//
-        { name: "Setting", path: `/dashboard/${role}/settings`, show: true },//
+    const staffMenus = [
+        {name: "Dashboard", path: `/dashboard/${Role}/home`, show: true},
+        {name: "Leave Apply", path: `/dashboard/${Role}/leaveapply`, show: true},
+        {name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true},
+        {name: "Logout", path: `/..`, show: true},
+
     ];
 
     // ========== Choose Menu Based on role ==========
-    // const menus = role === "admin" ? adminMenus : ( role === "staff" ? staffMenus : studentMenus);
+    const menus = Role === "admin" ? adminMenus : ( Role === "staff" ? staffMenus : studentMenus);
 
     return (
         <div className="flex w-screen h-screen bg-gray-100">
@@ -53,7 +49,7 @@ function DMenuBar() {
 
                 {/* Role Display */}
                 <div className="text-center bg-indigo-600 py-1 rounded-lg mb-8 font-medium">
-                    Role: {role?.toUpperCase()}
+                    Role: {Role?.toUpperCase()}
                 </div>
 
                 {/* Dynamic Menu List */}

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 
 // --- Mock Data & Configuration (Enhanced) ---
 const initialPendingRequests = [
@@ -28,17 +28,9 @@ const teamMetrics = {
     criticalCoverage: 80 // Percentage of critical roles currently covered
 };
 
-const employeeHistory = {
-    // ... (Employee history data remains the same)
-};
-// --- End Mock Data ---
-
 // --- Sub-Component: Employee Context Panel (Enhanced) ---
 const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
-    // Get employee history based on request.applicant
-    const history = employeeHistory[request.applicant] || {};
     const isLowBalance = request.balance - request.days < 0;
-
     const [rejectionReason, setRejectionReason] = useState("");
 
     return (
@@ -58,21 +50,23 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
             </div>
 
             {/* B. Conflicts & Compliance Warnings */}
-            {request.conflictReason && (
+            {request.conflictReason && request.conflictReason !== "N/A" && (
                 <div className="p-3 bg-yellow-100 border-l-4 border-yellow-500 rounded-md">
                     <p className="font-bold text-yellow-800">⚠️ Conflict Alert:</p>
                     <p className="text-sm text-yellow-800">{request.conflictReason}</p>
                 </div>
             )}
             
-            {/* C. History Snippet */}
-            <h4 className="font-semibold text-gray-700">Past Behavior:</h4>
-            <div className="text-sm text-gray-600">
-                Last Request Status: **{history.lastRequestStatus || 'N/A'}** | Rejections YTD: **{history.rejectedCountYTD || 0}**
+            {/* C. Reason for Leave (UPDATED) */}
+            <div>
+                <h4 className="font-semibold text-gray-700 mb-2">Reason for Leave:</h4>
+                <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-md text-sm text-gray-800 italic">
+                    "{request.reason}"
+                </div>
             </div>
 
             {/* D. Action Area */}
-            <div className="flex-grow space-y-4 pt-4 border-t border-gray-100">
+            <div className="flex-grow space-y-4 pt-4 border-t border-gray-100 mt-auto">
                 <label className="block text-sm font-medium text-gray-700">Rejection Note (Mandatory for Reject)</label>
                 <textarea
                     rows="3"
@@ -170,7 +164,7 @@ function StaffLeaveRequests() {
                         <div className="divide-y divide-gray-200 bg-white shadow-lg rounded-xl">
                             {requests.map((request) => {
                                 const isSelected = selectedRequest && selectedRequest.id === request.id;
-                                const priorityClass = request.conflictReason ? 'border-l-4 border-yellow-500' : 'border-l-4 border-indigo-200';
+                                const priorityClass = request.conflictReason && request.conflictReason !== "N/A" ? 'border-l-4 border-yellow-500' : 'border-l-4 border-indigo-200';
                                 
                                 return (
                                     <div 
@@ -186,7 +180,7 @@ function StaffLeaveRequests() {
                                                 <span className="text-sm text-gray-600">{request.type}: {request.dates} ({request.days} Days)</span>
                                             </div>
                                             <div className="text-right">
-                                                {request.conflictReason && (
+                                                {request.conflictReason && request.conflictReason !== "N/A" && (
                                                     <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full font-bold">CONFLICT</span>
                                                 )}
                                                 <p className="text-xs text-gray-500 mt-1">Requested: {request.requestedOn}</p>

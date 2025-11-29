@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 
 // --- 1. ICON COMPONENTS (Inline SVGs for professionalism without external libraries) ---
@@ -160,6 +160,7 @@ export default function LoginPage() {
     const [id, setId] = useState("");
     const [pass, setPass] = useState("");
     const navigate = useNavigate();
+    
 
     const swapToSignUp = () => setIsLogInActive(false);
     const swapToLogIn = () => setIsLogInActive(true);
@@ -172,14 +173,27 @@ export default function LoginPage() {
       Id: id,          // VERY IMPORTANT — MUST MATCH BACKEND
       password: pass
     });
-
+       const Role=res.data.Role;
+    console.log(res.data.Role);
     alert("Login Successful");
-    console.log(res.data);
+  
 
-    if(res.data.success)
+    if(Role == "admin")
     {
         navigate("/dashboard/admin");
     }
+    else if (Role== "staff") 
+        {
+        navigate("/dashboard/staff");
+    } 
+    else if(Role == "student"){
+        navigate("/dashboard/student");
+        
+    }   
+    else{
+        navigate("/error page");
+    }
+    
 
   } catch (error) {
     console.error(error);
