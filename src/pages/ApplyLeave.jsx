@@ -83,7 +83,10 @@ function ApplyLeave() {
         e.preventDefault();
 try{
         const res = await axios.post("http://localhost:5000/api/sapply",formData);
-        alert("apply done");
+        // const ans = res.data.message;
+        if(res.data.success){
+        alert("applyed successfully");
+        }
 
 }
 
