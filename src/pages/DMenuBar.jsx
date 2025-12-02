@@ -8,8 +8,8 @@ function DMenuBar() {
     // ========== ADMIN MENUS ==========
     const adminMenus = [
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
-        { name: "Students Leave Requests", path: `/dashboard/${Role}/studentleaverequests`, show: true },
-        { name: "Staff Leave Requests", path: `/dashboard/${Role}/staffleaveRequests`, show: true },
+        // { name: "Students Leave Requests", path: `/dashboard/${Role}/studentleaverequests`, show: true },
+        { name: "Leave Requests", path: `/dashboard/${Role}/staffleaveRequests`, show: true },
         { name: "Setting", path: `/dashboard/${Role}/setting`, show: true },
         {name: "Logout", path: `/..`, show: true},
 
@@ -47,10 +47,10 @@ function DMenuBar() {
                     Leave Management
                 </h1>
 
-                {/* Role Display */}
+                {/* Role Display
                 <div className="text-center bg-indigo-600 py-1 rounded-lg mb-8 font-medium">
-                    Role: {Role?.toUpperCase()}
-                </div>
+                     Role: {Role?.toUpperCase()} 
+                </div> */}
 
                 {/* Dynamic Menu List */}
                 <nav className="flex-1 space-y-2">

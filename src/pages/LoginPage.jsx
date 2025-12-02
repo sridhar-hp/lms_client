@@ -50,13 +50,13 @@ const LogInForm = ({ handlelogin, id, setId, pass, setPass }) => (
         <h1 className="text-3xl font-extrabold mb-2 text-gray-800">Welcome Back</h1>
         <p className="text-gray-500 mb-8 text-sm">Enter your credentials to access your account.</p>
 
-<AuthInput
-    name="Id"
-    placeholder="ID"
-    value={id}
-    onChange={(e) => setId(e.target.value)}
-    icon={UserIcon}
-/>
+        <AuthInput
+            name="Id"
+            placeholder="ID"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+            icon={UserIcon}
+        />
 
 
         <AuthInput
@@ -81,7 +81,6 @@ const LogInForm = ({ handlelogin, id, setId, pass, setPass }) => (
     </form>
 );
 
-// --- 4. PROFESSIONAL SIGN UP FORM (With Segmented Toggle) ---
 const SignUpForm = () => {
     const [role, setRole] = useState('student');
 
@@ -132,7 +131,7 @@ const SignUpForm = () => {
             {/* --- INPUTS --- */}
             <AuthInput name="name" placeholder="Full Name" icon={UserIcon} />
 
-            {/* Conditional Render with Animation Effect logic */}
+
             <div className="animate-fade-in-up">
                 {role === 'student' ? (
                     <AuthInput name="regNo" placeholder="Register Number" icon={IdCardIcon} />
@@ -154,52 +153,50 @@ const SignUpForm = () => {
     );
 };
 
-// --- 5. MAIN LAYOUT (Refined Gradients & Shadows) ---
+
 export default function LoginPage() {
     const [isLogInActive, setIsLogInActive] = useState(true);
     const [id, setId] = useState("");
     const [pass, setPass] = useState("");
     const navigate = useNavigate();
-    
+
 
     const swapToSignUp = () => setIsLogInActive(false);
     const swapToLogIn = () => setIsLogInActive(true);
 
-   const handleLogin = async (e) => {
-  e.preventDefault();
+    const handleLogin = async (e) => {
+        e.preventDefault();
 
-  try {
-    const res = await axios.post("http://localhost:5000/api/login", {
-      Id: id,          // VERY IMPORTANT — MUST MATCH BACKEND
-      password: pass
-    });
-       const Role=res.data.Role;
-    console.log(res.data.Role);
-    alert("Login Successful");
-  
+        try {
+            const res = await axios.post("http://localhost:5000/api/login", {
+                Id: id,
+                password: pass
+            });
+            const Role = res.data.Role;
+            console.log(res.data.Role);
+            alert("Login Successful");
 
-    if(Role == "admin")
-    {
-        navigate("/dashboard/admin");
-    }
-    else if (Role== "staff") 
-        {
-        navigate("/dashboard/staff");
-    } 
-    else if(Role == "student"){
-        navigate("/dashboard/student");
-        
-    }   
-    else{
-        navigate("/error page");
-    }
-    
 
-  } catch (error) {
-    console.error(error);
-    alert("Login Failed: " + error.response.data.message);
-  }
-};
+            if (Role == "admin") {
+                navigate("/dashboard/admin");
+            }
+            else if (Role == "staff") {
+                navigate("/dashboard/staff");
+            }
+            else if (Role == "student") {
+                navigate("/dashboard/student");
+
+            }
+            else {
+                navigate("/error page");
+            }
+
+
+        } catch (error) {
+            console.error(error);
+            alert("Login Failed: " + error.response.data.message);
+        }
+    };
 
 
 

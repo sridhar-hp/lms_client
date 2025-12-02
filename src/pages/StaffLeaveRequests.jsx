@@ -15,7 +15,7 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
 
     return (
         <div className="p-5 space-y-5 bg-white shadow-lg rounded-xl h-full flex flex-col">
-            <h3 className="text-2xl font-bold text-indigo-800 border-b pb-3">Review & Action: {request.name}</h3>//name
+            <h3 className="text-2xl font-bold text-indigo-800 border-b pb-3">Review & Action: {request.name}</h3>
 
             <div>
                 <h4 className="font-semibold text-gray-700 mb-2">Reason for Leave:</h4>
@@ -26,7 +26,7 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
 
             {/* D. Action Area */}
             <div className="flex-grow space-y-4 pt-4 border-t border-gray-100 mt-auto">
-                    <div className="flex space-x-4">
+                <div className="flex space-x-4">
                     <button
                         onClick={() => onAction(request.id, 'Approved')}
                         // disabled={actionPending}
@@ -80,8 +80,8 @@ function StaffLeaveRequests() {
             // Remove the processed item
             setLeaveRequest(prev => prev.filter(req => req.id !== id));
 
-const nextReq = leaveRequest.find(req => req.id !== id) || null;
-setSelectedRequest(nextReq);
+            const nextReq = leaveRequest.find(req => req.id !== id) || null;
+            setSelectedRequest(nextReq);
 
 
             setActionPending(false);
@@ -139,7 +139,7 @@ setSelectedRequest(nextReq);
                                                 <span className="text-lg font-bold text-gray-900">{request.name}
                                                     {/* <span className="text-sm font-normal text-gray-500 ml-2">({request.dept})</span> */}
                                                 </span>
-                                                <span className="text-sm text-gray-600">{request.type}: {request.startDate} ({request.endDate} Days)</span>
+                                                <span className="text-sm text-gray-600">{request.type}: {request.startDate} ({request.endDate})</span>
                                             </div>
                                             <div className="text-right">
                                                 {request.conflictReason && request.conflictReason !== "N/A" && (

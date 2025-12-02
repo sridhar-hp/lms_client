@@ -44,6 +44,7 @@ function LeaveApply() {
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [duration, setDuration] = useState(0);
 
+    
     // Active Balance Logic
     const selectedBalance = useMemo(() => {
         return initialLeaveBalances.find(item => item.type === formData.leaveType);
