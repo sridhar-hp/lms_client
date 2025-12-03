@@ -79,21 +79,27 @@ function ApplyLeave() {
 
 
     //handle leave apply
-    const handleapply=async(e)=>{
+    const handleapply = async (e) => {
         e.preventDefault();
-try{
-        const res = await axios.post("http://localhost:5000/api/sapply",formData);
-        // const ans = res.data.message;
-        if(res.data.success){
-        alert("applyed successfully");
+        try {
+            const res = await axios.post("http://localhost:5000/api/sapply", {
+                name: formData.name,
+                leaveType: formData.leaveType,
+                startDate: formData.startDate,
+                endDate: formData.endDate,
+                leaveReason: formData.leaveReason,
+                duration: duration
+            });
+            // const ans = res.data.message;
+            if (res.data.success) {
+                alert("applyed successfully");
+            }
+
         }
 
-}
-
-catch(err)
-{
-    console.log(err);
-}
+        catch (err) {
+            console.log(err);
+        }
     }
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">

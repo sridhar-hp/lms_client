@@ -8,10 +8,10 @@ function DMenuBar() {
     // ========== ADMIN MENUS ==========
     const adminMenus = [
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
-        // { name: "Students Leave Requests", path: `/dashboard/${Role}/studentleaverequests`, show: true },
-        { name: "Leave Requests", path: `/dashboard/${Role}/staffleaveRequests`, show: true },
+        { name: "Leave Requests", path: `/dashboard/${Role}/studentleaverequests`, show: true },
+        // { name: "Leave Requests", path: `/dashboard/${Role}/staffleaveRequests`, show: true },
         { name: "Setting", path: `/dashboard/${Role}/setting`, show: true },
-        {name: "Logout", path: `/..`, show: true},
+        { name: "Logout", path: `/..`, show: true },
 
     ];
 
@@ -20,21 +20,23 @@ function DMenuBar() {
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyLeave`, show: true },
         { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true },
-        {name: "Logout", path: `/..`, show: true},
-        
+        { name: "Logout", path: `/..`, show: true },
+
 
     ];
 
     const staffMenus = [
-        {name: "Dashboard", path: `/dashboard/${Role}/home`, show: true},
-        {name: "Leave Apply", path: `/dashboard/${Role}/leaveapply`, show: true},
+        { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
+        // { name: "Leave Apply", path: `/dashboard/${Role}/leaveapply`, show: true },
         {name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true},
-        {name: "Logout", path: `/..`, show: true},
+        { name: "Apply Leave", path: `/dashboard/${Role}/applyLeave`, show: true },
+
+        { name: "Logout", path: `/..`, show: true },
 
     ];
 
     // ========== Choose Menu Based on role ==========
-    const menus = Role === "admin" ? adminMenus : ( Role === "staff" ? staffMenus : studentMenus);
+    const menus = Role === "admin" ? adminMenus : (Role === "staff" ? staffMenus : studentMenus);
 
     return (
         <div className="flex w-screen h-screen bg-gray-100">
