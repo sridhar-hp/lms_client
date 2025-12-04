@@ -13,6 +13,11 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const isLowBalance = request.balance - request.days < 0;
     const [rejectionReason, setRejectionReason] = useState("");
 
+    // const rejection=async(e)=>{
+    //     e.preventdefault();
+    //     const rej = await axios.post("http://localhost:5000/api/rejection",)
+    // }
+
     return (
         <div className="p-5 space-y-5 bg-white shadow-lg rounded-xl h-full flex flex-col">
             <h3 className="text-2xl font-bold text-indigo-800 border-b pb-3">Review & Action: {request.name}</h3>
@@ -55,6 +60,11 @@ function StudentLeaveRequests() {
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [leaveRequest, setLeaveRequest] = useState([])// state na [] vanum
     const [actionPending, setActionPending] = useState(false);
+    const [id,setId]=useState("");
+
+    useEffect(()=> { 
+        const userid= await axios
+    })
 
 
     useEffect(() => {
@@ -134,7 +144,7 @@ function StudentLeaveRequests() {
                                     >
                                         <div className="flex justify-between items-center">
                                             <div className="flex flex-col">
-                                                <span className="text-lg font-bold text-gray-900">{request.name}
+                                                <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.Id})
                                                     {/* <span className="text-sm font-normal text-gray-500 ml-2">({request.dept})</span> */}
                                                 </span>
                                                 <span className="text-sm text-gray-600">{request.leaveType}: {request.startDate}  to  {request.endDate}  ({request.duration}days)</span>

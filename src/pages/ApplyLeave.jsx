@@ -76,7 +76,7 @@ function ApplyLeave() {
         setSubmissionStatus({ type: 'success', message: 'Your request has been successfully submitted for approval.' });
         console.log("Submitting Leave:", { ...formData, duration });
     };
-
+        
 
     //handle leave apply
     const handleapply = async (e) => {
@@ -88,7 +88,8 @@ function ApplyLeave() {
                 startDate: formData.startDate,
                 endDate: formData.endDate,
                 leaveReason: formData.leaveReason,
-                duration: duration
+                duration: duration,
+                Id:
             });
             // const ans = res.data.message;
             if (res.data.success) {
