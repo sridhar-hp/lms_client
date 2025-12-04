@@ -63,8 +63,13 @@ function StudentLeaveRequests() {
     const [id,setId]=useState("");
 
     useEffect(()=> { 
-        const userid= await axios
-    })
+        const user = async()=>{
+            const res = await axios.post("http://localhost:5000/api/request");
+            setId(res.data.Id);
+
+        }
+        user();
+    },[]);
 
 
     useEffect(() => {
