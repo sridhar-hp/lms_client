@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
-//leave apply.jsx
+//leave apply.jsx this is have staff leave apply design
+
 
 // --- Icons (SVG Components for portability) ---
 const CalendarIcon = () => (
