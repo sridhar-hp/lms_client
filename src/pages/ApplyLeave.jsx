@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 // --- Mock Data & Configuration ---
 const initialLeaveBalances = [
@@ -33,7 +34,10 @@ function ApplyLeave() {
     });
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [duration, setDuration] = useState(0);
+     const location = useLocation();
+    const userId = location.state?.userId;
 
+console.log("User ID:", userId);
     // Calculate the active balance for the selected leave type
     const selectedBalance = useMemo(() => {
         return initialLeaveBalances.find(item => item.type === formData.leaveType);
@@ -89,6 +93,7 @@ function ApplyLeave() {
                 endDate: formData.endDate,
                 leaveReason: formData.leaveReason,
                 duration: duration,
+                userId:userId,
                 
             });
             // const ans = res.data.message;
