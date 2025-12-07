@@ -89,7 +89,7 @@ function ApplyLeave() {
                 endDate: formData.endDate,
                 leaveReason: formData.leaveReason,
                 duration: duration,
-                Id:
+                
             });
             // const ans = res.data.message;
             if (res.data.success) {

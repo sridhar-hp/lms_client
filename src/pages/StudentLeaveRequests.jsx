@@ -60,16 +60,8 @@ function StudentLeaveRequests() {
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [leaveRequest, setLeaveRequest] = useState([])// state na [] vanum
     const [actionPending, setActionPending] = useState(false);
-    const [id,setId]=useState("");
+    const [ids,setIds]=useState();
 
-    useEffect(()=> { 
-        const user = async()=>{
-            const res = await axios.post("http://localhost:5000/api/request");
-            setId(res.data.Id);
-
-        }
-        user();
-    },[]);
 
 
     useEffect(() => {
@@ -143,13 +135,13 @@ function StudentLeaveRequests() {
 
                                 return (
                                     <div
-                                        key={request._id}
+                                        key={request.id}
                                         onClick={() => setSelectedRequest(request)}
                                         className={`p-4 hover:bg-indigo-50/50 cursor-pointer transition duration-150 ${isSelected ? 'bg-indigo-100/75 border-indigo-600' : ''} ${priorityClass}`}
                                     >
                                         <div className="flex justify-between items-center">
                                             <div className="flex flex-col">
-                                                <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.Id})
+                                                <span className="text-lg font-bold text-gray-900">({request.name}- ID : {ids})
                                                     {/* <span className="text-sm font-normal text-gray-500 ml-2">({request.dept})</span> */}
                                                 </span>
                                                 <span className="text-sm text-gray-600">{request.leaveType}: {request.startDate}  to  {request.endDate}  ({request.duration}days)</span>
