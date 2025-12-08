@@ -11,16 +11,21 @@ const teamMetrics = {
 // --- Sub-Component: Employee Context Panel (Enhanced) ---
 const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const isLowBalance = request.balance - request.days < 0;
-    const [rejectionReason, setRejectionReason] = useState("");
+    const [rejectionReason, setRejectionReason] = useState([]);
 
-    // const rejection=async(e)=>{
-    //     e.preventdefault();
-    //     const rej = await axios.post("http://localhost:5000/api/rejection",)
-    // }
+    const handlerejection=async(id)=>{
+        // e.preventdefault();
+        
+        const res = await axios.post(`http://localhost:5000/api/rejection/${id}`);
+        
+        alert("leave rejected");
+
+    }
 
     return (
         <div className="p-5 space-y-5 bg-white shadow-lg rounded-xl h-full flex flex-col">
             <h3 className="text-2xl font-bold text-indigo-800 border-b pb-3">Review & Action: {request.name}</h3>
+            <h3>Id:{request.userId}</h3>
 
             <div>
                 <h4 className="font-semibold text-gray-700 mb-2">Reason for Leave:</h4>
@@ -33,14 +38,14 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
             <div className="flex-grow space-y-4 pt-4 border-t border-gray-100 mt-auto">
                 <div className="flex space-x-4">
                     <button
-                        onClick={() => onAction(request.id, 'Approved')}
+                        onClick={ rejection(request.userId)}
                         // disabled={actionPending}
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >
                         Approve Request
                     </button>
                     <button
-                        onClick={() => onAction(request.id, 'Rejected', rejectionReason)}
+                        onClick={() => handlerejection(request.userId)}
                         // disabled={actionPending || !rejectionReason}
                         className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >
