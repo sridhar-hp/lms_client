@@ -13,14 +13,19 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const isLowBalance = request.balance - request.days < 0;
     const [rejectionReason, setRejectionReason] = useState([]);
 
-    const handlerejection=async(id)=>{
+    const handlerejection = async(Id) => {
         // e.preventdefault();
-        
-        const res = await axios.post(`http://localhost:5000/api/rejection/${id}`);
-        
-        alert("leave rejected");
-
+try{
+        const res = await axios.put(`http://localhost:5000/api/rejection/${Id}`);
+        if (res.data.success) {
+            alert("leave rejected");
+        }
     }
+    catch(err)
+    {
+        console.log(err);
+    }
+    };
 
     return (
         <div className="p-5 space-y-5 bg-white shadow-lg rounded-xl h-full flex flex-col">
@@ -38,18 +43,18 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
             <div className="flex-grow space-y-4 pt-4 border-t border-gray-100 mt-auto">
                 <div className="flex space-x-4">
                     <button
-                        onClick={ rejection(request.userId)}
+                        // onClick={ rejection(request.userId)}
                         // disabled={actionPending}
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >
-                        Approve Request
+                        Approve
                     </button>
                     <button
                         onClick={() => handlerejection(request.userId)}
                         // disabled={actionPending || !rejectionReason}
                         className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >
-                        Reject Request
+                        Reject
                     </button>
                 </div>
                 <p className="text-xs text-gray-500 italic pt-2">
@@ -65,7 +70,7 @@ function StudentLeaveRequests() {
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [leaveRequest, setLeaveRequest] = useState([])// state na [] vanum
     const [actionPending, setActionPending] = useState(false);
-    const [ids,setIds]=useState();
+    const [ids, setIds] = useState();
 
 
 
@@ -140,7 +145,7 @@ function StudentLeaveRequests() {
 
                                 return (
                                     <div
-                                        key={request.id}
+                                        key={request._id}
                                         onClick={() => setSelectedRequest(request)}
                                         className={`p-4 hover:bg-indigo-50/50 cursor-pointer transition duration-150 ${isSelected ? 'bg-indigo-100/75 border-indigo-600' : ''} ${priorityClass}`}
                                     >
