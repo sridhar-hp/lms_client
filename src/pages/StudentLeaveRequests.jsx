@@ -141,7 +141,7 @@ function StudentLeaveRequests() {
                                     >
                                         <div className="flex justify-between items-center">
                                             <div className="flex flex-col">
-                                                <span className="text-lg font-bold text-gray-900">({request.name}- ID : {ids})
+                                                <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.userId})
                                                     {/* <span className="text-sm font-normal text-gray-500 ml-2">({request.dept})</span> */}
                                                 </span>
                                                 <span className="text-sm text-gray-600">{request.leaveType}: {request.startDate}  to  {request.endDate}  ({request.duration}days)</span>

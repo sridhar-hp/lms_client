@@ -184,7 +184,10 @@ export default function LoginPage() {
                 navigate("/dashboard/staff");
             }
             else if (Role == "student") {
-                navigate("/dashboard/student/applyleave", { state: { userId: res.data.Id } });
+                navigate("/dashboard/student/applyleave", {
+  state: {userId:res.data.Id  }
+});
+
             }
             else {
                 navigate("/error page");

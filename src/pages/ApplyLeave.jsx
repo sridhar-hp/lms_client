@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo,useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // --- Mock Data & Configuration ---
@@ -34,10 +34,13 @@ function ApplyLeave() {
     });
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [duration, setDuration] = useState(0);
-     const location = useLocation();
+    const location = useLocation();
     const userId = location.state?.userId;
 
-console.log("User ID:", userId);
+    useEffect(() => {
+        console.log("User ID:", userId);  // logs once
+    }, []);
+    // console.log("User ID:", userId);
     // Calculate the active balance for the selected leave type
     const selectedBalance = useMemo(() => {
         return initialLeaveBalances.find(item => item.type === formData.leaveType);
@@ -80,21 +83,21 @@ console.log("User ID:", userId);
         setSubmissionStatus({ type: 'success', message: 'Your request has been successfully submitted for approval.' });
         console.log("Submitting Leave:", { ...formData, duration });
     };
-        
+
 
     //handle leave apply
     const handleapply = async (e) => {
         e.preventDefault();
         try {
             const res = await axios.post("http://localhost:5000/api/sapply", {
+                userId: userId,
                 name: formData.name,
                 leaveType: formData.leaveType,
                 startDate: formData.startDate,
                 endDate: formData.endDate,
                 leaveReason: formData.leaveReason,
                 duration: duration,
-                userId:userId,
-                
+
             });
             // const ans = res.data.message;
             if (res.data.success) {
