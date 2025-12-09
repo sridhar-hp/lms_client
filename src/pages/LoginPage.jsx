@@ -83,7 +83,10 @@ const LogInForm = ({ handlelogin, id, setId, pass, setPass }) => (
 
 const SignUpForm = () => {
     const [role, setRole] = useState('student');
+    const [newaccount,setNewaccount]=useState();
 
+
+    const handleinput
     const handleSignUp = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -134,7 +137,7 @@ const SignUpForm = () => {
 
             <div className="animate-fade-in-up">
                 {role === 'student' ? (
-                    <AuthInput name="regNo" placeholder="Register Number" icon={IdCardIcon} />
+                    <AuthInput name="regNo" placeholder="Register Number" icon={IdCardIcon} onChange={} />
                 ) : (
                     <AuthInput name="staffId" placeholder="Staff ID" icon={IdCardIcon} />
                 )}
@@ -185,8 +188,8 @@ export default function LoginPage() {
             }
             else if (Role == "student") {
                 navigate("/dashboard/student/applyleave", {
-  state: {userId:res.data.Id  }
-});
+                    state: { userId: res.data.Id }
+                });
 
             }
             else {
@@ -273,6 +276,3 @@ export default function LoginPage() {
         </div>
     );
 }
-
-
-// 
