@@ -11,26 +11,43 @@ const teamMetrics = {
 // --- Sub-Component: Employee Context Panel (Enhanced) ---
 const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const isLowBalance = request.balance - request.days < 0;
-    const [rejectionReason, setRejectionReason] = useState([]);
+    // const [rejectionReason, setRejectionReason] = useState([]);
 
-    const handlerejection = async(Id) => {
+    const handlerejection = async(id) => {
+        console.log("Reject Button Clicked, ID:", id);
         // e.preventdefault();
-try{
-        const res = await axios.put(`http://localhost:5000/api/rejection/${Id}`);
-        if (res.data.success) {
-            alert("leave rejected");
+        try {
+            const res = await axios.put(`http://localhost:5000/api/rejection/${id}`);
+            if (res.data.success) {
+                alert("rejected ✅");
+            }
         }
-    }
-    catch(err)
-    {
-        console.log(err);
-    }
+        catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleaccepting = async(id)=>{
+        console.log
+        try{
+            const res = await axios.put(`http://localhost:5000/api/accept/${id}`);
+            if(res.data.success)
+            {
+                alert("accepted successfully");
+            }
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
     };
 
     return (
         <div className="p-5 space-y-5 bg-white shadow-lg rounded-xl h-full flex flex-col">
             <h3 className="text-2xl font-bold text-indigo-800 border-b pb-3">Review & Action: {request.name}</h3>
             <h3>Id:{request.userId}</h3>
+            <h5>status:{request.status}</h5>
+            <h6>mid:{request._id}</h6>
 
             <div>
                 <h4 className="font-semibold text-gray-700 mb-2">Reason for Leave:</h4>
@@ -43,14 +60,14 @@ try{
             <div className="flex-grow space-y-4 pt-4 border-t border-gray-100 mt-auto">
                 <div className="flex space-x-4">
                     <button
-                        // onClick={ rejection(request.userId)}
+                        onClick={()=> handleaccepting(request._id)}
                         // disabled={actionPending}
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >
                         Approve
                     </button>
                     <button
-                        onClick={() => handlerejection(request.userId)}
+                        onClick={() => handlerejection(request._id)}
                         // disabled={actionPending || !rejectionReason}
                         className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >

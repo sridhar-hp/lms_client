@@ -6,7 +6,7 @@ import DMenuBar from "./pages/DMenuBar.jsx";
 import ApplyLeave from "./pages/ApplyLeave.jsx";
 import MyLeaveStatus from "./pages/MyLeaveStatus.jsx";
 import Settings from "./pages/Settings.jsx";
-import LeaveApply from "./pages/LeaveApply.jsx";
+// import LeaveApply from "./pages/LeaveApply.jsx";
 import StudentLeaveRequests from "./pages/StudentLeaveRequests.jsx";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ function App() {
                     <Route path="studentleaverequests" element={<StudentLeaveRequests />} />
                     <Route path="applyleave" element={<ApplyLeave />} />
                     <Route path="myleavestatus" element={<MyLeaveStatus />} />
-                    <Route path="leaveapply" element={<LeaveApply />} />
+                    {/* <Route path="leaveapply" element={<LeaveApply />} /> */}
                     <Route path="setting" element={<Settings />} />
                 </Route>
             </Routes>
