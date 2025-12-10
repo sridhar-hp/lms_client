@@ -58,7 +58,6 @@ const LogInForm = ({ handlelogin, id, setId, pass, setPass }) => (
             icon={UserIcon}
         />
 
-
         <AuthInput
             name="password"
             type="password"
@@ -83,10 +82,23 @@ const LogInForm = ({ handlelogin, id, setId, pass, setPass }) => (
 
 const SignUpForm = () => {
     const [role, setRole] = useState('student');
-    const [newaccount,setNewaccount]=useState();
+    const [newaccount, setNewaccount] = useState();
 
 
-    const handleinput
+    const handleinput = (e) => {
+        e.preventDefault();
+        console.log("rolle of the user: ",role);
+
+        console.log("this is new account ", newaccount);
+
+    }
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setNewaccount((prev) => ({ ...prev, [name]: value }));
+      
+    }
+
     const handleSignUp = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -98,7 +110,7 @@ const SignUpForm = () => {
 
 
     return (
-        <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handleSignUp}>
+        <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handleinput}>
             <h1 className="text-3xl font-extrabold mb-2 text-gray-800">Create Account</h1>
             <p className="text-gray-500 mb-6 text-sm">Join us and start your journey.</p>
 
@@ -132,19 +144,19 @@ const SignUpForm = () => {
             </div>
 
             {/* --- INPUTS --- */}
-            <AuthInput name="name" placeholder="Full Name" icon={UserIcon} />
+            <AuthInput name="name" placeholder="Full Name" icon={UserIcon} type='text' onChange={handleChange} />
 
 
             <div className="animate-fade-in-up">
                 {role === 'student' ? (
-                    <AuthInput name="regNo" placeholder="Register Number" icon={IdCardIcon} onChange={} />
+                    <AuthInput name="regNo" placeholder="Register Number" icon={IdCardIcon} onChange={handleChange} />
                 ) : (
-                    <AuthInput name="staffId" placeholder="Staff ID" icon={IdCardIcon} />
+                    <AuthInput name="staffId" placeholder="Staff ID" icon={IdCardIcon} onChange={handleChange} />
                 )}
             </div>
 
-            <AuthInput name="email" placeholder="Email Address" icon={MailIcon} />
-            <AuthInput name="password" type="password" placeholder="Password" icon={LockIcon} />
+            <AuthInput name="email" placeholder="Email Address" icon={MailIcon} onChange={handleChange} />
+            <AuthInput name="password" type="password" placeholder="Password" icon={LockIcon} onChange={handleChange} />
 
             <button
                 type="submit"
