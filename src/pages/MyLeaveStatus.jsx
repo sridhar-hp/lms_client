@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 // Assume all styles and icons come from a robust design system.
 
 // --- Mock Data ---
@@ -8,22 +10,22 @@ const userData = {
     availableDays: 14.5, // Combined total for quick view
 };
 
-const leaveSummary = [
-    { type: "Annual Leave", used: 5.5, total: 20, color: "#4F46E5" }, // Indigo
-    { type: "Sick Leave", used: 1.0, total: 10, color: "#10B981" },  // Green
-    { type: "Compensatory Off", used: 0, total: 5, color: "#F59E0B" }, // Amber
-];
+// const leaveSummary = [
+//     { type: "Annual Leave", used: 5.5, total: 20, color: "#4F46E5" }, // Indigo
+//     { type: "Sick Leave", used: 1.0, total: 10, color: "#10B981" },  // Green
+//     { type: "Compensatory Off", used: 0, total: 5, color: "#F59E0B" }, // Amber
+// ];
 
-const allLeaveRequests = [
-    { id: 101, type: "Annual Leave", dates: "2026-01-15 - 2026-01-17", days: 3, status: "Pending", requestedOn: "2025-11-20", reason: "Vacation" },
-    { id: 102, type: "Sick Leave", dates: "2025-12-01", days: 1, status: "Approved", requestedOn: "2025-11-15", reason: "Fever" },
-    { id: 103, type: "Annual Leave", dates: "2025-10-25 - 2025-10-27", days: 3, status: "Rejected", requestedOn: "2025-10-20", reason: "Conflicting deadline" },
-    { id: 104, type: "Sick Leave", dates: "2025-09-05", days: 1, status: "Approved", requestedOn: "2025-08-30", reason: "N/A" },
-    { id: 105, type: "Annual Leave", dates: "2025-08-01", days: 1, status: "Rejected", requestedOn: "2025-07-25", reason: "Too many team members out" }, // Second rejected item
-];
+// const allLeaveRequests = [
+//     { id: 101, type: "Annual Leave", dates: "2026-01-15 - 2026-01-17", days: 3, status: "Pending", requestedOn: "2025-11-20", reason: "Vacation" },
+//     { id: 102, type: "Sick Leave", dates: "2025-12-01", days: 1, status: "Approved", requestedOn: "2025-11-15", reason: "Fever" },
+//     { id: 103, type: "Annual Leave", dates: "2025-10-25 - 2025-10-27", days: 3, status: "Rejected", requestedOn: "2025-10-20", reason: "Conflicting deadline" },
+//     { id: 104, type: "Sick Leave", dates: "2025-09-05", days: 1, status: "Approved", requestedOn: "2025-08-30", reason: "N/A" },
+//     { id: 105, type: "Annual Leave", dates: "2025-08-01", days: 1, status: "Rejected", requestedOn: "2025-07-25", reason: "Too many team members out" }, // Second rejected item
+// ];
 
 // Calculate the rejected count based on mock data
-const rejectedCount = allLeaveRequests.filter(req => req.status === 'Rejected').length;
+// const rejectedCount = allLeaveRequests.filter(req => req.status === 'Rejected').length;
 // --- End Mock Data ---
 
 
@@ -51,15 +53,30 @@ const StatusPill = ({ status }) => {
 
 function MyLeaveStatus() {
     const [filter, setFilter] = useState("all");
+    const { Id } = useParams();
+    const [leaves, setLeaves] = useState([]);
 
     // Filter logic for the table
-    const filteredRequests = allLeaveRequests.filter(request => 
-        filter === 'all' ? true : request.status.toLowerCase() === filter
-    );
+    // const filteredRequests = allLeaveRequests.filter(request =>
+    //     filter === 'all' ? true : request.status.toLowerCase() === filter
+    // );
 
-    return(
+    useEffect(() => {
+        const Lstatus = async () => {
+            const res = await axios.get(`http://localhost:5000/api/status/${Id}`);
+            setLeaves(res.data);
+            if (res.data.success) {
+                alert("your leave history");
+            }
+        }
+        Lstatus();
+
+    }, [Id]);
+
+
+    return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
-            
+
             {/* --- 1. Header & Call-to-Action --- */}
             <header className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
                 <div>
@@ -75,38 +92,38 @@ function MyLeaveStatus() {
 
             {/* --- 2. Leave Balance Summary Cards & Rejected Count --- */}
             <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
-                
+
                 {/* REJECTED COUNT CARD (New Focus Metric) */}
                 <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition duration-300 cursor-pointer"
-                     onClick={() => setFilter('rejected')} // Clickable to filter table
+                    onClick={() => setFilter('rejected')} // Clickable to filter table
                 >
                     <p className="text-sm font-semibold text-red-600 uppercase tracking-wider">
                         Rejected Requests
                     </p>
                     <div className="flex items-end justify-between mt-2">
-                        <span className="text-5xl font-extrabold text-red-700">{rejectedCount}</span>
+                        {/* <span className="text-5xl font-extrabold text-red-700">{rejectedCount}</span> */}
                         <span className="text-lg font-medium text-gray-500">View History</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">Click to view details below.</p>
                 </div>
 
                 {/* Individual Leave Type Cards */}
-                {leaveSummary.map((item, index) => (
+                {/* {leaveSummary.map((item, index) => (
                     <div key={index} className="bg-white p-6 rounded-xl shadow-lg border-t-4" style={{ borderColor: item.color }}>
                         <p className="text-lg font-semibold text-gray-800">{item.type}</p>
                         <div className="mt-2 text-2xl font-bold text-gray-900">
                             {item.total - item.used} <span className="text-base font-normal text-gray-500"> / {item.total} Days Left</span>
                         </div>
                         <p className="text-sm text-gray-500 mt-1">Used: {item.used} days</p>
-                        {/* Conceptual Progress Bar (Professional styling) */}
+                        {/* Conceptual Progress Bar (Professional styling) 
                         <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
-                            <div 
-                                className={`h-2 rounded-full`} 
+                            <div
+                                className={`h-2 rounded-full`}
                                 style={{ width: `${(item.used / item.total) * 100}%`, backgroundColor: item.color }}
                             ></div>
                         </div>
                     </div>
-                ))}
+                ))} */}
             </section>
 
             {/* --- 3. Detailed Request Table with Filters --- */}
@@ -116,12 +133,12 @@ function MyLeaveStatus() {
                     {/* Filter Tabs */}
                     <div className="inline-flex rounded-md shadow-sm" role="group">
                         {['all', 'pending', 'approved', 'rejected'].map(status => (
-                            <button 
+                            <button
                                 key={status}
                                 onClick={() => setFilter(status)}
                                 className={`py-2 px-4 text-sm font-medium capitalize border border-gray-200 
                                             ${filter === status ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 hover:bg-gray-100'}`}
-                                style={{ 
+                                style={{
                                     borderTopLeftRadius: status === 'all' ? '0.375rem' : '0',
                                     borderBottomLeftRadius: status === 'all' ? '0.375rem' : '0',
                                     borderTopRightRadius: status === 'rejected' ? '0.375rem' : '0',
@@ -133,7 +150,7 @@ function MyLeaveStatus() {
                         ))}
                     </div>
                 </div>
-                
+
                 {/* Table Structure */}
                 <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
                     <table className="min-w-full divide-y divide-gray-200">
@@ -148,29 +165,24 @@ function MyLeaveStatus() {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-100">
-                            {filteredRequests.length > 0 ? (
-                                filteredRequests.map((request) => (
-                                    <tr key={request.id} className="hover:bg-indigo-50/50 transition duration-150">
-                                        <td className="px-6 py-4 text-sm text-gray-600">#{request.id}</td>
-                                        <td className="px-6 py-4 text-sm font-medium text-gray-900">{request.type}</td>
-                                        <td className="px-6 py-4 text-sm text-gray-700">{request.dates} <br/> ({request.days} Days)</td>
-                                        <td className="px-6 py-4 text-sm text-gray-500">{request.requestedOn}</td>
-                                        <td className="px-6 py-4">
-                                            <StatusPill status={request.status} />
-                                        </td>
-                                        <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
-                                            <button className="text-gray-500 hover:text-indigo-600">Details</button>
-                                            {request.status === 'Pending' && (
-                                                <button className="text-red-500 hover:text-red-700">Cancel</button>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="6" className="text-center py-10 text-gray-500">No {filter !== 'all' ? filter : ''} requests found.</td>
+                            {leaves.map((request) => (
+                                <tr key={request.id} className="hover:bg-indigo-50/50 transition duration-150">
+                                    <td className="px-6 py-4 text-sm text-gray-600">#{request.id}</td>
+                                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{request.type}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-700">{request.dates} <br /> ({request.days} Days)</td>
+                                    <td className="px-6 py-4 text-sm text-gray-500">{request.requestedOn}</td>
+                                    <td className="px-6 py-4">
+                                        <StatusPill status={request.status} />
+                                    </td>
+                                    <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
+                                        <button className="text-gray-500 hover:text-indigo-600">Details</button>
+                                        {request.status === 'Pending' && (
+                                            <button className="text-red-500 hover:text-red-700">Cancel</button>
+                                        )}
+                                    </td>
                                 </tr>
-                            )}
+                            ))
+                            }
                         </tbody>
                     </table>
                 </div>

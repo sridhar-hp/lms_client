@@ -2,10 +2,10 @@
 import React, { useState } from "react";
 
 // --- Configuration Constants ---
-const BACKGROUND_COLOR = 'bg-gray-50'; 
+const BACKGROUND_COLOR = 'bg-gray-50';
 const CARD_BG = 'bg-white';
 const PRIMARY_ACCENT = 'teal-600'; // Deep Teal for focus
-const DANGER_COLOR = 'red-600'; 
+const DANGER_COLOR = 'red-600';
 
 // --- Dummy Data (Unchanged) ---
 const INITIAL_STUDENT_DATA = [
@@ -85,7 +85,7 @@ const RegistryRow = ({ item, columns, dataType, isEditing, setEditId, handleSave
                 <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {isEditing ? (
                         <input
-                            type={field === 'id' ? 'text' : 'text'} 
+                            type={field === 'id' ? 'text' : 'text'}
                             name={field}
                             value={formData[field]}
                             onChange={handleChange}
@@ -97,17 +97,17 @@ const RegistryRow = ({ item, columns, dataType, isEditing, setEditId, handleSave
                     )}
                 </td>
             ))}
-            
+
             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                 {isEditing ? (
                     <>
-                        <button 
+                        <button
                             onClick={(e) => handleSave(e, formData)}
                             className={`text-${PRIMARY_ACCENT} hover:text-teal-700 font-bold`}
                         >
                             Save
                         </button>
-                        <button 
+                        <button
                             onClick={() => setEditId(null)}
                             className="text-gray-500 hover:text-gray-700"
                         >
@@ -116,13 +116,13 @@ const RegistryRow = ({ item, columns, dataType, isEditing, setEditId, handleSave
                     </>
                 ) : (
                     <>
-                        <button 
+                        <button
                             onClick={() => setEditId(item.id)}
                             className={`text-${PRIMARY_ACCENT} hover:text-teal-700 font-bold`}
                         >
                             Edit
                         </button>
-                        <button 
+                        <button
                             onClick={() => handleDelete(item.id)}
                             className={`text-${DANGER_COLOR} hover:text-red-800`}
                         >
@@ -212,10 +212,10 @@ const DataRegistryConsole = () => {
                     </thead>
                     <tbody className="divide-y divide-gray-100">
                         {filteredData.map((item) => (
-                            <RegistryRow 
-                                key={item.id} 
-                                item={item} 
-                                columns={columns} 
+                            <RegistryRow
+                                key={item.id}
+                                item={item}
+                                columns={columns}
                                 dataType={dataType}
                                 isEditing={item.id === editId}
                                 setEditId={setEditId}
@@ -226,7 +226,7 @@ const DataRegistryConsole = () => {
                             />
                         ))}
                         {filteredData.length === 0 && (
-                             <tr><td colSpan={columns.length + 1} className="text-center py-6 text-gray-500">No records found matching your search.</td></tr>
+                            <tr><td colSpan={columns.length + 1} className="text-center py-6 text-gray-500">No records found matching your search.</td></tr>
                         )}
                     </tbody>
                 </table>
@@ -239,8 +239,8 @@ const DataRegistryConsole = () => {
 // --- Main Settings Component (MODIFIED) ---
 
 function Settings() {
-    const [activeSection, setActiveSection] = useState('registry'); 
-    const [globalSearchTerm, setGlobalSearchTerm] = useState(''); 
+    const [activeSection, setActiveSection] = useState('registry');
+    const [globalSearchTerm, setGlobalSearchTerm] = useState('');
 
     const renderContent = () => {
         switch (activeSection) {
@@ -250,7 +250,7 @@ function Settings() {
                 return <NotificationSettings />;
             case 'security':
                 return <SecuritySettings />;
-            case 'registry': 
+            case 'registry':
                 return <DataRegistryConsole />;
             default:
                 return <ProfileSettings />;
@@ -265,12 +265,12 @@ function Settings() {
 
     return (
         <main className={`p-8 md:p-12 flex-grow ${BACKGROUND_COLOR} min-h-screen`}>
-            
+
             {/* Header: Title + Global Search Bar */}
             <header className="mb-4 pb-4 border-b-2 border-gray-300">
                 <div className="flex justify-between items-start mb-4">
                     <h1 className={`text-4xl font-extrabold text-${PRIMARY_ACCENT}`}>User & System Settings</h1>
-                    
+
                     {/* PROFESSIONAL GLOBAL SEARCH BAR */}
                     <form onSubmit={handleGlobalSearch} className="flex items-center space-x-2">
                         <div className="relative">
@@ -293,15 +293,15 @@ function Settings() {
                         </button>
                     </form>
                 </div>
-                
+
                 <p className="text-gray-600 mt-1">Manage your access, security, and administrative preferences.</p>
             </header>
-            
+
             {/* MODIFIED SECTION: Horizontal Tabs and Full-Width Content */}
             <section>
                 {/* Horizontal Navigation Tabs */}
                 <SettingsNav activeSection={activeSection} setActiveSection={setActiveSection} />
-                
+
                 {/* Full-Width Content Area */}
                 <div className="mt-8">
                     {renderContent()}

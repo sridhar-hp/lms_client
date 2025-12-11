@@ -19,7 +19,7 @@ function DMenuBar() {
     const studentMenus = [
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyLeave`, show: true },
-        { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true },
+        { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus/:Id`, show: true },
         { name: "Logout", path: `/..`, show: true },
 
 
@@ -29,7 +29,7 @@ function DMenuBar() {
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyleave`, show: true },
      // { name: "Leave Apply", path: `/dashboard/${Role}/leaveapply`, show: true },
-        {name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true},
+        {name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus/:Id`, show: true},
         { name: "Logout", path: `/..`, show: true },
 
     ];
