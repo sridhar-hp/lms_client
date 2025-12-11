@@ -85,46 +85,39 @@ const SignUpForm = () => {
     const [newaccount, setNewaccount] = useState();
 
 
-    const handleinput = async(e) => {
+    const handleinput = async (e) => {
         e.preventDefault();
-        try{
-            const res = await axios.post("http://localhost:5000/api/newuser",{newaccount,role});
+        try {
+            const res = await axios.post("http://localhost:5000/api/register", {
+                name: newaccount.name,
+                Id: newaccount.Id,
+                email: newaccount.email,
+                password: newaccount.password,
+                role,
+            });
 
-            if(res.data.success)
-            {
+            if (res.data.success) {
                 alert("account created successfully");
             }
-            else
-            {
+            else {
                 alert("error in account creation");
             }
-        
+
         }
-        catch(err)
-        {
+        catch (err) {
             console.log(err);
         }
-      //  console.log("rolle of the user: ",role);
+        //  console.log("rolle of the user: ",role);
 
-       // console.log("this is new account ", newaccount);
+        // console.log("this is new account ", newaccount);
 
     }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setNewaccount((prev) => ({ ...prev, [name]: value }));
-      
-    }
 
-    const handleSignUp = (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        const data = Object.fromEntries(formData.entries());
-        const finalPayload = { ...data, role };
-        alert(`Registered as: ${role.toUpperCase()}\nData: ${JSON.stringify(finalPayload)}`);
     };
-
-
 
     return (
         <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handleinput}>
@@ -166,9 +159,9 @@ const SignUpForm = () => {
 
             <div className="animate-fade-in-up">
                 {role === 'student' ? (
-                    <AuthInput name="regNo" placeholder="Register Number" icon={IdCardIcon} onChange={handleChange} />
+                    <AuthInput name="Id" placeholder="Register Number" icon={IdCardIcon} onChange={handleChange} />
                 ) : (
-                    <AuthInput name="staffId" placeholder="Staff ID" icon={IdCardIcon} onChange={handleChange} />
+                    <AuthInput name="Id" placeholder="Staff ID" icon={IdCardIcon} onChange={handleChange} />
                 )}
             </div>
 
@@ -213,7 +206,9 @@ export default function LoginPage() {
                 navigate("/dashboard/admin");
             }
             else if (Role == "staff") {
-                navigate("/dashboard/staff");
+                navigate("/dashboard/student/applyleave", {
+                    state: { userId: res.data.Id }
+                })
             }
             else if (Role == "student") {
                 navigate("/dashboard/student/applyleave", {

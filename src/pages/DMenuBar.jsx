@@ -27,10 +27,9 @@ function DMenuBar() {
 
     const staffMenus = [
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
-        // { name: "Leave Apply", path: `/dashboard/${Role}/leaveapply`, show: true },
-        {name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true},
         { name: "Apply Leave", path: `/dashboard/${Role}/applyleave`, show: true },
-
+     // { name: "Leave Apply", path: `/dashboard/${Role}/leaveapply`, show: true },
+        {name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true},
         { name: "Logout", path: `/..`, show: true },
 
     ];

@@ -15,11 +15,12 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
 
     const handlerejection = async(id) => {
         console.log("Reject Button Clicked, ID:", id);
-        // e.preventdefault();
+        
         try {
             const res = await axios.put(`http://localhost:5000/api/rejection/${id}`);
             if (res.data.success) {
                 alert("rejected ✅");
+                window.location.reload();
             }
         }
         catch (err) {
@@ -28,12 +29,13 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     };
 
     const handleaccepting = async(id)=>{
-        console.log
+        
         try{
             const res = await axios.put(`http://localhost:5000/api/accept/${id}`);
             if(res.data.success)
             {
                 alert("accepted successfully");
+                window.location.reload();
             }
         }
         catch(err)
