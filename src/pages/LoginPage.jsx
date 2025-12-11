@@ -85,11 +85,28 @@ const SignUpForm = () => {
     const [newaccount, setNewaccount] = useState();
 
 
-    const handleinput = (e) => {
+    const handleinput = async(e) => {
         e.preventDefault();
-        console.log("rolle of the user: ",role);
+        try{
+            const res = await axios.post("http://localhost:5000/api/newuser",{newaccount,role});
 
-        console.log("this is new account ", newaccount);
+            if(res.data.success)
+            {
+                alert("account created successfully");
+            }
+            else
+            {
+                alert("error in account creation");
+            }
+        
+        }
+        catch(err)
+        {
+            console.log(err);
+        }
+      //  console.log("rolle of the user: ",role);
+
+       // console.log("this is new account ", newaccount);
 
     }
 
