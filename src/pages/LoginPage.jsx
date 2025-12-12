@@ -88,7 +88,7 @@ const SignUpForm = () => {
     const handleinput = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5000/api/register", {
+            const res = await axios.post("http://localhost:5000/api/register",{
                 name: newaccount.name,
                 Id: newaccount.Id,
                 email: newaccount.email,
@@ -107,9 +107,9 @@ const SignUpForm = () => {
         catch (err) {
             console.log(err);
         }
-        //  console.log("rolle of the user: ",role);
+         console.log("rolle of the user: ",role);
 
-        // console.log("this is new account ", newaccount);
+        console.log("this is new account ", newaccount);
 
     }
 
@@ -194,7 +194,7 @@ export default function LoginPage() {
 
         try {
             const res = await axios.post("http://localhost:5000/api/login", {
-                Id: id,
+                Id:id,
                 password: pass
             });
             const Role = res.data.Role;
@@ -226,8 +226,6 @@ export default function LoginPage() {
             alert("Login Failed: " + error.response.data.message);
         }
     };
-
-
 
     const overlayTransform = isLogInActive ? 'translate-x-0' : 'translate-x-[-100%]';
     const contentTransform = isLogInActive ? 'translate-x-0' : '-translate-x-1/2';
@@ -295,7 +293,6 @@ export default function LoginPage() {
                     <button onClick={swapToSignUp} className={`px-4 py-2 text-xs font-bold rounded-full transition ${!isLogInActive ? 'bg-white text-indigo-600 shadow' : 'text-indigo-800'}`}>Sign Up</button>
                     <button onClick={swapToLogIn} className={`px-4 py-2 text-xs font-bold rounded-full transition ${isLogInActive ? 'bg-white text-indigo-600 shadow' : 'text-indigo-800'}`}>Sign In</button>
                 </div>
-
             </div>
         </div>
     );
