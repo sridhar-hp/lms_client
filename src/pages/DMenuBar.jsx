@@ -1,14 +1,15 @@
 import React from "react";
-import { NavLink, Outlet, useParams } from "react-router-dom";
+import { NavLink, Outlet, useParams,useLocation } from "react-router-dom";
 
 function DMenuBar() {
-
+    const location = useLocation();
+    const userId = location.state?.userId;
     const { Role } = useParams();   // role = "admin" OR "student"
 
     // ========== ADMIN MENUS ==========
     const adminMenus = [
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
-        { name: "Leave Requests", path: `/dashboard/${Role}/studentleaverequests`, show: true },
+        { name: "Leave Requests", path: `/dashboard/${Role}/studentleaverequests/`, show: true },
         // { name: "Leave Requests", path: `/dashboard/${Role}/staffleaveRequests`, show: true },
         { name: "Setting", path: `/dashboard/${Role}/setting`, show: true },
         { name: "Logout", path: `/..`, show: true },
@@ -19,7 +20,7 @@ function DMenuBar() {
     const studentMenus = [
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyLeave`, show: true },
-        { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true },
+        { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus/${userId}`, show: true },
         { name: "Logout", path: `/..`, show: true },
 
 
@@ -29,7 +30,7 @@ function DMenuBar() {
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyleave`, show: true },
      // { name: "Leave Apply", path: `/dashboard/${Role}/leaveapply`, show: true },
-        {name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus`, show: true},
+        {name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus/${userId}`, show: true},
         { name: "Logout", path: `/..`, show: true },
 
     ];

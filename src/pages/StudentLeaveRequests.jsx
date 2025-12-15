@@ -3,12 +3,18 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 
 function formatDate(d) {
-    const dt = new Date(d);
-    const DD = String(dt.getDate()).padStart(2, "0");
-    const MM = String(dt.getMonth() + 1).padStart(2, "0");
-    const YYYY = dt.getFullYear();
-    return `${DD}-${MM}-${YYYY}`;
+  if (!d) return "-";
+
+  const dt = new Date(d);
+  if (isNaN(dt.getTime())) return "-";
+
+  const DD = String(dt.getDate()).padStart(2, "0");
+  const MM = String(dt.getMonth() + 1).padStart(2, "0");
+  const YYYY = dt.getFullYear();
+
+  return `${DD}-${MM}-${YYYY}`;
 }
+
 
 const teamMetrics = {
     teamSize: 15,
@@ -181,7 +187,7 @@ function StudentLeaveRequests() {
                                                 <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.userId})
                                                     {/* <span className="text-sm font-normal text-gray-500 ml-2">({request.dept})</span> */}
                                                 </span>
-                                                <span className="text-sm text-gray-600">{request.leaveType}: {request.startDate}  to  {request.endDate}  ({request.duration}days)</span>
+                                                <span className="text-sm text-gray-600">{request.leaveType}: {formatDate(request.startDate)}  to  {formatDate(request.endDate)}  ({request.duration}days)</span>
                                             </div>
                                             <div className="text-right">
                                                 {request.conflictReason && request.conflictReason !== "N/A" && (

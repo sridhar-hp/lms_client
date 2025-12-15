@@ -10,11 +10,11 @@ const userData = {
     availableDays: 14.5, // Combined total for quick view
 };
 
-// const leaveSummary = [
-//     { type: "Annual Leave", used: 5.5, total: 20, color: "#4F46E5" }, // Indigo
-//     { type: "Sick Leave", used: 1.0, total: 10, color: "#10B981" },  // Green
-//     { type: "Compensatory Off", used: 0, total: 5, color: "#F59E0B" }, // Amber
-// ];
+const leaveSummary = [
+    { type: "Annual Leave", used: 5.5, total: 20, color: "#4F46E5" }, // Indigo
+    { type: "Sick Leave", used: 1.0, total: 10, color: "#10B981" },  // Green
+    { type: "Compensatory Off", used: 0, total: 5, color: "#F59E0B" }, // Amber
+];
 
 // const allLeaveRequests = [
 //     { id: 101, type: "Annual Leave", dates: "2026-01-15 - 2026-01-17", days: 3, status: "Pending", requestedOn: "2025-11-20", reason: "Vacation" },
@@ -53,8 +53,9 @@ const StatusPill = ({ status }) => {
 
 function MyLeaveStatus() {
     const [filter, setFilter] = useState("all");
-    const { Id } = useParams();
+    const { userId } = useParams();
     const [leaves, setLeaves] = useState([]);
+    const [selectedLeave, setSelectedLeave] = useState(null);
 
     // Filter logic for the table
     // const filteredRequests = allLeaveRequests.filter(request =>
@@ -63,16 +64,20 @@ function MyLeaveStatus() {
 
     useEffect(() => {
         const Lstatus = async () => {
-            const res = await axios.get(`http://localhost:5000/api/status/${Id}`);
-            setLeaves(res.data);
+            const res = await axios.get(`http://localhost:5000/api/status/${userId}`);
+            setLeaves(res.data.leaves);
             if (res.data.success) {
-                alert("your leave history");
+                // alert("your leave history");
             }
         }
         Lstatus();
 
-    }, [Id]);
+    }, [userId]);
 
+    const filteredLeaves = leaves.filter((leave) => {
+        if (filter === "all") return true;
+        return leave.status.toLowerCase() === filter;
+    });
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
@@ -108,14 +113,14 @@ function MyLeaveStatus() {
                 </div>
 
                 {/* Individual Leave Type Cards */}
-                {/* {leaveSummary.map((item, index) => (
+                {leaveSummary.map((item, index) => (
                     <div key={index} className="bg-white p-6 rounded-xl shadow-lg border-t-4" style={{ borderColor: item.color }}>
                         <p className="text-lg font-semibold text-gray-800">{item.type}</p>
                         <div className="mt-2 text-2xl font-bold text-gray-900">
                             {item.total - item.used} <span className="text-base font-normal text-gray-500"> / {item.total} Days Left</span>
                         </div>
                         <p className="text-sm text-gray-500 mt-1">Used: {item.used} days</p>
-                        {/* Conceptual Progress Bar (Professional styling) 
+                        Conceptual Progress Bar (Professional styling)
                         <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
                             <div
                                 className={`h-2 rounded-full`}
@@ -123,7 +128,7 @@ function MyLeaveStatus() {
                             ></div>
                         </div>
                     </div>
-                ))} */}
+                ))}
             </section>
 
             {/* --- 3. Detailed Request Table with Filters --- */}
@@ -161,30 +166,53 @@ function MyLeaveStatus() {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates & Duration</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requested On</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3"></th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-100">
-                            {leaves.map((request) => (
-                                <tr key={request.id} className="hover:bg-indigo-50/50 transition duration-150">
-                                    <td className="px-6 py-4 text-sm text-gray-600">#{request.id}</td>
-                                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{request.type}</td>
-                                    <td className="px-6 py-4 text-sm text-gray-700">{request.dates} <br /> ({request.days} Days)</td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{request.requestedOn}</td>
+                            {filteredLeaves.map((request) => (
+                                <tr key={request._id} className="hover:bg-indigo-50/50 transition duration-150">
+                                    <td className="px-6 py-4 text-sm text-gray-600">#{request.userId}</td>
+                                    <td className="px-6 py-4 text-sm text-gray-600">#{request.leaveType}</td>
+                                    <td className="px-6 py-4 text-sm font-medium text-gray-900">{request.startDate} to {request.endDate}<br /> ({request.duration}days)</td>
+                                    <td className="px-6 py-4 text-sm text-gray-700">{new Date(request.appliedDate).toLocaleDateString()}</td>
+                                    {/* <td className="px-6 py-4 text-sm text-gray-500">{request.status}</td> */}
                                     <td className="px-6 py-4">
                                         <StatusPill status={request.status} />
                                     </td>
                                     <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
-                                        <button className="text-gray-500 hover:text-indigo-600">Details</button>
-                                        {request.status === 'Pending' && (
-                                            <button className="text-red-500 hover:text-red-700">Cancel</button>
-                                        )}
+                                        <button className="text-gray-500 hover:text-indigo-600" onClick={() => setSelectedLeave(request)}>Details</button>
+                                        {/* {request.status === 'Pending' && ( */}
+                                            {/* // <button className="text-red-500 hover:text-red-700">Cancel</button>
+                                        // )} */}
                                     </td>
                                 </tr>
                             ))
                             }
                         </tbody>
                     </table>
+                    {selectedLeave && (
+                        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                            <div className="bg-white rounded-xl p-6 w-[400px] shadow-xl">
+                                <h2 className="text-xl font-bold mb-4">Leave Details</h2>
+
+                                <p><b>Leave Type:</b> {selectedLeave.leaveType}</p>
+                                <p><b>From:</b> {selectedLeave.startDate}</p>
+                                <p><b>To:</b> {selectedLeave.endDate}</p>
+                                <p><b>Duration:</b> {selectedLeave.duration} days</p>
+                                <p><b>Status:</b> {selectedLeave.status}</p>
+                                <p><b>Reason:</b> {selectedLeave.leaveReason}</p>
+
+                                <button
+                                    className="mt-4 bg-indigo-600 text-white px-4 py-2 rounded"
+                                    onClick={() => setSelectedLeave(null)}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
                 </div>
             </section>
         </div>
