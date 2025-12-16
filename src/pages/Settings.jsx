@@ -1,5 +1,9 @@
 // src/pages/Settings.jsx (HORIZONTAL TABS & FULL-WIDTH TABLE)
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+
+
+
 
 // --- Configuration Constants ---
 const BACKGROUND_COLOR = 'bg-gray-50';
@@ -68,70 +72,78 @@ const SecuritySettings = () => (
 
 // --- Data Registry Console and Registry Row (Unchanged functionality) ---
 
-const RegistryRow = ({ item, columns, dataType, isEditing, setEditId, handleSave, handleDelete, PRIMARY_ACCENT, DANGER_COLOR }) => {
-    const [formData, setFormData] = useState(item);
+const RegistryRow = ({ Id, name, role, email }) => {
+    // const [formData, setFormData] = useState(item);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const specificField = dataType === 'student' ? 'major' : 'department';
+    //const specificField = dataType === 'student' ? 'major' : 'department';
 
-    const fields = ['id', 'name', 'email', 'phone', specificField];
-
+    //const fields = ['id', 'name', 'email', 'phone', specificField];
+// 
     return (
-        <tr className={isEditing ? 'bg-teal-50' : 'hover:bg-gray-50 transition duration-150'}>
-            {fields.map((field, index) => (
-                <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {isEditing ? (
-                        <input
-                            type={field === 'id' ? 'text' : 'text'}
-                            name={field}
-                            value={formData[field]}
-                            onChange={handleChange}
-                            disabled={field === 'id'}
-                            className={`w-full p-2 border rounded-md ${field === 'id' ? 'bg-gray-100' : 'border-teal-300 focus:border-teal-500'}`}
-                        />
-                    ) : (
-                        item[field]
-                    )}
-                </td>
-            ))}
+        // <tr className={isEditing ? 'bg-teal-50' : 'hover:bg-gray-50 transition duration-150'}>
+        //     {fields.map((field, index) => (
+        //         <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+        //             {isEditing ? (
+        //                 <input
+        //                     type={field === 'id' ? 'text' : 'text'}
+        //                     name={field}
+        //                     value={formData[field]}
+        //                     onChange={handleChange}
+        //                     disabled={field === 'id'}
+        //                     className={`w-full p-2 border rounded-md ${field === 'id' ? 'bg-gray-100' : 'border-teal-300 focus:border-teal-500'}`}
+        //                 />
+        //             ) : (
+        //                 item[field]
+        //             )}
+        //         </td>
+        //     ))}
 
-            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                {isEditing ? (
-                    <>
-                        <button
-                            onClick={(e) => handleSave(e, formData)}
-                            className={`text-${PRIMARY_ACCENT} hover:text-teal-700 font-bold`}
-                        >
-                            Save
-                        </button>
-                        <button
-                            onClick={() => setEditId(null)}
-                            className="text-gray-500 hover:text-gray-700"
-                        >
-                            Cancel
-                        </button>
-                    </>
-                ) : (
-                    <>
-                        <button
-                            onClick={() => setEditId(item.id)}
-                            className={`text-${PRIMARY_ACCENT} hover:text-teal-700 font-bold`}
-                        >
-                            Edit
-                        </button>
-                        <button
-                            onClick={() => handleDelete(item.id)}
-                            className={`text-${DANGER_COLOR} hover:text-red-800`}
-                        >
-                            Delete
-                        </button>
-                    </>
-                )}
-            </td>
+        //     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+        //         {isEditing ? (
+        //             <>
+        //                 <button
+        //                     onClick={(e) => handleSave(e, formData)}
+        //                     className={`text-${PRIMARY_ACCENT} hover:text-teal-700 font-bold`}
+        //                 >
+        //                     Save
+        //                 </button>
+        //                 <button
+        //                     onClick={() => setEditId(null)}
+        //                     className="text-gray-500 hover:text-gray-700"
+        //                 >
+        //                     Cancel
+        //                 </button>
+        //             </>
+        //         ) : (
+        //             <>
+        //                 <button
+        //                     onClick={() => setEditId(item.id)}
+        //                     className={`text-${PRIMARY_ACCENT} hover:text-teal-700 font-bold`}
+        //                 >
+        //                     Edit
+        //                 </button>
+        //                 <button
+        //                     onClick={() => handleDelete(item.id)}
+        //                     className={`text-${DANGER_COLOR} hover:text-red-800`}
+        //                 >
+        //                     Delete
+        //                 </button>
+        //             </>
+        //         )}
+        //     </td>
+        // </tr>
+        <>        <tr className="hover:bg-gray-50 transition">
+            <td className="px-6 py-4 text-sm text-gray-900">{Id}</td>
+            <td className="px-6 py-4 text-sm text-gray-900">{name}</td>
+            <td className="px-6 py-4 text-sm text-gray-900">{email}</td>
+            <td className="px-6 py-4 text-sm text-gray-900">{role}</td>
+            <td className="px-6 py-4 text-sm text-gray-900">—</td>
         </tr>
+        </>
     );
 };
 
@@ -140,6 +152,15 @@ const DataRegistryConsole = () => {
     const [data, setData] = useState(INITIAL_STUDENT_DATA);
     const [searchQuery, setSearchQuery] = useState('');
     const [editId, setEditId] = useState(null);
+    const [users, setUsers] = useState([]);
+    useEffect(() => {
+        const setting = async () => {
+            const res = await axios.get("http://localhost:5000/api/setting");
+            setUsers(res.data.users);
+            console.log(res.data.users);
+        }
+        setting();
+    }, []);
 
     React.useEffect(() => {
         setData(dataType === 'student' ? INITIAL_STUDENT_DATA : INITIAL_STAFF_DATA);
@@ -167,6 +188,8 @@ const DataRegistryConsole = () => {
     const columns = dataType === 'student'
         ? ['ID', 'Name', 'Email', 'Phone', 'Major']
         : ['ID', 'Name', 'Email', 'Phone', 'Department'];
+
+
 
     return (
         <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}>
@@ -204,31 +227,34 @@ const DataRegistryConsole = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            {columns.map(col => (
-                                <th key={col} className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">{col}</th>
-                            ))}
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">Actions</th>
+                            <th className="px-6 py-3">ID</th>
+                            <th className="px-6 py-3">Name</th>
+                            <th className="px-6 py-3">Email</th>
+                            <th className="px-6 py-3">Role</th>
+                            <th className="px-6 py-3">Actions</th>
                         </tr>
                     </thead>
+
                     <tbody className="divide-y divide-gray-100">
-                        {filteredData.map((item) => (
-                            <RegistryRow
-                                key={item.id}
-                                item={item}
-                                columns={columns}
-                                dataType={dataType}
-                                isEditing={item.id === editId}
-                                setEditId={setEditId}
-                                handleSave={handleSave}
-                                handleDelete={handleDelete}
-                                PRIMARY_ACCENT={PRIMARY_ACCENT}
-                                DANGER_COLOR={DANGER_COLOR}
-                            />
-                        ))}
-                        {filteredData.length === 0 && (
-                            <tr><td colSpan={columns.length + 1} className="text-center py-6 text-gray-500">No records found matching your search.</td></tr>
+                        {users.length === 0 ? (
+                            <tr>
+                                <td colSpan={5} className="text-center py-6 text-gray-500">
+                                    No users found
+                                </td>
+                            </tr>
+                        ) : (
+                            users.map((item) => (
+                                <RegistryRow
+                                    key={item._id}
+                                    Id={item.Id}
+                                    name={item.name}
+                                    email={item.email}
+                                    role={item.role}
+                                />
+                            ))
                         )}
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -262,6 +288,8 @@ function Settings() {
         console.log(`Performing global search for: ${globalSearchTerm}`);
         alert(`Simulating system-wide search for: "${globalSearchTerm}".`);
     };
+
+
 
     return (
         <main className={`p-8 md:p-12 flex-grow ${BACKGROUND_COLOR} min-h-screen`}>
