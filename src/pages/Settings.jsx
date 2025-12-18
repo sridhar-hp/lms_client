@@ -70,10 +70,22 @@ const SecuritySettings = () => (
     <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔒 Security & Password</h2><p className="mt-4 text-gray-600">Security settings interface...</p></div>
 );
 
+
 // --- Data Registry Console and Registry Row (Unchanged functionality) ---
 
-const RegistryRow = ({ Id, name, role, email }) => {
-    // const [formData, setFormData] = useState(item);
+const RegistryRow = ({
+    item,
+    isEditing,
+    setEditId,
+    handleSave,
+    handleDelete
+}) => {
+
+    const [formData, setFormData] = useState(item);
+
+    useEffect(() => {
+        setFormData(item);
+    }, [item]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -82,68 +94,70 @@ const RegistryRow = ({ Id, name, role, email }) => {
     //const specificField = dataType === 'student' ? 'major' : 'department';
 
     //const fields = ['id', 'name', 'email', 'phone', specificField];
-// 
+    // 
     return (
-        // <tr className={isEditing ? 'bg-teal-50' : 'hover:bg-gray-50 transition duration-150'}>
-        //     {fields.map((field, index) => (
-        //         <td key={index} className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-        //             {isEditing ? (
-        //                 <input
-        //                     type={field === 'id' ? 'text' : 'text'}
-        //                     name={field}
-        //                     value={formData[field]}
-        //                     onChange={handleChange}
-        //                     disabled={field === 'id'}
-        //                     className={`w-full p-2 border rounded-md ${field === 'id' ? 'bg-gray-100' : 'border-teal-300 focus:border-teal-500'}`}
-        //                 />
-        //             ) : (
-        //                 item[field]
-        //             )}
-        //         </td>
-        //     ))}
+        <tr className={isEditing ? 'bg-teal-50' : 'hover:bg-gray-50 transition'}>
+            <td className="px-6 py-4">{item.Id}</td>
+            <td className="px-6 py-4">
+                {isEditing ? (
+                    <input
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        className="border p-1 rounded w-full"
+                    />
 
-        //     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-        //         {isEditing ? (
-        //             <>
-        //                 <button
-        //                     onClick={(e) => handleSave(e, formData)}
-        //                     className={`text-${PRIMARY_ACCENT} hover:text-teal-700 font-bold`}
-        //                 >
-        //                     Save
-        //                 </button>
-        //                 <button
-        //                     onClick={() => setEditId(null)}
-        //                     className="text-gray-500 hover:text-gray-700"
-        //                 >
-        //                     Cancel
-        //                 </button>
-        //             </>
-        //         ) : (
-        //             <>
-        //                 <button
-        //                     onClick={() => setEditId(item.id)}
-        //                     className={`text-${PRIMARY_ACCENT} hover:text-teal-700 font-bold`}
-        //                 >
-        //                     Edit
-        //                 </button>
-        //                 <button
-        //                     onClick={() => handleDelete(item.id)}
-        //                     className={`text-${DANGER_COLOR} hover:text-red-800`}
-        //                 >
-        //                     Delete
-        //                 </button>
-        //             </>
-        //         )}
-        //     </td>
-        // </tr>
-        <>        <tr className="hover:bg-gray-50 transition">
-            <td className="px-6 py-4 text-sm text-gray-900">{Id}</td>
-            <td className="px-6 py-4 text-sm text-gray-900">{name}</td>
-            <td className="px-6 py-4 text-sm text-gray-900">{email}</td>
-            <td className="px-6 py-4 text-sm text-gray-900">{role}</td>
-            <td className="px-6 py-4 text-sm text-gray-900">—</td>
+                ) : (
+                    item.name
+                )}
+            </td>
+            <td className="px-6 py-4">{item.email}</td>
+            <td className="px-6 py-4">{item.role}</td>
+
+            <td className="px-6 py-4 space-x-2">
+                {isEditing ? (
+                    <>
+                        <button
+                            onClick={() => handleSave(formData)}
+                            className="text-green-600 font-semibold"
+                        >
+                            Save
+                        </button>
+
+                        <button
+                            onClick={() => setEditId(null)}
+                            className="text-gray-500"
+                        >
+                            Cancel
+                        </button>
+                    </>
+                ) : (
+                    <>
+                        <button
+                            onClick={() => setEditId(item._id)}
+                            className="text-teal-600 font-semibold"
+                        >
+                            Edit
+                        </button>
+                        <button
+                            onClick={() => handleDelete(item._id)}
+                            className="text-red-600"
+                        >
+                            Delete
+                        </button>
+                    </>
+                )}
+            </td>
         </tr>
-        </>
+
+
+        // <td className="px-6 py-4 text-sm text-gray-900">{Id}</td>
+        // <td className="px-6 py-4 text-sm text-gray-900">{name}</td>
+        // <td className="px-6 py-4 text-sm text-gray-900">{email}</td>
+        // <td className="px-6 py-4 text-sm text-gray-900">{role}</td>
+        // <td className="px-6 py-4 text-sm text-gray-900">—</td>
+
+
     );
 };
 
@@ -153,10 +167,16 @@ const DataRegistryConsole = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const [editId, setEditId] = useState(null);
     const [users, setUsers] = useState([]);
+
     useEffect(() => {
         const setting = async () => {
             const res = await axios.get("http://localhost:5000/api/setting");
-            setUsers(res.data.users);
+            if (Array.isArray(res.data.users)) {
+                setUsers(res.data.users.filter(u => u && u._id));
+            } else {
+                setUsers([]);
+            }
+
             console.log(res.data.users);
         }
         setting();
@@ -179,17 +199,34 @@ const DataRegistryConsole = () => {
         }
     };
 
-    const handleSave = (e, updatedItem) => {
-        e.preventDefault();
-        setData(data.map(item => (item.id === editId ? updatedItem : item)));
-        setEditId(null);
-    };
+    // const handleSave = (updatedItem) => {
+    //     setUsers(prev =>
+    //         prev.map(u => u._id === updatedItem._id ? updatedItem : u)
+    //     );
+    //     setEditId(null);
+    // };
+
 
     const columns = dataType === 'student'
         ? ['ID', 'Name', 'Email', 'Phone', 'Major']
         : ['ID', 'Name', 'Email', 'Phone', 'Department'];
 
 
+    const handleSave = async (updatedItem) => {
+        try {
+            const res = await axios.put(`http://localhost:5000/api/users/${updatedItem._id}`, updatedItem);
+
+            if (res.data.success) {
+                setUsers(prev => prev.map(user => user._id === updatedItem._id ? res.data.user : user));
+                setEditId(null);
+                alert("user updated successfully");
+            }
+        }
+        catch (err) {
+            console.log(err);
+            alert("update failed");
+        }
+    }
 
     return (
         <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}>
@@ -235,7 +272,7 @@ const DataRegistryConsole = () => {
                         </tr>
                     </thead>
 
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-gray-100 px-6 py-3">
                         {users.length === 0 ? (
                             <tr>
                                 <td colSpan={5} className="text-center py-6 text-gray-500">
@@ -243,15 +280,18 @@ const DataRegistryConsole = () => {
                                 </td>
                             </tr>
                         ) : (
-                            users.map((item) => (
+                            users.filter(item => item && item._id).map((item) => (
                                 <RegistryRow
                                     key={item._id}
-                                    Id={item.Id}
-                                    name={item.name}
-                                    email={item.email}
-                                    role={item.role}
+                                    item={item}
+                                    isEditing={editId === item._id}
+                                    setEditId={setEditId}
+                                    handleSave={handleSave}
+                                    handleDelete={handleDelete}
                                 />
+
                             ))
+
                         )}
                     </tbody>
 
