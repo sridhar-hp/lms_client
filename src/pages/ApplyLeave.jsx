@@ -1,16 +1,22 @@
 import axios from "axios";
-import React, { useState, useMemo,useEffect } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 // --- Mock Data & Configuration ---
-const initialLeaveBalances = [
-    { type: "Annual Leave", balance: 14.5, total: 20 },
-    { type: "Sick Leave", balance: 8.0, total: 10 },
-    { type: "Compensatory Off", balance: 5.0, total: 5 },
-    { type: "Unpaid Leave", balance: Infinity, total: Infinity }
-];
+
 // --- End Mock Data ---
 
+const calculateDays = (start, end) => {
+    if (!start || !end) return 0;
+
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const diffTime = endDate - startDate;
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+    return diffDays > 0 ? diffDays : 0;
+};
 
 // Helper function: Calculates duration excluding weekends/holidays (Simplified)
 const calculateWorkingDays = (start, end) => {//=
@@ -26,7 +32,7 @@ const calculateWorkingDays = (start, end) => {//=
 function ApplyLeave() {
     const [formData, setFormData] = useState({
         name: "", // Added Name field to state
-        leaveType: initialLeaveBalances[0].type,
+        // leaveType: initialLeaveBalances[0].type,
         startDate: "",
         endDate: "",
         leaveReason: "",
@@ -34,17 +40,31 @@ function ApplyLeave() {
     });
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [duration, setDuration] = useState(0);
+    const [leaveBalance, setLeaveBalance] = useState({});
     const location = useLocation();
     const userId = location.state?.userId;
+    const requestedDays = calculateDays(formData.startDate, formData.endDate);
+const availableDays = leaveBalance[formData.leaveType] || 0;
+const remainingDays = availableDays - requestedDays;
+const isFormInvalid =
+  !formData.name ||
+  !formData.leaveType ||
+  !formData.leaveReason ||
+  duration === 0 ||
+  remainingDays < 0;
+
+
+   
+
 
     useEffect(() => {
         console.log("User ID:", userId);  // logs once
     }, []);
     // console.log("User ID:", userId);
     // Calculate the active balance for the selected leave type
-    const selectedBalance = useMemo(() => {
-        return initialLeaveBalances.find(item => item.type === formData.leaveType);
-    }, [formData.leaveType]);
+    // const selectedBalance = useMemo(() => {
+    //     // return initialLeaveBalances.find(item => item.type === formData.leaveType);
+    // }, [formData.leaveType]);
 
     // --- Dynamic Form Logic ---
     const handleChange = (e) => {
@@ -61,15 +81,28 @@ function ApplyLeave() {
         });
     };
 
+    useEffect(() => {
+  if (!userId) return;
+const la = async()=>{
+    
+  const res = await axios.get(`http://localhost:5000/api/leave-balance/${userId}`)
+    
+      if (res.data.success) {
+        setLeaveBalance(res.data.leaveBalance);
+      }
+}
+    la();
+}, [userId]);
+
     const handleFileChange = (e) => {
         setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
     };
 
     // --- Validation and Submission ---
-    const isBalanceExceeded = duration > selectedBalance?.balance && selectedBalance.balance !== Infinity;
+    // const isBalanceExceeded = duration > selectedBalance?.balance && selectedBalance.balance !== Infinity;
 
     // Added !formData.name to validation check
-    const isFormInvalid = !formData.name || duration === 0 || !formData.leaveReason || isBalanceExceeded;
+    //const isFormInvalid = !formData.name || duration === 0 || !formData.leaveReason || isBalanceExceeded;
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -136,15 +169,26 @@ function ApplyLeave() {
                 <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
                     <h2 className="text-xl font-bold text-gray-800 mb-4">Current Leave Balances</h2>
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        {initialLeaveBalances
-                            .filter(b => b.balance !== Infinity)
-                            .map((item, index) => (
-                                <div key={index} className="p-4 bg-gray-50 rounded-md border-l-4 border-indigo-400">
-                                    <p className="text-sm font-medium text-gray-600">{item.type}</p>
-                                    <span className="text-2xl font-bold text-gray-900">{item.balance.toFixed(1)}</span>
-                                    <span className="text-sm text-gray-500 ml-1">Days Left</span>
-                                </div>
-                            ))}
+                        <div className="mt-4 p-4 bg-gray-50 border rounded-lg space-y-2">
+                            <p>
+                                <strong>Available Days:</strong> {availableDays}
+                            </p>
+
+                            <p>
+                                <strong>Requested Days:</strong> {requestedDays}
+                            </p>
+
+                            <p className={remainingDays < 0 ? "text-red-600" : "text-green-600"}>
+                                <strong>Remaining Days:</strong> {remainingDays}
+                            </p>
+
+                            {remainingDays < 0 && (
+                                <p className="text-red-600 font-semibold">
+                                    ❌ Insufficient leave balance
+                                </p>
+                            )}
+                        </div>
+
                     </div>
                 </section>
 
@@ -179,14 +223,16 @@ function ApplyLeave() {
                                 value={formData.leaveType}
                                 onChange={handleChange}
                                 required
-                                className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 rounded-md shadow-sm"
+                                className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 rounded-md"
                             >
-                                {initialLeaveBalances.map((type) => (//
-                                    <option key={type.type} value={type.type}>
-                                        {type.type} ({type.balance === Infinity ? 'Unlimited' : `${type.balance.toFixed(1)} Days Left`})
-                                    </option>
-                                ))}
+                               {Object.keys(leaveBalance).map((type) => (
+  <option key={type} value={type}>
+    {type} ({leaveBalance[type]} days)
+  </option>
+))}
+
                             </select>
+
                         </div>
 
                         {/* Dates Grid */}
@@ -259,14 +305,14 @@ function ApplyLeave() {
                         </div>
 
                         {/* Financial/Balance Warning */}
-                        {isBalanceExceeded && (
+                        {/* {isBalanceExceeded && (
                             <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md font-medium">
                                 ⚠️ **Balance Overdrawn!**
                                 <p className="text-sm mt-1">
                                     This request exceeds your **{selectedBalance.type}** balance. It may automatically be converted to Unpaid Leave (LOP) or be rejected.
                                 </p>
                             </div>
-                        )}
+                        )} */}
 
                         {/* Submission */}
                         <div className="pt-4 border-t border-gray-200">
