@@ -31,13 +31,14 @@ const calculateWorkingDays = (start, end) => {//=
 
 function ApplyLeave() {
     const [formData, setFormData] = useState({
-        name: "", // Added Name field to state
-        // leaveType: initialLeaveBalances[0].type,
-        startDate: "",
-        endDate: "",
-        leaveReason: "",
-        attachment: null,
-    });
+  name: "",
+  leaveType: "",   // ✅ ADD THIS
+  startDate: "",
+  endDate: "",
+  leaveReason: "",
+  attachment: null,
+});
+
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [duration, setDuration] = useState(0);
     const [leaveBalance, setLeaveBalance] = useState({});
@@ -135,7 +136,12 @@ const la = async()=>{
             // const ans = res.data.message;
             if (res.data.success) {
                 alert("applyed successfully");
+                    const balanceRes = await axios.get(
+        `http://localhost:5000/api/leave-balance/${userId}`
+      );
             }
+
+      setLeaveBalance(balanceRes.data.leaveBalance);
 
         }
 
@@ -217,21 +223,23 @@ const la = async()=>{
                         {/* Leave Type */}
                         <div>
                             <label htmlFor="leaveType" className="block text-sm font-medium text-gray-700">2. Leave Type <span className="text-red-500">*</span></label>
-                            <select
-                                id="leaveType"
-                                name="leaveType"
-                                value={formData.leaveType}
-                                onChange={handleChange}
-                                required
-                                className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 rounded-md"
-                            >
-                               {Object.keys(leaveBalance).map((type) => (
-  <option key={type} value={type}>
-    {type} ({leaveBalance[type]} days)
-  </option>
-))}
+                           <select
+  id="leaveType"
+  name="leaveType"
+  value={formData.leaveType}
+  onChange={handleChange}
+  required
+  className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 rounded-md"
+>
+  <option value="">-- Select Leave Type --</option>
 
-                            </select>
+  {Object.keys(leaveBalance).map((type) => (
+    <option key={type} value={type}>
+      {type} ({leaveBalance[type]} days)
+    </option>
+  ))}
+</select>
+
 
                         </div>
 
