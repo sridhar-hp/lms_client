@@ -31,31 +31,42 @@ const calculateWorkingDays = (start, end) => {//=
 
 function ApplyLeave() {
     const [formData, setFormData] = useState({
-  name: "",
-  leaveType: "",   // ✅ ADD THIS
-  startDate: "",
-  endDate: "",
-  leaveReason: "",
-  attachment: null,
-});
+        name: "",
+        leaveType: "",   // ✅ ADD THIS
+        startDate: "",
+        endDate: "",
+        leaveReason: "",
+        attachment: null,
+    });
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
+    const [loadingBalance, setLoadingBalance] = useState(true);
+
     const [duration, setDuration] = useState(0);
     const [leaveBalance, setLeaveBalance] = useState({});
     const location = useLocation();
     const userId = location.state?.userId;
     const requestedDays = calculateDays(formData.startDate, formData.endDate);
-const availableDays = leaveBalance[formData.leaveType] || 0;
-const remainingDays = availableDays - requestedDays;
-const isFormInvalid =
-  !formData.name ||
-  !formData.leaveType ||
-  !formData.leaveReason ||
-  duration === 0 ||
-  remainingDays < 0;
+    const availableDays = loadingBalance
+        ? null
+        : formData.leaveType
+            ? leaveBalance[formData.leaveType]
+            : null;
+
+    const remainingDays =
+        typeof availableDays === "number"
+            ? availableDays - requestedDays
+            : null;
+
+    const isFormInvalid =
+        !formData.name ||
+        !formData.leaveType ||
+        !formData.leaveReason ||
+        duration === 0 ||
+        remainingDays < 0;
 
 
-   
+
 
 
     useEffect(() => {
@@ -82,18 +93,41 @@ const isFormInvalid =
         });
     };
 
+    //     useEffect(() => {
+    //   if (!userId) return;
+    // const la = async()=>{
+
+    //   const res = await axios.get(`http://localhost:5000/api/leave-balance/${userId}`)
+
+    //       if (res.data.success) {
+    //         setLeaveBalance(res.data.leaveBalance);
+    //       }
+    // }
+    //     la();
+    // }, [userId]);
     useEffect(() => {
-  if (!userId) return;
-const la = async()=>{
-    
-  const res = await axios.get(`http://localhost:5000/api/leave-balance/${userId}`)
-    
-      if (res.data.success) {
-        setLeaveBalance(res.data.leaveBalance);
-      }
-}
-    la();
-}, [userId]);
+        if (!userId) return;
+
+        const fetchBalance = async () => {
+            try {
+                const res = await axios.get(
+                    `http://localhost:5000/api/leave-balance/${userId}`
+                );
+
+                if (res.data.success) {
+                    setLeaveBalance(res.data.leaveBalance);
+                }
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setLoadingBalance(false);
+            }
+        };
+
+        fetchBalance();
+    }, [userId]);
+
+
 
     const handleFileChange = (e) => {
         setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
@@ -120,8 +154,38 @@ const la = async()=>{
 
 
     //handle leave apply
+    // const handleapply = async (e) => {
+    //     e.preventDefault();
+    //     try {
+    //         const res = await axios.post("http://localhost:5000/api/sapply", {
+    //             userId: userId,
+    //             name: formData.name,
+    //             leaveType: formData.leaveType,
+    //             startDate: formData.startDate,
+    //             endDate: formData.endDate,
+    //             leaveReason: formData.leaveReason,
+    //             duration: duration,
+
+    //         });
+    //         // const ans = res.data.message;
+    //         if (res.data.success) {
+    //             alert("applyed successfully");
+    //                 const balanceRes = await axios.get(
+    //     `http://localhost:5000/api/leave-balance/${userId}`
+    //   );
+    //         }
+
+    //   setLeaveBalance(balanceRes.data.leaveBalance);
+
+    //     }
+
+    //     catch (err) {
+    //         console.log(err);
+    //     }
+    // }
     const handleapply = async (e) => {
         e.preventDefault();
+
         try {
             const res = await axios.post("http://localhost:5000/api/sapply", {
                 userId: userId,
@@ -131,24 +195,23 @@ const la = async()=>{
                 endDate: formData.endDate,
                 leaveReason: formData.leaveReason,
                 duration: duration,
-
             });
-            // const ans = res.data.message;
+
             if (res.data.success) {
-                alert("applyed successfully");
-                    const balanceRes = await axios.get(
-        `http://localhost:5000/api/leave-balance/${userId}`
-      );
+                alert("Applied successfully");
+
+                const balanceRes = await axios.get(
+                    `http://localhost:5000/api/leave-balance/${userId}`
+                );
+
+                setLeaveBalance(balanceRes.data.leaveBalance);
             }
 
-      setLeaveBalance(balanceRes.data.leaveBalance);
-
-        }
-
-        catch (err) {
+        } catch (err) {
             console.log(err);
         }
-    }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
 
@@ -172,31 +235,33 @@ const la = async()=>{
             <form onSubmit={handleSubmit} className="space-y-8">
 
                 {/* --- Step 1: Balances Overview (Contextual Cards) --- */}
-                <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                    <h2 className="text-xl font-bold text-gray-800 mb-4">Current Leave Balances</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="mt-4 p-4 bg-gray-50 border rounded-lg space-y-2">
-                            <p>
-                                <strong>Available Days:</strong> {availableDays}
-                            </p>
+                
+                            <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                                    Current Leave Balances
+                                </h2>
 
-                            <p>
-                                <strong>Requested Days:</strong> {requestedDays}
-                            </p>
+                                {loadingBalance ? (
+                                    <p className="text-gray-500">Loading leave balances...</p>
+                                ) : (
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                                        {Object.entries(leaveBalance).map(([type, days]) => (
+                                            <div
+                                                key={type}
+                                                className="p-5 bg-gray-50 border rounded-xl text-center shadow-sm hover:shadow-md transition"
+                                            >
+                                                <p className="text-sm font-semibold text-gray-600">{type}</p>
+                                                <p className="text-3xl font-extrabold text-indigo-600 my-2">
+                                                    {days}
+                                                </p>
+                                                <p className="text-xs text-gray-500">Days Available</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </section>
 
-                            <p className={remainingDays < 0 ? "text-red-600" : "text-green-600"}>
-                                <strong>Remaining Days:</strong> {remainingDays}
-                            </p>
 
-                            {remainingDays < 0 && (
-                                <p className="text-red-600 font-semibold">
-                                    ❌ Insufficient leave balance
-                                </p>
-                            )}
-                        </div>
-
-                    </div>
-                </section>
 
                 {/* --- Step 2: Request Details and Logic --- */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -223,22 +288,22 @@ const la = async()=>{
                         {/* Leave Type */}
                         <div>
                             <label htmlFor="leaveType" className="block text-sm font-medium text-gray-700">2. Leave Type <span className="text-red-500">*</span></label>
-                           <select
-  id="leaveType"
-  name="leaveType"
-  value={formData.leaveType}
-  onChange={handleChange}
-  required
-  className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 rounded-md"
->
-  <option value="">-- Select Leave Type --</option>
+                            <select
+                                id="leaveType"
+                                name="leaveType"
+                                value={formData.leaveType}
+                                onChange={handleChange}
+                                required
+                                className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 rounded-md"
+                            >
+                                <option value="">-- Select Leave Type --</option>
 
-  {Object.keys(leaveBalance).map((type) => (
-    <option key={type} value={type}>
-      {type} ({leaveBalance[type]} days)
-    </option>
-  ))}
-</select>
+                                {Object.keys(leaveBalance).map((type) => (
+                                    <option key={type} value={type}>
+                                        {type} ({leaveBalance[type]} days)
+                                    </option>
+                                ))}
+                            </select>
 
 
                         </div>
