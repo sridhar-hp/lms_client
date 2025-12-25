@@ -45,10 +45,10 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const handleaccepting = async(id)=>{
         
         try{
-            const res = await axios.put(`http://localhost:5000/api/accept/${id}`);
+            const res = await axios.put(`http://localhost:5000/api/accept/${id}`,userId);
             if(res.data.success)
             {
-                alert("accepted successfully");
+                alert("accepted successfully ✅");
                 window.location.reload();
             }
         }

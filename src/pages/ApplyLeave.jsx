@@ -232,7 +232,7 @@ function ApplyLeave() {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form className="space-y-8">
 
                 {/* --- Step 1: Balances Overview (Contextual Cards) --- */}
                 
@@ -390,7 +390,7 @@ function ApplyLeave() {
                         {/* Submission */}
                         <div className="pt-4 border-t border-gray-200">
                             <button
-                                type="submit"
+                                type="button"
                                 disabled={isFormInvalid}
                                 onClick={handleapply}
                                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-xl transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
