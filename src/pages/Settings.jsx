@@ -1,17 +1,11 @@
-// src/pages/Settings.jsx (HORIZONTAL TABS & FULL-WIDTH TABLE)
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-
-
-
-// --- Configuration Constants ---
 const BACKGROUND_COLOR = 'bg-gray-50';
 const CARD_BG = 'bg-white';
-const PRIMARY_ACCENT = 'teal-600'; // Deep Teal for focus
+const PRIMARY_ACCENT = 'teal-600'; 
 const DANGER_COLOR = 'red-600';
 
-// --- Dummy Data (Unchanged) ---
 const INITIAL_STUDENT_DATA = [
     { id: 'S1001', name: 'Alice Chen', phone: '555-1234', email: 'a.chen@std.edu', major: 'Comp Sci' },
     { id: 'S1002', name: 'Bob Davis', phone: '555-4567', email: 'b.davis@std.edu', major: 'History' },
@@ -21,11 +15,6 @@ const INITIAL_STAFF_DATA = [
     { id: 'T2002', name: 'Mr. Frank White', phone: '555-3456', email: 'f.white@staff.edu', department: 'Admin' },
 ];
 
-// --- Helper Components (Simplified for the new layout) ---
-
-/**
- * 1. Horizontal Settings Tab Navigation (MODIFIED)
- */
 const SettingsNav = ({ activeSection, setActiveSection }) => {
     const sections = [
         { key: 'registry', name: 'Data Registry Console', icon: '🗃️' },
@@ -56,10 +45,6 @@ const SettingsNav = ({ activeSection, setActiveSection }) => {
     );
 };
 
-
-// [All other Helper Components remain functionally the same, only the container styling will change due to layout removal]
-
-// Mock components for the sake of a complete, runnable file
 const ProfileSettings = () => (
     <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">👤 Profile & Access</h2><p className="mt-4 text-gray-600">Profile management interface...</p></div>
 );
@@ -69,9 +54,6 @@ const NotificationSettings = () => (
 const SecuritySettings = () => (
     <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔒 Security & Password</h2><p className="mt-4 text-gray-600">Security settings interface...</p></div>
 );
-
-
-// --- Data Registry Console and Registry Row (Unchanged functionality) ---
 
 const RegistryRow = ({
     item,
@@ -90,11 +72,7 @@ const RegistryRow = ({
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-
-    //const specificField = dataType === 'student' ? 'major' : 'department';
-
-    //const fields = ['id', 'name', 'email', 'phone', specificField];
-    // 
+ 
     return (
         <tr className={isEditing ? 'bg-teal-50' : 'hover:bg-gray-50 transition'}>
             <td className="px-6 py-4">{item.Id}</td>
@@ -150,14 +128,6 @@ const RegistryRow = ({
             </td>
         </tr>
 
-
-        // <td className="px-6 py-4 text-sm text-gray-900">{Id}</td>
-        // <td className="px-6 py-4 text-sm text-gray-900">{name}</td>
-        // <td className="px-6 py-4 text-sm text-gray-900">{email}</td>
-        // <td className="px-6 py-4 text-sm text-gray-900">{role}</td>
-        // <td className="px-6 py-4 text-sm text-gray-900">—</td>
-
-
     );
 };
 
@@ -192,24 +162,18 @@ const DataRegistryConsole = () => {
         item.id.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleDelete = async(id) => {
-        try{
+    const handleDelete = async (id) => {
+        try {
             const res = await axios.put(`http://localhost:5000/api/dusers/${id}`);
 
-            if(res.data.success) {
+            if (res.data.success) {
                 alert("user deleted successfully");
             }
         }
-        catch(err)
-        {
+        catch (err) {
             console.log(err);
         }
     };
-
-    // const columns = dataType === 'student'
-    //     ? ['ID', 'Name', 'Email', 'Phone', 'Major']
-    //     : ['ID', 'Name', 'Email', 'Phone', 'Department'];
-
 
     const handleSave = async (updatedItem) => {
         try {
@@ -247,7 +211,6 @@ const DataRegistryConsole = () => {
                 </div>
             </h2>
 
-            {/* Local Search and Filter */}
             <div className="mb-6">
                 <input
                     type="text"
@@ -258,7 +221,6 @@ const DataRegistryConsole = () => {
                 />
             </div>
 
-            {/* Data Table (Now uses max available width due to main layout change) */}
             <div className="overflow-x-auto border border-gray-200 rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
@@ -300,9 +262,6 @@ const DataRegistryConsole = () => {
     );
 };
 
-
-// --- Main Settings Component (MODIFIED) ---
-
 function Settings() {
     const [activeSection, setActiveSection] = useState('registry');
     const [globalSearchTerm, setGlobalSearchTerm] = useState('');
@@ -328,17 +287,13 @@ function Settings() {
         alert(`Simulating system-wide search for: "${globalSearchTerm}".`);
     };
 
-
-
     return (
         <main className={`p-8 md:p-12 flex-grow ${BACKGROUND_COLOR} min-h-screen`}>
 
-            {/* Header: Title + Global Search Bar */}
             <header className="mb-4 pb-4 border-b-2 border-gray-300">
                 <div className="flex justify-between items-start mb-4">
                     <h1 className={`text-4xl font-extrabold text-${PRIMARY_ACCENT}`}>User & System Settings</h1>
 
-                    {/* PROFESSIONAL GLOBAL SEARCH BAR */}
                     <form onSubmit={handleGlobalSearch} className="flex items-center space-x-2">
                         <div className="relative">
                             <input
@@ -364,12 +319,9 @@ function Settings() {
                 <p className="text-gray-600 mt-1">Manage your access, security, and administrative preferences.</p>
             </header>
 
-            {/* MODIFIED SECTION: Horizontal Tabs and Full-Width Content */}
             <section>
-                {/* Horizontal Navigation Tabs */}
                 <SettingsNav activeSection={activeSection} setActiveSection={setActiveSection} />
 
-                {/* Full-Width Content Area */}
                 <div className="mt-8">
                     {renderContent()}
                 </div>

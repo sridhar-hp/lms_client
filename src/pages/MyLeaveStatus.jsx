@@ -1,35 +1,19 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-// Assume all styles and icons come from a robust design system.
 
-// --- Mock Data ---
 const userData = {
     name: "Aisha Sharma",
     reportingManager: "David Lee",
-    availableDays: 14.5, // Combined total for quick view
+    availableDays: 14.5, 
 };
 
 const leaveSummary = [
-    { type: "Annual Leave", used: 5.5, total: 20, color: "#4F46E5" }, // Indigo
-    { type: "Sick Leave", used: 1.0, total: 10, color: "#10B981" },  // Green
-    { type: "Compensatory Off", used: 0, total: 5, color: "#F59E0B" }, // Amber
+    { type: "Annual Leave", used: 5.5, total: 20, color: "#4F46E5" }, 
+    { type: "Sick Leave", used: 1.0, total: 10, color: "#10B981" },  
+    { type: "Compensatory Off", used: 0, total: 5, color: "#F59E0B" }, 
 ];
 
-// const allLeaveRequests = [
-//     { id: 101, type: "Annual Leave", dates: "2026-01-15 - 2026-01-17", days: 3, status: "Pending", requestedOn: "2025-11-20", reason: "Vacation" },
-//     { id: 102, type: "Sick Leave", dates: "2025-12-01", days: 1, status: "Approved", requestedOn: "2025-11-15", reason: "Fever" },
-//     { id: 103, type: "Annual Leave", dates: "2025-10-25 - 2025-10-27", days: 3, status: "Rejected", requestedOn: "2025-10-20", reason: "Conflicting deadline" },
-//     { id: 104, type: "Sick Leave", dates: "2025-09-05", days: 1, status: "Approved", requestedOn: "2025-08-30", reason: "N/A" },
-//     { id: 105, type: "Annual Leave", dates: "2025-08-01", days: 1, status: "Rejected", requestedOn: "2025-07-25", reason: "Too many team members out" }, // Second rejected item
-// ];
-
-// Calculate the rejected count based on mock data
-// const rejectedCount = allLeaveRequests.filter(req => req.status === 'Rejected').length;
-// --- End Mock Data ---
-
-
-// Helper: Renders the visually distinct status pill
 const StatusPill = ({ status }) => {
     let style = "";
     switch (status) {
@@ -57,18 +41,11 @@ function MyLeaveStatus() {
     const [leaves, setLeaves] = useState([]);
     const [selectedLeave, setSelectedLeave] = useState(null);
 
-    // Filter logic for the table
-    // const filteredRequests = allLeaveRequests.filter(request =>
-    //     filter === 'all' ? true : request.status.toLowerCase() === filter
-    // );
-
     useEffect(() => {
         const Lstatus = async () => {
             const res = await axios.get(`http://localhost:5000/api/status/${userId}`);
             setLeaves(res.data.leaves);
-            if (res.data.success) {
-                // alert("your leave history");
-            }
+            
         }
         Lstatus();
 
@@ -82,7 +59,6 @@ function MyLeaveStatus() {
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
 
-            {/* --- 1. Header & Call-to-Action --- */}
             <header className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
                 <div>
                     <h1 className="text-4xl font-extrabold text-gray-900">👋 Welcome back, {userData.name}</h1>
@@ -95,24 +71,20 @@ function MyLeaveStatus() {
                 </button>
             </header>
 
-            {/* --- 2. Leave Balance Summary Cards & Rejected Count --- */}
             <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
 
-                {/* REJECTED COUNT CARD (New Focus Metric) */}
                 <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition duration-300 cursor-pointer"
-                    onClick={() => setFilter('rejected')} // Clickable to filter table
+                    onClick={() => setFilter('rejected')} 
                 >
                     <p className="text-sm font-semibold text-red-600 uppercase tracking-wider">
                         Rejected Requests
                     </p>
                     <div className="flex items-end justify-between mt-2">
-                        {/* <span className="text-5xl font-extrabold text-red-700">{rejectedCount}</span> */}
                         <span className="text-lg font-medium text-gray-500">View History</span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">Click to view details below.</p>
                 </div>
 
-                {/* Individual Leave Type Cards */}
                 {leaveSummary.map((item, index) => (
                     <div key={index} className="bg-white p-6 rounded-xl shadow-lg border-t-4" style={{ borderColor: item.color }}>
                         <p className="text-lg font-semibold text-gray-800">{item.type}</p>
@@ -131,11 +103,9 @@ function MyLeaveStatus() {
                 ))}
             </section>
 
-            {/* --- 3. Detailed Request Table with Filters --- */}
             <section>
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-2xl font-bold text-gray-800">📋 Request History</h2>
-                    {/* Filter Tabs */}
                     <div className="inline-flex rounded-md shadow-sm" role="group">
                         {['all', 'pending', 'approved', 'rejected'].map(status => (
                             <button
@@ -156,7 +126,6 @@ function MyLeaveStatus() {
                     </div>
                 </div>
 
-                {/* Table Structure */}
                 <div className="bg-white shadow-xl rounded-xl overflow-hidden border border-gray-200">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
@@ -176,15 +145,11 @@ function MyLeaveStatus() {
                                     <td className="px-6 py-4 text-sm text-gray-600">#{request.leaveType}</td>
                                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{request.startDate} to {request.endDate}<br /> ({request.duration}days)</td>
                                     <td className="px-6 py-4 text-sm text-gray-700">{new Date(request.appliedDate).toLocaleDateString()}</td>
-                                    {/* <td className="px-6 py-4 text-sm text-gray-500">{request.status}</td> */}
                                     <td className="px-6 py-4">
                                         <StatusPill status={request.status} />
                                     </td>
                                     <td className="px-6 py-4 text-right text-sm font-medium space-x-2">
                                         <button className="text-gray-500 hover:text-indigo-600" onClick={() => setSelectedLeave(request)}>Details</button>
-                                        {/* {request.status === 'Pending' && ( */}
-                                            {/* // <button className="text-red-500 hover:text-red-700">Cancel</button>
-                                        // )} */}
                                     </td>
                                 </tr>
                             ))

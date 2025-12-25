@@ -1,14 +1,10 @@
-// src/pages/OperationalResourceConsole_V4.jsx (MAXIMUM ABSENCE FOCUS)
 import React from 'react';
 
-// --- Dashboard-Specific Constants (Operational/Teal Accent) ---
-const BACKGROUND_COLOR = 'bg-gray-50'; 
+const BACKGROUND_COLOR = 'bg-gray-50';
 const CARD_BG = 'bg-white';
-const PRIMARY_ACCENT = 'teal-600'; // Deep Teal for Professional Focus
+const PRIMARY_ACCENT = 'teal-600'; 
 
-// --- Data Structures ---
 const REAL_TIME_STATUS_KPIS = [
-    // Real-Time Attendance/Applications (Kept as requested)
     { title: "Students Present Today", value: "8,125", trend: "96% of Active Roster", color: `text-${PRIMARY_ACCENT}`, icon: "✔️" },
     { title: "Students Absent Today", value: "325", trend: "15 Unverified Absences", color: "text-red-600", icon: "❌" },
     { title: "Faculty/Staff Present", value: "98%", trend: "4 Unscheduled Absences", color: `text-${PRIMARY_ACCENT}`, icon: "👥" },
@@ -16,7 +12,6 @@ const REAL_TIME_STATUS_KPIS = [
 ];
 
 const UNVERIFIED_ABSENCE_LOG = [
-    // Expanded data for the new large panel
     { id: '10034', student: 'J. Davis', course: 'MKTG 301', time: '9:00 AM', status: 'Unverified', action: 'Notify Advisor' },
     { id: '10055', student: 'A. Chen', course: 'ENGL 101', time: '10:30 AM', status: 'Unverified', action: 'Contact Student' },
     { id: '10112', student: 'R. Bell', course: 'CSCI 205', time: '11:00 AM', status: 'Unverified', action: 'Notify Advisor' },
@@ -27,12 +22,6 @@ const UNVERIFIED_ABSENCE_LOG = [
     { id: '10520', student: 'T. Jones', course: 'CSCI 205', time: '11:00 AM', status: 'Unverified', action: 'Notify Advisor' },
 ];
 
-
-// --- Dashboard Helper Components ---
-
-/**
- * KPI Card: Clean, high-contrast, border-focused (Unchanged).
- */
 const KPICard = ({ title, value, trend, color, icon }) => (
     <div className={`${CARD_BG} p-6 rounded-lg shadow-sm border-t-4 border-gray-200 transition duration-300 hover:border-t-4 hover:border-${PRIMARY_ACCENT}`}>
         <div className="flex justify-between items-start">
@@ -42,21 +31,16 @@ const KPICard = ({ title, value, trend, color, icon }) => (
             </div>
             <span className={`text-2xl p-2 rounded-full bg-gray-100 ${color}`}>{icon}</span>
         </div>
-        
+
         <p className={`text-xs font-semibold text-gray-600 mt-3 pt-2 border-t border-gray-100`}>
             {trend}
         </p>
     </div>
 );
 
-
-/**
- * NEW Panel: Expanded Unverified Student Absences Log (FULL WIDTH)
- */
 const ExpandedAbsenceLog = ({ data }) => {
-    // Determine the urgency level based on the count in the KPI bar (15)
-    const criticalCount = 15; 
-    
+    const criticalCount = 15;
+
     return (
         <div className={`${CARD_BG} p-8 rounded-lg shadow-xl border-t-8 border-red-500`}>
             <div className="flex justify-between items-center mb-6">
@@ -67,7 +51,7 @@ const ExpandedAbsenceLog = ({ data }) => {
                     <span className="mr-2">✉️</span> Send Bulk Notifications
                 </button>
             </div>
-            
+
             <div className="overflow-x-auto border border-gray-200 rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-red-50">
@@ -107,13 +91,10 @@ const ExpandedAbsenceLog = ({ data }) => {
     );
 };
 
-
-// --- Dashboard Page Component ---
 export default function OperationalResourceConsole() {
     return (
         <main className={`p-8 md:p-12 flex-grow ${BACKGROUND_COLOR} min-h-screen`}>
-            
-            {/* Header and Call to Action */}
+
             <header className="flex justify-between items-center mb-10 pb-4 border-b-4 border-gray-300">
                 <h1 className={`text-4xl font-extrabold text-${PRIMARY_ACCENT}`}>Operational Resource Console</h1>
                 <button className={`bg-${PRIMARY_ACCENT} hover:bg-teal-700 text-white font-semibold py-2.5 px-6 rounded-md shadow-lg transition duration-300`}>
@@ -121,16 +102,14 @@ export default function OperationalResourceConsole() {
                 </button>
             </header>
 
-            {/* Real-Time Status KPI Grid */}
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 {REAL_TIME_STATUS_KPIS.map((kpi, index) => (
                     <KPICard key={index} {...kpi} />
                 ))}
             </section>
-            
+
             <hr className="border-gray-300" />
 
-            {/* Main Content Section - SINGLE EXPANDED PANEL */}
             <section className="mt-8">
                 <ExpandedAbsenceLog data={UNVERIFIED_ABSENCE_LOG} />
             </section>

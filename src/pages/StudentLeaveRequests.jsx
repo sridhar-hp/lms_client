@@ -19,13 +19,12 @@ function formatDate(d) {
 const teamMetrics = {
     teamSize: 15,
     onLeaveToday: 2,
-    criticalCoverage: 80 // Percentage of critical roles currently covered
+    criticalCoverage: 80 
 };
 
-// --- Sub-Component: Employee Context Panel (Enhanced) ---
 const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const isLowBalance = request.balance - request.days < 0;
-    // const [rejectionReason, setRejectionReason] = useState([]);
+  
 
     const handlerejection = async(id) => {
         console.log("Reject Button Clicked, ID:", id);
@@ -72,19 +71,16 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
                 </div>
             </div>
 
-            {/* D. Action Area */}
             <div className="flex-grow space-y-4 pt-4 border-t border-gray-100 mt-auto">
                 <div className="flex space-x-4">
                     <button
                         onClick={()=> handleaccepting(request._id)}
-                        // disabled={actionPending}
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >
                         Approve
                     </button>
                     <button
                         onClick={() => handlerejection(request._id)}
-                        // disabled={actionPending || !rejectionReason}
                         className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >
                         Reject
@@ -97,15 +93,12 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
         </div>
     );
 };
-// --- End Sub-Component ---
 
 function StudentLeaveRequests() {
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [leaveRequest, setLeaveRequest] = useState([])// state na [] vanum
     const [actionPending, setActionPending] = useState(false);
     const [ids, setIds] = useState();
-
-
 
     useEffect(() => {
         const request = async () => {
@@ -117,17 +110,14 @@ function StudentLeaveRequests() {
     }, []);
 
     console.log(leaveRequest)
-    // --- Core Action Handler ---
     const handleAction = (id, action, reason = null) => {
-        if (action === 'Rejected' && !reason) return; // Enforce audit compliance
-
+        if (action === 'Rejected' && !reason) return; 
         setActionPending(true);
 
-        // Simulating API delay
         setTimeout(() => {
             console.log(`Executing ${action} for ID: ${id}. Reason: ${reason || 'N/A'}`);
 
-            // Remove the processed item
+            
             setLeaveRequest(prev => prev.filter(req => req.id !== id));
 
             const nextReq = leaveRequest.find(req => req.id !== id) || null;
@@ -141,13 +131,11 @@ function StudentLeaveRequests() {
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
 
-            {/* --- 1. Sticky Header with Metrics & Navigation --- */}
             <header className="sticky top-0 z-10 bg-white shadow-md p-4 flex justify-between items-center border-b border-gray-200">
                 <h1 className="text-2xl font-extrabold text-gray-800">Leave Approval Console</h1>
                 <div className="flex items-center space-x-6 text-sm">
                     <div className="text-center">
                         <p className="font-semibold text-gray-600">Pending Requests</p>
-                        {/* <span className="text-2xl font-bold text-red-600">{requests.length}</span> */}
                     </div>
                     <div className="text-center">
                         <p className="font-semibold text-gray-600">Team Coverage</p>
@@ -159,10 +147,8 @@ function StudentLeaveRequests() {
                 </div>
             </header>
 
-            {/* --- 2. Master-Detail View --- */}
             <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                {/* A. Master List (Left/2/3rds Column) */}
                 <div className="lg:col-span-2 space-y-4">
                     <h2 className="text-xl font-bold text-gray-700">Requests Awaiting Review</h2>
 
@@ -185,7 +171,6 @@ function StudentLeaveRequests() {
                                         <div className="flex justify-between items-center">
                                             <div className="flex flex-col">
                                                 <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.userId})
-                                                    {/* <span className="text-sm font-normal text-gray-500 ml-2">({request.dept})</span> */}
                                                 </span>
                                                 <span className="text-sm text-gray-600">{request.leaveType}: {formatDate(request.startDate)}  to  {formatDate(request.endDate)}  ({request.duration}days)</span>
                                             </div>
@@ -203,9 +188,8 @@ function StudentLeaveRequests() {
                     )}
                 </div>
 
-                {/* B. Detail & Action Panel (Right/1/3rd Column) */}
                 <div className="lg:col-span-1">
-                    <div className="sticky top-24"> {/* Makes the panel scroll independently */}
+                    <div className="sticky top-24"> 
                         {selectedRequest ? (
                             <EmployeeContextPanel
                                 request={selectedRequest}

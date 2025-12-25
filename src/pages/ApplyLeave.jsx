@@ -2,10 +2,6 @@ import axios from "axios";
 import React, { useState, useMemo, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-// --- Mock Data & Configuration ---
-
-// --- End Mock Data ---
-
 const calculateDays = (start, end) => {
     if (!start || !end) return 0;
 
@@ -18,8 +14,7 @@ const calculateDays = (start, end) => {
     return diffDays > 0 ? diffDays : 0;
 };
 
-// Helper function: Calculates duration excluding weekends/holidays (Simplified)
-const calculateWorkingDays = (start, end) => {//=
+const calculateWorkingDays = (start, end) => {
     if (!start || !end) return 0;
     const startDT = new Date(start);
     const endDT = new Date(end);
@@ -32,7 +27,7 @@ const calculateWorkingDays = (start, end) => {//=
 function ApplyLeave() {
     const [formData, setFormData] = useState({
         name: "",
-        leaveType: "",   // ✅ ADD THIS
+        leaveType: "",   
         startDate: "",
         endDate: "",
         leaveReason: "",
@@ -70,15 +65,9 @@ function ApplyLeave() {
 
 
     useEffect(() => {
-        console.log("User ID:", userId);  // logs once
+        console.log("User ID:", userId);  
     }, []);
-    // console.log("User ID:", userId);
-    // Calculate the active balance for the selected leave type
-    // const selectedBalance = useMemo(() => {
-    //     // return initialLeaveBalances.find(item => item.type === formData.leaveType);
-    // }, [formData.leaveType]);
 
-    // --- Dynamic Form Logic ---
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => {
@@ -93,18 +82,6 @@ function ApplyLeave() {
         });
     };
 
-    //     useEffect(() => {
-    //   if (!userId) return;
-    // const la = async()=>{
-
-    //   const res = await axios.get(`http://localhost:5000/api/leave-balance/${userId}`)
-
-    //       if (res.data.success) {
-    //         setLeaveBalance(res.data.leaveBalance);
-    //       }
-    // }
-    //     la();
-    // }, [userId]);
     useEffect(() => {
         if (!userId) return;
 
@@ -133,24 +110,18 @@ function ApplyLeave() {
         setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
     };
 
-    // --- Validation and Submission ---
-    // const isBalanceExceeded = duration > selectedBalance?.balance && selectedBalance.balance !== Infinity;
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
 
-    // Added !formData.name to validation check
-    //const isFormInvalid = !formData.name || duration === 0 || !formData.leaveReason || isBalanceExceeded;
+    //     if (isFormInvalid) {
+    //         setSubmissionStatus({ type: 'error', message: 'Please ensure all required fields are filled and balance is not exceeded.' });
+    //         return;
+    //     }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if (isFormInvalid) {
-            setSubmissionStatus({ type: 'error', message: 'Please ensure all required fields are filled and balance is not exceeded.' });
-            return;
-        }
-
-        // --- API Submission Simulation ---
-        setSubmissionStatus({ type: 'success', message: 'Your request has been successfully submitted for approval.' });
-        console.log("Submitting Leave:", { ...formData, duration });
-    };
+    //     // --- API Submission Simulation ---
+    //     setSubmissionStatus({ type: 'success', message: 'Your request has been successfully submitted for approval.' });
+    //     console.log("Submitting Leave:", { ...formData, duration });
+    // };
 
 
     const handleapply = async (e) => {
@@ -185,7 +156,6 @@ function ApplyLeave() {
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
 
-            {/* --- 1. Header & Context --- */}
             <header className="mb-8 pb-4 border-b border-indigo-200">
                 <h1 className="text-3xl font-extrabold text-indigo-700">🚀 Apply for Leave</h1>
                 <p className="text-gray-500 mt-1">
@@ -193,7 +163,6 @@ function ApplyLeave() {
                 </p>
             </header>
 
-            {/* --- 2. Submission Feedback --- */}
             {submissionStatus && (
                 <div
                     className={`p-4 mb-6 rounded-lg font-medium ${submissionStatus.type === 'success' ? 'bg-green-100 text-green-800 border-green-400' : 'bg-red-100 text-red-800 border-red-400'} border`}
@@ -204,43 +173,37 @@ function ApplyLeave() {
 
             <form className="space-y-8">
 
-                {/* --- Step 1: Balances Overview (Contextual Cards) --- */}
-                
-                            <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
-                                <h2 className="text-xl font-bold text-gray-800 mb-4">
-                                    Current Leave Balances
-                                </h2>
+                <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
+                    <h2 className="text-xl font-bold text-gray-800 mb-4">
+                        Current Leave Balances
+                    </h2>
 
-                                {loadingBalance ? (
-                                    <p className="text-gray-500">Loading leave balances...</p>
-                                ) : (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                                        {Object.entries(leaveBalance).map(([type, days]) => (
-                                            <div
-                                                key={type}
-                                                className="p-5 bg-gray-50 border rounded-xl text-center shadow-sm hover:shadow-md transition"
-                                            >
-                                                <p className="text-sm font-semibold text-gray-600">{type}</p>
-                                                <p className="text-3xl font-extrabold text-indigo-600 my-2">
-                                                    {days}
-                                                </p>
-                                                <p className="text-xs text-gray-500">Days Available</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </section>
+                    {loadingBalance ? (
+                        <p className="text-gray-500">Loading leave balances...</p>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                            {Object.entries(leaveBalance).map(([type, days]) => (
+                                <div
+                                    key={type}
+                                    className="p-5 bg-gray-50 border rounded-xl text-center shadow-sm hover:shadow-md transition"
+                                >
+                                    <p className="text-sm font-semibold text-gray-600">{type}</p>
+                                    <p className="text-3xl font-extrabold text-indigo-600 my-2">
+                                        {days}
+                                    </p>
+                                    <p className="text-xs text-gray-500">Days Available</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </section>
 
 
-
-                {/* --- Step 2: Request Details and Logic --- */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                    {/* A. Input Fields (Left/Center Columns) */}
                     <div className="lg:col-span-2 bg-white p-8 rounded-xl shadow-lg border border-gray-200 space-y-6">
                         <h2 className="text-xl font-bold text-gray-800">Request Details</h2>
 
-                        {/* --- NEW NAME INPUT FIELD --- */}
                         <div>
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700">1. Full Name <span className="text-red-500">*</span></label>
                             <input
@@ -255,7 +218,6 @@ function ApplyLeave() {
                             />
                         </div>
 
-                        {/* Leave Type */}
                         <div>
                             <label htmlFor="leaveType" className="block text-sm font-medium text-gray-700">2. Leave Type <span className="text-red-500">*</span></label>
                             <select
@@ -278,7 +240,6 @@ function ApplyLeave() {
 
                         </div>
 
-                        {/* Dates Grid */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label htmlFor="startDate" className="block text-sm font-medium text-gray-700">3. Start Date <span className="text-red-500">*</span></label>
@@ -308,7 +269,6 @@ function ApplyLeave() {
                             </div>
                         </div>
 
-                        {/* Reason and Attachment */}
                         <div>
                             <label htmlFor="leaveReason" className="block text-sm font-medium text-gray-700">5. Reason for Leave <span className="text-red-500">*</span></label>
                             <textarea
@@ -336,10 +296,8 @@ function ApplyLeave() {
 
                     </div>
 
-                    {/* B. Summary & Action Panel (Right Column) */}
                     <div className="lg:col-span-1 space-y-6">
 
-                        {/* Duration & Manager Details */}
                         <div className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-600">
                             <p className="text-sm font-medium text-gray-600">Calculated Duration:</p>
                             <span className="text-4xl font-extrabold text-gray-900">{duration}</span>
@@ -347,17 +305,6 @@ function ApplyLeave() {
                             <p className="text-xs text-gray-500 mt-3">Approval Manager: **David Lee**</p>
                         </div>
 
-                        {/* Financial/Balance Warning */}
-                        {/* {isBalanceExceeded && (
-                            <div className="p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-md font-medium">
-                                ⚠️ **Balance Overdrawn!**
-                                <p className="text-sm mt-1">
-                                    This request exceeds your **{selectedBalance.type}** balance. It may automatically be converted to Unpaid Leave (LOP) or be rejected.
-                                </p>
-                            </div>
-                        )} */}
-
-                        {/* Submission */}
                         <div className="pt-4 border-t border-gray-200">
                             <button
                                 type="button"

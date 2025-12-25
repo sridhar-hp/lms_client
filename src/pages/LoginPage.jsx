@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 
-// --- 1. ICON COMPONENTS (Inline SVGs for professionalism without external libraries) ---
 const UserIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
 );
@@ -19,12 +18,9 @@ const BriefcaseIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
 );
 
-
-// --- 2. UPDATED INPUT COMPONENT ---
 const AuthInput = ({ type = 'text', placeholder, name, icon: Icon, value, onChange }) => (
 
     <div className="w-full mb-5 relative group">
-        {/* Icon Container - Absolute positioned inside the input wrapper */}
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-500 transition-colors duration-200">
             {Icon && <Icon />}
         </div>
@@ -35,16 +31,13 @@ const AuthInput = ({ type = 'text', placeholder, name, icon: Icon, value, onChan
             value={value}
             onChange={onChange}
             autoComplete="current-password"
-            // Added pl-10 (padding-left) to make room for the icon
             className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all duration-200 text-gray-700 placeholder-gray-400 shadow-sm outline-none"
             required
         />
     </div>
 );
 
-// --- 3. LOGIN FORM (With Icons) ---
 const LogInForm = ({ handlelogin, id, setId, pass, setPass }) => (
-
 
     <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handlelogin}>
         <h1 className="text-3xl font-extrabold mb-2 text-gray-800">Welcome Back</h1>
@@ -88,7 +81,7 @@ const SignUpForm = () => {
     const handleinput = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:5000/api/register",{
+            const res = await axios.post("http://localhost:5000/api/register", {
                 name: newaccount.name,
                 Id: newaccount.Id,
                 email: newaccount.email,
@@ -107,7 +100,7 @@ const SignUpForm = () => {
         catch (err) {
             console.log(err);
         }
-         console.log("rolle of the user: ",role);
+        console.log("rolle of the user: ", role);
 
         console.log("this is new account ", newaccount);
 
@@ -124,10 +117,7 @@ const SignUpForm = () => {
             <h1 className="text-3xl font-extrabold mb-2 text-gray-800">Create Account</h1>
             <p className="text-gray-500 mb-6 text-sm">Join us and start your journey.</p>
 
-            {/* --- PROFESSIONAL SEGMENTED TOGGLE CONTROL --- */}
             <div className="flex p-1 mb-6 bg-gray-100 rounded-xl relative shadow-inner">
-                {/* Sliding Background Pill (Optional advanced CSS, but here we use conditional classes for simplicity) */}
-
                 <button
                     type="button"
                     onClick={() => setRole('student')}
@@ -153,9 +143,7 @@ const SignUpForm = () => {
                 </button>
             </div>
 
-            {/* --- INPUTS --- */}
             <AuthInput name="name" placeholder="Full Name" icon={UserIcon} type='text' onChange={handleChange} />
-
 
             <div className="animate-fade-in-up">
                 {role === 'student' ? (
@@ -178,14 +166,11 @@ const SignUpForm = () => {
     );
 };
 
-
 export default function LoginPage() {
     const [isLogInActive, setIsLogInActive] = useState(true);
     const [id, setId] = useState("");
     const [pass, setPass] = useState("");
     const navigate = useNavigate();
-
-
     const swapToSignUp = () => setIsLogInActive(false);
     const swapToLogIn = () => setIsLogInActive(true);
 
@@ -194,7 +179,7 @@ export default function LoginPage() {
 
         try {
             const res = await axios.post("http://localhost:5000/api/login", {
-                Id:id,
+                Id: id,
                 password: pass
             });
             const Role = res.data.Role;
@@ -220,7 +205,6 @@ export default function LoginPage() {
                 navigate("/error page");
             }
 
-
         } catch (error) {
             console.error(error);
             alert("Login Failed: " + error.response.data.message);
@@ -234,13 +218,11 @@ export default function LoginPage() {
         <div
             className="min-h-screen flex items-center justify-center p-4 font-sans"
             style={{
-                // A cleaner, more subtle corporate gradient
                 background: 'linear-gradient(135deg, #f3f4f6 0%, #e0e7ff 100%)'
             }}
         >
             <div className="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-5xl min-h-[640px] flex relative">
 
-                {/* Log In Container */}
                 <div className={`w-1/2 p-10 flex justify-center items-center absolute top-0 left-0 h-full transition-all duration-700 ease-in-out ${isLogInActive ? 'z-20 opacity-100 transform translate-x-0' : 'z-10 opacity-0 transform translate-x-10'}`}>
                     <LogInForm
                         handlelogin={handleLogin}
@@ -252,16 +234,13 @@ export default function LoginPage() {
 
                 </div>
 
-                {/* Sign Up Container */}
                 <div className={`w-1/2 p-10 flex justify-center items-center absolute top-0 right-0 h-full transition-all duration-700 ease-in-out ${!isLogInActive ? 'z-20 opacity-100 transform translate-x-0' : 'z-10 opacity-0 transform -translate-x-10'}`}>
                     <SignUpForm />
                 </div>
 
-                {/* Overlay Panel */}
                 <div className={`absolute top-0 right-0 w-1/2 h-full overflow-hidden transition-transform duration-700 ease-in-out z-30 ${overlayTransform}`}>
                     <div className={`bg-gradient-to-br from-indigo-600 to-purple-700 text-white h-full flex transition-transform duration-700 ease-in-out w-[200%] ${contentTransform}`}>
 
-                        {/* Overlay Left */}
                         <div className="w-1/2 flex flex-col justify-center items-center p-12 text-center">
                             <h2 className="text-4xl font-bold mb-4">Hello, Friend!</h2>
                             <p className="text-lg mb-8 opacity-90 font-light">Enter your personal details and start journey with us</p>
@@ -273,7 +252,6 @@ export default function LoginPage() {
                             </button>
                         </div>
 
-                        {/* Overlay Right */}
                         <div className="w-1/2 flex flex-col justify-center items-center p-12 text-center">
                             <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
                             <p className="text-lg mb-8 opacity-90 font-light">To keep connected with us please login with your personal info</p>
@@ -288,7 +266,6 @@ export default function LoginPage() {
                     </div>
                 </div>
 
-                {/* Mobile Toggle (Visible only on small screens) */}
                 <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex z-40 md:hidden bg-white/20 backdrop-blur-md p-1 rounded-full border border-white/30">
                     <button onClick={swapToSignUp} className={`px-4 py-2 text-xs font-bold rounded-full transition ${!isLogInActive ? 'bg-white text-indigo-600 shadow' : 'text-indigo-800'}`}>Sign Up</button>
                     <button onClick={swapToLogIn} className={`px-4 py-2 text-xs font-bold rounded-full transition ${isLogInActive ? 'bg-white text-indigo-600 shadow' : 'text-indigo-800'}`}>Sign In</button>
