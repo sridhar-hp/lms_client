@@ -192,24 +192,23 @@ const DataRegistryConsole = () => {
         item.id.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    const handleDelete = (id) => {
-        if (window.confirm(`Are you sure you want to delete ${id}? This action cannot be undone.`)) {
-            setData(data.filter(item => item.id !== id));
-            setEditId(null);
+    const handleDelete = async(id) => {
+        try{
+            const res = await axios.put(`http://localhost:5000/api/dusers/${id}`);
+
+            if(res.data.success) {
+                alert("user deleted successfully");
+            }
+        }
+        catch(err)
+        {
+            console.log(err);
         }
     };
 
-    // const handleSave = (updatedItem) => {
-    //     setUsers(prev =>
-    //         prev.map(u => u._id === updatedItem._id ? updatedItem : u)
-    //     );
-    //     setEditId(null);
-    // };
-
-
-    const columns = dataType === 'student'
-        ? ['ID', 'Name', 'Email', 'Phone', 'Major']
-        : ['ID', 'Name', 'Email', 'Phone', 'Department'];
+    // const columns = dataType === 'student'
+    //     ? ['ID', 'Name', 'Email', 'Phone', 'Major']
+    //     : ['ID', 'Name', 'Email', 'Phone', 'Department'];
 
 
     const handleSave = async (updatedItem) => {

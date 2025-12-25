@@ -153,36 +153,6 @@ function ApplyLeave() {
     };
 
 
-    //handle leave apply
-    // const handleapply = async (e) => {
-    //     e.preventDefault();
-    //     try {
-    //         const res = await axios.post("http://localhost:5000/api/sapply", {
-    //             userId: userId,
-    //             name: formData.name,
-    //             leaveType: formData.leaveType,
-    //             startDate: formData.startDate,
-    //             endDate: formData.endDate,
-    //             leaveReason: formData.leaveReason,
-    //             duration: duration,
-
-    //         });
-    //         // const ans = res.data.message;
-    //         if (res.data.success) {
-    //             alert("applyed successfully");
-    //                 const balanceRes = await axios.get(
-    //     `http://localhost:5000/api/leave-balance/${userId}`
-    //   );
-    //         }
-
-    //   setLeaveBalance(balanceRes.data.leaveBalance);
-
-    //     }
-
-    //     catch (err) {
-    //         console.log(err);
-    //     }
-    // }
     const handleapply = async (e) => {
         e.preventDefault();
 

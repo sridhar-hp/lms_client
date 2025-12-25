@@ -206,7 +206,7 @@ export default function LoginPage() {
                 navigate("/dashboard/admin");
             }
             else if (Role == "staff") {
-                navigate("/dashboard/student/applyleave", {
+                navigate("/dashboard/staff/applyleave", {
                     state: { userId: res.data.Id }
                 })
             }
