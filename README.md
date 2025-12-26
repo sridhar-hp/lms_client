@@ -179,7 +179,7 @@ Updated balance shown on next visit
 
 ⚙️ Installation & Setup
 1️⃣ Clone the repository
-git clone https://github.com/your-username/lms.git
+git clone https://github.com/sridhar-hp/lms.git
 
 2️⃣ Backend setup
 cd server
