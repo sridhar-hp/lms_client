@@ -7,10 +7,8 @@ const calculateDays = (start, end) => {
 
     const startDate = new Date(start);
     const endDate = new Date(end);
-
     const diffTime = endDate - startDate;
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-
     return diffDays > 0 ? diffDays : 0;
 };
 
@@ -22,7 +20,6 @@ const calculateWorkingDays = (start, end) => {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
     return diffDays > 0 ? diffDays : 0;
 };
-
 
 function ApplyLeave() {
     const [formData, setFormData] = useState({
@@ -36,7 +33,6 @@ function ApplyLeave() {
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [loadingBalance, setLoadingBalance] = useState(true);
-
     const [duration, setDuration] = useState(0);
     const [leaveBalance, setLeaveBalance] = useState({});
     const location = useLocation();
@@ -59,10 +55,6 @@ function ApplyLeave() {
         !formData.leaveReason ||
         duration === 0 ||
         remainingDays < 0;
-
-
-
-
 
     useEffect(() => {
         console.log("User ID:", userId);  
@@ -104,8 +96,6 @@ function ApplyLeave() {
         fetchBalance();
     }, [userId]);
 
-
-
     const handleFileChange = (e) => {
         setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
     };
@@ -122,7 +112,6 @@ function ApplyLeave() {
     //     setSubmissionStatus({ type: 'success', message: 'Your request has been successfully submitted for approval.' });
     //     console.log("Submitting Leave:", { ...formData, duration });
     // };
-
 
     const handleapply = async (e) => {
         e.preventDefault();
@@ -302,7 +291,7 @@ function ApplyLeave() {
                             <p className="text-sm font-medium text-gray-600">Calculated Duration:</p>
                             <span className="text-4xl font-extrabold text-gray-900">{duration}</span>
                             <span className="text-xl text-gray-500 ml-1">Days</span>
-                            <p className="text-xs text-gray-500 mt-3">Approval Manager: **David Lee**</p>
+                            <p className="text-xs text-gray-500 mt-3">Approval Manager: **Admin**</p>
                         </div>
 
                         <div className="pt-4 border-t border-gray-200">
