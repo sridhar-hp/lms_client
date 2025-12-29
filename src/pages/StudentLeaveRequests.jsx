@@ -3,32 +3,30 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 
 function formatDate(d) {
-  if (!d) return "-";
+    if (!d) return "-";
 
-  const dt = new Date(d);
-  if (isNaN(dt.getTime())) return "-";
+    const dt = new Date(d);
+    if (isNaN(dt.getTime())) return "-";
 
-  const DD = String(dt.getDate()).padStart(2, "0");
-  const MM = String(dt.getMonth() + 1).padStart(2, "0");
-  const YYYY = dt.getFullYear();
+    const DD = String(dt.getDate()).padStart(2, "0");
+    const MM = String(dt.getMonth() + 1).padStart(2, "0");
+    const YYYY = dt.getFullYear();
 
-  return `${DD}-${MM}-${YYYY}`;
+    return `${DD}-${MM}-${YYYY}`;
 }
-
 
 const teamMetrics = {
     teamSize: 15,
     onLeaveToday: 2,
-    criticalCoverage: 80 
+    criticalCoverage: 80
 };
 
 const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const isLowBalance = request.balance - request.days < 0;
-  
 
-    const handlerejection = async(id) => {
+    const handlerejection = async (id) => {
         console.log("Reject Button Clicked, ID:", id);
-        
+
         try {
             const res = await axios.put(`http://localhost:5000/api/rejection/${id}`);
             if (res.data.success) {
@@ -41,18 +39,16 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
         }
     };
 
-    const handleaccepting = async(id)=>{
-        
-        try{
+    const handleaccepting = async (id) => {
+
+        try {
             const res = await axios.put(`http://localhost:5000/api/accept/${id}`);
-            if(res.data.success)
-            {
+            if (res.data.success) {
                 alert("accepted successfully ✅");
                 window.location.reload();
             }
         }
-        catch(err)
-        {
+        catch (err) {
             console.log(err);
         }
     };
@@ -74,7 +70,7 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
             <div className="flex-grow space-y-4 pt-4 border-t border-gray-100 mt-auto">
                 <div className="flex space-x-4">
                     <button
-                        onClick={()=> handleaccepting(request._id)}
+                        onClick={() => handleaccepting(request._id)}
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow transition duration-200 disabled:opacity-50"
                     >
                         Approve
@@ -111,13 +107,13 @@ function StudentLeaveRequests() {
 
     console.log(leaveRequest)
     const handleAction = (id, action, reason = null) => {
-        if (action === 'Rejected' && !reason) return; 
+        if (action === 'Rejected' && !reason) return;
         setActionPending(true);
 
         setTimeout(() => {
             console.log(`Executing ${action} for ID: ${id}. Reason: ${reason || 'N/A'}`);
 
-            
+
             setLeaveRequest(prev => prev.filter(req => req.id !== id));
 
             const nextReq = leaveRequest.find(req => req.id !== id) || null;
@@ -127,6 +123,11 @@ function StudentLeaveRequests() {
             setActionPending(false);
         }, 500);
     };
+
+    const pendingRequests = leaveRequest.filter(
+        req => req.status === "Pending"
+    );
+
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
@@ -152,44 +153,46 @@ function StudentLeaveRequests() {
                 <div className="lg:col-span-2 space-y-4">
                     <h2 className="text-xl font-bold text-gray-700">Requests Awaiting Review</h2>
 
-                    {leaveRequest.length === 0 ? (
+                    {pendingRequests.length === 0 ? (
                         <div className="bg-white p-12 rounded-xl text-center text-gray-500 shadow-lg">
                             🎉 All clear! No requests pending approval.
                         </div>
                     ) : (
                         <div className="divide-y divide-gray-200 bg-white shadow-lg rounded-xl">
-                            {leaveRequest.map((request) => {
-                                const isSelected = selectedRequest && selectedRequest.id === request.id;
-                                const priorityClass = request.conflictReason && request.conflictReason !== "N/A" ? 'border-l-4 border-yellow-500' : 'border-l-4 border-indigo-200';
+                            {pendingRequests
+                                .filter(req => req.status === "Pending")
+                                .map((request) => {
+                                    const isSelected = selectedRequest && selectedRequest.id === request.id;
+                                    const priorityClass = request.conflictReason && request.conflictReason !== "N/A" ? 'border-l-4 border-yellow-500' : 'border-l-4 border-indigo-200';
 
-                                return (
-                                    <div
-                                        key={request._id}
-                                        onClick={() => setSelectedRequest(request)}
-                                        className={`p-4 hover:bg-indigo-50/50 cursor-pointer transition duration-150 ${isSelected ? 'bg-indigo-100/75 border-indigo-600' : ''} ${priorityClass}`}
-                                    >
-                                        <div className="flex justify-between items-center">
-                                            <div className="flex flex-col">
-                                                <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.userId})
-                                                </span>
-                                                <span className="text-sm text-gray-600">{request.leaveType}: {formatDate(request.startDate)}  to  {formatDate(request.endDate)}  ({request.duration}days)</span>
-                                            </div>
-                                            <div className="text-right">
-                                                {request.conflictReason && request.conflictReason !== "N/A" && (
-                                                    <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full font-bold">CONFLICT</span>
-                                                )}
-                                                <p className="text-xs text-gray-500 mt-1">Requested-On: {formatDate(request.appliedDate)}</p>
+                                    return (
+                                        <div
+                                            key={request._id}
+                                            onClick={() => setSelectedRequest(request)}
+                                            className={`p-4 hover:bg-indigo-50/50 cursor-pointer transition duration-150 ${isSelected ? 'bg-indigo-100/75 border-indigo-600' : ''} ${priorityClass}`}
+                                        >
+                                            <div className="flex justify-between items-center">
+                                                <div className="flex flex-col">
+                                                    <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.userId})
+                                                    </span>
+                                                    <span className="text-sm text-gray-600">{request.leaveType}: {formatDate(request.startDate)}  to  {formatDate(request.endDate)}  ({request.duration}days)</span>
+                                                </div>
+                                                <div className="text-right">
+                                                    {request.conflictReason && request.conflictReason !== "N/A" && (
+                                                        <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full font-bold">CONFLICT</span>
+                                                    )}
+                                                    <p className="text-xs text-gray-500 mt-1">Requested-On: {formatDate(request.appliedDate)}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                );
-                            })}
+                                    );
+                                })}
                         </div>
                     )}
                 </div>
 
                 <div className="lg:col-span-1">
-                    <div className="sticky top-24"> 
+                    <div className="sticky top-24">
                         {selectedRequest ? (
                             <EmployeeContextPanel
                                 request={selectedRequest}
