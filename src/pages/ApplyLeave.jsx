@@ -24,7 +24,7 @@ const calculateWorkingDays = (start, end) => {
 function ApplyLeave() {
     const [formData, setFormData] = useState({
         name: "",
-        leaveType: "",   
+        leaveType: "",
         startDate: "",
         endDate: "",
         leaveReason: "",
@@ -57,7 +57,7 @@ function ApplyLeave() {
         remainingDays < 0;
 
     useEffect(() => {
-        console.log("User ID:", userId);  
+        console.log("User ID:", userId);
     }, []);
 
     const handleChange = (e) => {
