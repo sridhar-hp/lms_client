@@ -61,27 +61,25 @@ function MyLeaveStatus() {
 
             <header className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
                 <div>
-                    <h1 className="text-4xl font-extrabold text-gray-900">👋 Welcome back, {userData.name}</h1>
-                    <p className="text-lg text-gray-500 mt-1">
-                        Your manager: **{userData.reportingManager}** | Available Leave Balance: **{userData.availableDays} Days**
-                    </p>
+                    <h1 className="text-4xl font-extrabold text-gray-900">👋 Welcome back</h1>
+                   
                 </div>
-                <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                {/* <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
                     🚀 Request New Leave
-                </button>
+                </button> */}
             </header>
 
-            <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
+            {/* <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
 
                 <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition duration-300 cursor-pointer"
                     onClick={() => setFilter('rejected')} 
                 >
                     <p className="text-sm font-semibold text-red-600 uppercase tracking-wider">
                         Rejected Requests
-                    </p>
-                    <div className="flex items-end justify-between mt-2">
+                    </p> 
+                     <div className="flex items-end justify-between mt-2">
                         <span className="text-lg font-medium text-gray-500">View History</span>
-                    </div>
+                    </div> 
                     <p className="text-xs text-gray-500 mt-1">Click to view details below.</p>
                 </div>
 
@@ -101,7 +99,7 @@ function MyLeaveStatus() {
                         </div>
                     </div>
                 ))}
-            </section>
+            </section> */}
 
             <section>
                 <div className="flex justify-between items-center mb-4">

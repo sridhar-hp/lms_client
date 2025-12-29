@@ -128,6 +128,17 @@ function StudentLeaveRequests() {
         req => req.status === "Pending"
     );
 
+    useEffect(() => {
+        if (pendingRequests.length === 0) {
+            setSelectedRequest(null);
+        } else if (
+            selectedRequest &&
+            selectedRequest.status !== "Pending"
+        ) {
+            setSelectedRequest(null);
+        }
+    }, [pendingRequests, selectedRequest]);
+
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans">
@@ -159,34 +170,32 @@ function StudentLeaveRequests() {
                         </div>
                     ) : (
                         <div className="divide-y divide-gray-200 bg-white shadow-lg rounded-xl">
-                            {pendingRequests
-                                .filter(req => req.status === "Pending")
-                                .map((request) => {
-                                    const isSelected = selectedRequest && selectedRequest.id === request.id;
-                                    const priorityClass = request.conflictReason && request.conflictReason !== "N/A" ? 'border-l-4 border-yellow-500' : 'border-l-4 border-indigo-200';
+                            {pendingRequests.map((request) => {
+                                const isSelected = selectedRequest && selectedRequest.id === request.id;
+                                const priorityClass = request.conflictReason && request.conflictReason !== "N/A" ? 'border-l-4 border-yellow-500' : 'border-l-4 border-indigo-200';
 
-                                    return (
-                                        <div
-                                            key={request._id}
-                                            onClick={() => setSelectedRequest(request)}
-                                            className={`p-4 hover:bg-indigo-50/50 cursor-pointer transition duration-150 ${isSelected ? 'bg-indigo-100/75 border-indigo-600' : ''} ${priorityClass}`}
-                                        >
-                                            <div className="flex justify-between items-center">
-                                                <div className="flex flex-col">
-                                                    <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.userId})
-                                                    </span>
-                                                    <span className="text-sm text-gray-600">{request.leaveType}: {formatDate(request.startDate)}  to  {formatDate(request.endDate)}  ({request.duration}days)</span>
-                                                </div>
-                                                <div className="text-right">
-                                                    {request.conflictReason && request.conflictReason !== "N/A" && (
-                                                        <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full font-bold">CONFLICT</span>
-                                                    )}
-                                                    <p className="text-xs text-gray-500 mt-1">Requested-On: {formatDate(request.appliedDate)}</p>
-                                                </div>
+                                return (
+                                    <div
+                                        key={request._id}
+                                        onClick={() => setSelectedRequest(request)}
+                                        className={`p-4 hover:bg-indigo-50/50 cursor-pointer transition duration-150 ${isSelected ? 'bg-indigo-100/75 border-indigo-600' : ''} ${priorityClass}`}
+                                    >
+                                        <div className="flex justify-between items-center">
+                                            <div className="flex flex-col">
+                                                <span className="text-lg font-bold text-gray-900">({request.name}- ID : {request.userId})
+                                                </span>
+                                                <span className="text-sm text-gray-600">{request.leaveType}: {formatDate(request.startDate)}  to  {formatDate(request.endDate)}  ({request.duration}days)</span>
+                                            </div>
+                                            <div className="text-right">
+                                                {request.conflictReason && request.conflictReason !== "N/A" && (
+                                                    <span className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full font-bold">CONFLICT</span>
+                                                )}
+                                                <p className="text-xs text-gray-500 mt-1">Requested-On: {formatDate(request.appliedDate)}</p>
                                             </div>
                                         </div>
-                                    );
-                                })}
+                                    </div>
+                                );
+                            })}
                         </div>
                     )}
                 </div>
@@ -201,7 +210,7 @@ function StudentLeaveRequests() {
                             />
                         ) : (
                             <div className="bg-white p-10 rounded-xl shadow-lg text-center text-gray-500">
-                                Click a request on the left to review details and approve/reject.
+                                No requests pending 🎉.
                             </div>
                         )}
                     </div>
