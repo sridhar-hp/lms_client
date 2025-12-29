@@ -5,13 +5,13 @@ import { useParams } from "react-router-dom";
 const userData = {
     name: "Aisha Sharma",
     reportingManager: "David Lee",
-    availableDays: 14.5, 
+    availableDays: 14.5,
 };
 
 const leaveSummary = [
-    { type: "Annual Leave", used: 5.5, total: 20, color: "#4F46E5" }, 
-    { type: "Sick Leave", used: 1.0, total: 10, color: "#10B981" },  
-    { type: "Compensatory Off", used: 0, total: 5, color: "#F59E0B" }, 
+    { type: "Annual Leave", used: 5.5, total: 20, color: "#4F46E5" },
+    { type: "Sick Leave", used: 1.0, total: 10, color: "#10B981" },
+    { type: "Compensatory Off", used: 0, total: 5, color: "#F59E0B" },
 ];
 
 const StatusPill = ({ status }) => {
@@ -45,7 +45,7 @@ function MyLeaveStatus() {
         const Lstatus = async () => {
             const res = await axios.get(`http://localhost:5000/api/status/${userId}`);
             setLeaves(res.data.leaves);
-            
+
         }
         Lstatus();
 
@@ -62,7 +62,7 @@ function MyLeaveStatus() {
             <header className="flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
                 <div>
                     <h1 className="text-4xl font-extrabold text-gray-900">👋 Welcome back</h1>
-                   
+
                 </div>
                 {/* <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
                     🚀 Request New Leave
