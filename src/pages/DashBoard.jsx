@@ -2,7 +2,7 @@ import React from 'react';
 
 const BACKGROUND_COLOR = 'bg-gray-50';
 const CARD_BG = 'bg-white';
-const PRIMARY_ACCENT = 'teal-600'; 
+const PRIMARY_ACCENT = 'teal-600';
 
 const REAL_TIME_STATUS_KPIS = [
     { title: "Students Present Today", value: "8,125", trend: "96% of Active Roster", color: `text-${PRIMARY_ACCENT}`, icon: "✔️" },

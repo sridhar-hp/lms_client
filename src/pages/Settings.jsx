@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 const BACKGROUND_COLOR = 'bg-gray-50';
 const CARD_BG = 'bg-white';
-const PRIMARY_ACCENT = 'teal-600'; 
+const PRIMARY_ACCENT = 'teal-600';
 const DANGER_COLOR = 'red-600';
 
 const INITIAL_STUDENT_DATA = [
@@ -72,7 +72,7 @@ const RegistryRow = ({
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
- 
+
     return (
         <tr className={isEditing ? 'bg-teal-50' : 'hover:bg-gray-50 transition'}>
             <td className="px-6 py-4">{item.Id}</td>
