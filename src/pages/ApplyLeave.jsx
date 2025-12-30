@@ -100,19 +100,6 @@ function ApplyLeave() {
         setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
     };
 
-    // const handleSubmit = (e) => {
-    //     e.preventDefault();
-
-    //     if (isFormInvalid) {
-    //         setSubmissionStatus({ type: 'error', message: 'Please ensure all required fields are filled and balance is not exceeded.' });
-    //         return;
-    //     }
-
-    //     // --- API Submission Simulation ---
-    //     setSubmissionStatus({ type: 'success', message: 'Your request has been successfully submitted for approval.' });
-    //     console.log("Submitting Leave:", { ...formData, duration });
-    // };
-
     const handleapply = async (e) => {
         e.preventDefault();
 
