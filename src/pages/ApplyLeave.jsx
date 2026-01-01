@@ -174,7 +174,6 @@ function ApplyLeave() {
                     )}
                 </section>
 
-
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                     <div className="lg:col-span-2 bg-white p-8 rounded-xl shadow-lg border border-gray-200 space-y-6">
