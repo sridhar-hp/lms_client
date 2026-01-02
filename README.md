@@ -18,41 +18,48 @@ It provides role-based user interfaces for **Students, Staff, and Admin** to int
 - Vite
 
 ## Project Structure
+```
 LMS
 └── lms_client
-├── public
-├── src
-│ ├── api
-│ ├── assets
-│ ├── pages
-│ │ ├── ApplyLeave.jsx
-│ │ ├── Dashboard.jsx
-│ │ ├── DMenuBar.jsx
-│ │ ├── LeaveApply.jsx
-│ │ ├── LoginPage.jsx
-│ │ ├── MyLeaveStatus.jsx
-│ │ ├── NDashboard.jsx
-│ │ ├── Settings.jsx
-│ │ ├── StaffLeaveRequests.jsx
-│ │ └── StudentLeaveRequests.jsx
-│ ├── App.jsx
-│ ├── main.jsx
-│ ├── index.css
-│ └── App.css
-├── tailwind.config.js
-├── vite.config.js
-├── package.json
-└── README.md
+    ├── public
+    ├── src
+    │   ├── api
+    │   ├── assets
+    │   ├── pages
+    │   │   ├── ApplyLeave.jsx
+    │   │   ├── Dashboard.jsx
+    │   │   ├── DMenuBar.jsx
+    │   │   ├── LeaveApply.jsx
+    │   │   ├── LoginPage.jsx
+    │   │   ├── MyLeaveStatus.jsx
+    │   │   ├── NDashboard.jsx
+    │   │   ├── Settings.jsx
+    │   │   ├── StaffLeaveRequests.jsx
+    │   │   └── StudentLeaveRequests.jsx
+    │   ├── App.jsx
+    │   ├── main.jsx
+    │   ├── index.css
+    │   └── App.css
+    ├── tailwind.config.js
+    ├── vite.config.js
+    ├── package.json
+    └── README.md
 
+```
 ## Setup Instructions
 1. Clone the repository
 2. Navigate to `lms_client`
 3. Install dependencies:
+```
+npm install
+```
 4. Start the development server:
-
+```
+npm run dev
+```
 ## API Communication
 - Uses **Axios** to communicate with backend REST APIs
-- Authentication handled via JWT tokens
+- Authentication handled using backend session / role-based logic
 
 ## Author
 Sridhar K  
