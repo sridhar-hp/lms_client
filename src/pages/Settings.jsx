@@ -225,11 +225,11 @@ const DataRegistryConsole = () => {
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3">ID</th>
-                            <th className="px-6 py-3">Name</th>
-                            <th className="px-6 py-3">Email</th>
-                            <th className="px-6 py-3">Role</th>
-                            <th className="px-6 py-3">Actions</th>
+                            <th className="px-6 py-3 text-left font-semibold">ID</th>
+                            <th className="px-6 py-3 text-left font-semibold">Name</th>
+                            <th className="px-6 py-3 text-left font-semibold">Email</th>
+                            <th className="px-6 py-3 text-left font-semibold">Role</th>
+                            <th className="px-6 py-3 text-left font-semibold w-32">Actions</th>
                         </tr>
                     </thead>
 

@@ -12,7 +12,7 @@ const REAL_TIME_STATUS_KPIS = [
 ];
 
 const UNVERIFIED_ABSENCE_LOG = [
-    { id: '10034', student: 'J. Davis', course: 'MKTG 301', time: '9:00 AM', status: 'Unverified', action: 'Notify Advisor' },
+    { id: '10034', student: 'J. David', course: 'MKTG 301', time: '9:00 AM', status: 'Unverified', action: 'Notify Advisor' },
     { id: '10055', student: 'A. Chen', course: 'ENGL 101', time: '10:30 AM', status: 'Unverified', action: 'Contact Student' },
     { id: '10112', student: 'R. Bell', course: 'CSCI 205', time: '11:00 AM', status: 'Unverified', action: 'Notify Advisor' },
     { id: '10298', student: 'L. Khan', course: 'MATH 101', time: '1:00 PM', status: 'Unverified', action: 'Notify Faculty' },

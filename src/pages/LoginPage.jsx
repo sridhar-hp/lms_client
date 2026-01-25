@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useForm } from "react-hook-form";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+
 
 const UserIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -18,7 +20,7 @@ const BriefcaseIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
 );
 
-const AuthInput = ({ type = 'text', placeholder, name, icon: Icon, value, onChange }) => (
+const AuthInput = ({ type = 'text', placeholder, name, icon: Icon, register, rules, error }) => (
 
     <div className="w-full mb-5 relative group">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-500 transition-colors duration-200">
@@ -26,94 +28,100 @@ const AuthInput = ({ type = 'text', placeholder, name, icon: Icon, value, onChan
         </div>
         <input
             type={type}
-            name={name}
             placeholder={placeholder}
-            value={value}
-            onChange={onChange}
-            autoComplete="current-password"
+            {...register(name, rules)}
             className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all duration-200 text-gray-700 placeholder-gray-400 shadow-sm outline-none"
-            required
         />
+        {error && (<p className="text-red-500 text-xs mt-1">{error.message}</p>)}
     </div>
 );
 
-const LogInForm = ({ handlelogin, id, setId, pass, setPass }) => (
+const LogInForm = ({ onLogin }) => {
 
-    <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handlelogin}>
-        <h1 className="text-3xl font-extrabold mb-2 text-gray-800">Welcome Back</h1>
-        <p className="text-gray-500 mb-8 text-sm">Enter your credentials to access your account.</p>
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm();
 
-        <AuthInput
-            name="Id"
-            placeholder="ID"
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            icon={UserIcon}
-        />
+    const onSubmit = async (data) => {
+        await onLogin(data);
+    };
 
-        <AuthInput
-            name="password"
-            type="password"
-            placeholder="Password"
-            icon={LockIcon}
-            value={pass}
-            onChange={e => setPass(e.target.value)}
-        />
 
-        <div className="text-right mb-6">
-            <a href="#" className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold tracking-wide">FORGOT PASSWORD?</a>
-        </div>
+    return (
+        <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handleSubmit(onSubmit)}>
+            <h1 className="text-3xl font-extrabold mb-2 text-gray-800">Welcome Back</h1>
+            <p className="text-gray-500 mb-8 text-sm">Enter your credentials to access your account.</p>
 
-        <button
-            type="submit"
-            className="w-full py-3 bg-indigo-600 text-white font-bold rounded-lg shadow-lg hover:bg-indigo-700 hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5"
-        >
-            LOG IN
-        </button>
-    </form>
-);
+            <AuthInput
+                name="Id"
+                placeholder="ID"
+                icon={UserIcon}
+                register={register}
+                rules={{ required: "Id is required" }}
+                error={errors.Id}
+            />
+
+            <AuthInput
+                name="password"
+                type="password"
+                placeholder="Password"
+                icon={LockIcon}
+                register={register}
+                rules={{
+                    required: "password is required",
+                    minLength: { value: 6, message: "Min 6 Characters" }
+                }}
+                error={errors.password}
+            />
+
+            <div className="text-right mb-6">
+                <a href="#" className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold tracking-wide">FORGOT PASSWORD?</a>
+            </div>
+
+            <button
+                type="submit"
+                className="w-full py-3 bg-indigo-600 text-white font-bold rounded-lg shadow-lg hover:bg-indigo-700 hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5"
+            >
+                LOG IN
+            </button>
+        </form>
+    );
+}
 
 const SignUpForm = () => {
     const [role, setRole] = useState('student');
-    const [newaccount, setNewaccount] = useState();
 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm();
 
-    const handleinput = async (e) => {
-        e.preventDefault();
+    const onSubmit = async (data) => {
         try {
-            const res = await axios.post("http://localhost:5000/api/register", {
-                name: newaccount.name,
-                Id: newaccount.Id,
-                email: newaccount.email,
-                password: newaccount.password,
-                role,
-            });
+            const res = await axios.post(
+                "http://localhost:5000/api/register",
+                {
+                    ...data,
+                    role
+                }
+            );
 
             if (res.data.success) {
-                alert("account created successfully");
-            }
-            else {
-                alert("error in account creation");
+                alert("Account created successfully");
+            } else {
+                alert("Error in account creation");
             }
 
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err);
         }
-        console.log("rolle of the user: ", role);
-
-        console.log("this is new account ", newaccount);
-
-    }
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setNewaccount((prev) => ({ ...prev, [name]: value }));
-
     };
 
     return (
-        <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handleinput}>
+        <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handleSubmit(onSubmit)}>
             <h1 className="text-3xl font-extrabold mb-2 text-gray-800">Create Account</h1>
             <p className="text-gray-500 mb-6 text-sm">Join us and start your journey.</p>
 
@@ -143,18 +151,26 @@ const SignUpForm = () => {
                 </button>
             </div>
 
-            <AuthInput name="name" placeholder="Full Name" icon={UserIcon} type='text' onChange={handleChange} />
+            <AuthInput name="name" placeholder="Full Name" icon={UserIcon} register={register} rules={{ required: "name is required" }} error={errors.name} />
 
             <div className="animate-fade-in-up">
                 {role === 'student' ? (
-                    <AuthInput name="Id" placeholder="Register Number" icon={IdCardIcon} onChange={handleChange} />
+                    <AuthInput name="Id" placeholder="Register Number" icon={IdCardIcon} register={register} rules={{ required: "register number is required" }} error={errors.Id} />
                 ) : (
-                    <AuthInput name="Id" placeholder="Staff ID" icon={IdCardIcon} onChange={handleChange} />
+                    <AuthInput name="Id" placeholder="Staff ID" icon={IdCardIcon} register={register} rules={{ required: "staff id is required" }} error={errors.Id} />
                 )}
             </div>
 
-            <AuthInput name="email" placeholder="Email Address" icon={MailIcon} onChange={handleChange} />
-            <AuthInput name="password" type="password" placeholder="Password" icon={LockIcon} onChange={handleChange} />
+            <AuthInput name="email" placeholder="Email Address" icon={MailIcon} register={register}
+                rules={{
+                    required: "Email is required",
+                    pattern: {
+                        value: /^\S+@\S+$/i,
+                        message: "Invalid email"
+                    }
+                }}
+                error={errors.email} />
+            <AuthInput name="password" type="password" placeholder="Password" icon={LockIcon} register={register} rules={{ required: "password is required", minLength: { value: 6, message: "min 6 characters" } }} error={errors.password} />
 
             <button
                 type="submit"
@@ -168,41 +184,31 @@ const SignUpForm = () => {
 
 export default function LoginPage() {
     const [isLogInActive, setIsLogInActive] = useState(true);
-    const [id, setId] = useState("");
-    const [pass, setPass] = useState("");
     const navigate = useNavigate();
     const swapToSignUp = () => setIsLogInActive(false);
     const swapToLogIn = () => setIsLogInActive(true);
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+    const handleLogin = async (data) => {
 
         try {
-            const res = await axios.post("http://localhost:5000/api/login", {
-                Id: id,
-                password: pass
-            });
+            const res = await axios.post("http://localhost:5000/api/login", data);
             const Role = res.data.Role;
             console.log(res.data.Role);
-            alert("Login Successful");
 
-
-            if (Role == "admin") {
+            if (Role === "admin") {
                 navigate("/dashboard/admin");
             }
-            else if (Role == "staff") {
+
+            else if (Role === "staff") {
                 navigate("/dashboard/staff/applyleave", {
                     state: { userId: res.data.Id }
-                })
+                });
             }
-            else if (Role == "student") {
+
+            else {
                 navigate("/dashboard/student/applyleave", {
                     state: { userId: res.data.Id }
                 });
-
-            }
-            else {
-                navigate("/error page");
             }
 
         } catch (error) {
@@ -224,12 +230,8 @@ export default function LoginPage() {
             <div className="bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-5xl min-h-[640px] flex relative">
 
                 <div className={`w-1/2 p-10 flex justify-center items-center absolute top-0 left-0 h-full transition-all duration-700 ease-in-out ${isLogInActive ? 'z-20 opacity-100 transform translate-x-0' : 'z-10 opacity-0 transform translate-x-10'}`}>
-                    <LogInForm
-                        handlelogin={handleLogin}
-                        id={id}
-                        setId={setId}
-                        pass={pass}
-                        setPass={setPass}
+                    <LogInForm onLogin={handleLogin}
+
                     />
 
                 </div>
