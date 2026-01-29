@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
+import { yupResolver } from "@hookform/resolvers/yup";
+import LoginSchema from '../validations/LoginSchema';
+import RegisterSchema from '../validations/RegisterSchema';
 
 
 const UserIcon = () => (
@@ -20,16 +23,17 @@ const BriefcaseIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
 );
 
-const AuthInput = ({ type = 'text', placeholder, name, icon: Icon, register, rules, error }) => (
+const AuthInput = ({ type = 'text', placeholder, name, icon: Icon, register, error }) => (
 
     <div className="w-full mb-5 relative group">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-indigo-500 transition-colors duration-200">
             {Icon && <Icon />}
         </div>
         <input
+            name={name}//it doesnt matter
             type={type}
             placeholder={placeholder}
-            {...register(name, rules)}
+            {...register(name)}
             className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent focus:bg-white transition-all duration-200 text-gray-700 placeholder-gray-400 shadow-sm outline-none"
         />
         {error && (<p className="text-red-500 text-xs mt-1">{error.message}</p>)}
@@ -42,7 +46,9 @@ const LogInForm = ({ onLogin }) => {
         register,
         handleSubmit,
         formState: { errors }
-    } = useForm();
+    } = useForm({
+        resolver: yupResolver(LoginSchema),
+    });
 
     const onSubmit = async (data) => {
         await onLogin(data);
@@ -59,7 +65,6 @@ const LogInForm = ({ onLogin }) => {
                 placeholder="ID"
                 icon={UserIcon}
                 register={register}
-                rules={{ required: "Id is required" }}
                 error={errors.Id}
             />
 
@@ -69,10 +74,6 @@ const LogInForm = ({ onLogin }) => {
                 placeholder="Password"
                 icon={LockIcon}
                 register={register}
-                rules={{
-                    required: "password is required",
-                    minLength: { value: 6, message: "Min 6 Characters" }
-                }}
                 error={errors.password}
             />
 
@@ -97,7 +98,9 @@ const SignUpForm = () => {
         register,
         handleSubmit,
         formState: { errors }
-    } = useForm();
+    } = useForm({
+        resolver: yupResolver(RegisterSchema),
+    });
 
     const onSubmit = async (data) => {
         try {
@@ -151,26 +154,19 @@ const SignUpForm = () => {
                 </button>
             </div>
 
-            <AuthInput name="name" placeholder="Full Name" icon={UserIcon} register={register} rules={{ required: "name is required" }} error={errors.name} />
+            <AuthInput name="name" placeholder="Full Name" icon={UserIcon} register={register} error={errors.name} />
 
             <div className="animate-fade-in-up">
                 {role === 'student' ? (
-                    <AuthInput name="Id" placeholder="Register Number" icon={IdCardIcon} register={register} rules={{ required: "register number is required" }} error={errors.Id} />
+                    <AuthInput name="Id" placeholder="Register Number" icon={IdCardIcon} register={register} error={errors.Id} />
                 ) : (
-                    <AuthInput name="Id" placeholder="Staff ID" icon={IdCardIcon} register={register} rules={{ required: "staff id is required" }} error={errors.Id} />
+                    <AuthInput name="Id" placeholder="Staff ID" icon={IdCardIcon} register={register} error={errors.Id} />
                 )}
             </div>
 
-            <AuthInput name="email" placeholder="Email Address" icon={MailIcon} register={register}
-                rules={{
-                    required: "Email is required",
-                    pattern: {
-                        value: /^\S+@\S+$/i,
-                        message: "Invalid email"
-                    }
-                }}
-                error={errors.email} />
-            <AuthInput name="password" type="password" placeholder="Password" icon={LockIcon} register={register} rules={{ required: "password is required", minLength: { value: 6, message: "min 6 characters" } }} error={errors.password} />
+            <AuthInput name="email" placeholder="Email Address" icon={MailIcon} register={register} error={errors.email} />
+
+            <AuthInput name="password" type="password" placeholder="Password" icon={LockIcon} register={register} error={errors.password} />
 
             <button
                 type="submit"
