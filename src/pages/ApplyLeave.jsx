@@ -1,6 +1,9 @@
 import axios from "axios";
 import React, { useState, useMemo, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import applyLeaveSchema from "../validations/ApplyLeaveSchema";
 
 const calculateDays = (start, end) => {
     if (!start || !end) return 0;
@@ -22,14 +25,18 @@ const calculateWorkingDays = (start, end) => {
 };
 
 function ApplyLeave() {
-    const [formData, setFormData] = useState({
-        name: "",
-        leaveType: "",
-        startDate: "",
-        endDate: "",
-        leaveReason: "",
-        attachment: null,
+   
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    }=useForm({
+        resolver:yupResolver(applyLeaveSchema),
     });
+
+    const onsubmit = async(data) =>{
+        console.log(data);
+    }
 
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [loadingBalance, setLoadingBalance] = useState(true);
@@ -188,9 +195,12 @@ function ApplyLeave() {
                                 value={formData.name}
                                 onChange={handleChange}
                                 required
+                                {...register("name")}
                                 placeholder="Enter your full name"
                                 className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             />
+                                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+
                         </div>
 
                         <div>
@@ -226,8 +236,11 @@ function ApplyLeave() {
                                     onChange={handleChange}
                                     min={new Date().toISOString().split('T')[0]}
                                     required
+                                    {...register("startDate")}
                                     className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 />
+                                    {errors.startDate && <p className="text-red-500 text-sm mt-1">{errors.startDate.message}</p>}
+
                             </div>
                             <div>
                                 <label htmlFor="endDate" className="block text-sm font-medium text-gray-700">4. End Date <span className="text-red-500">*</span></label>
