@@ -108,17 +108,20 @@ function ApplyLeave() {
     };
 
     const handleapply = async (e) => {
-        e.preventDefault();
+            // e.preventDefault();
 
         try {
             const res = await axios.post("http://localhost:5000/api/sapply", {
-                userId: userId,
-                name: formData.name,
-                leaveType: formData.leaveType,
-                startDate: formData.startDate,
-                endDate: formData.endDate,
-                leaveReason: formData.leaveReason,
-                duration: duration,
+                // userId: userId,
+                // name: formData.name,
+                // leaveType: formData.leaveType,
+                // startDate: formData.startDate,
+                // endDate: formData.endDate,
+                // leaveReason: formData.leaveReason,
+                // duration: duration,
+                userId,
+                ...data,
+                duration
             });
 
             if (res.data.success) {
@@ -154,7 +157,7 @@ function ApplyLeave() {
                 </div>
             )}
 
-            <form className="space-y-8">
+            <form onSubmit={handleSubmit(handleapply)} className="space-y-8" >
 
                 <section className="bg-white p-6 rounded-xl shadow-lg border border-gray-200">
                     <h2 className="text-xl font-bold text-gray-800 mb-4">
@@ -211,6 +214,7 @@ function ApplyLeave() {
                                 value={formData.leaveType}
                                 onChange={handleChange}
                                 required
+                                {...request("leaveType")}
                                 className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 rounded-md"
                             >
                                 <option value="">-- Select Leave Type --</option>
@@ -221,6 +225,7 @@ function ApplyLeave() {
                                     </option>
                                 ))}
                             </select>
+                            {errors.leaveType && <p className="text-red-500 text-sm mt-1" >{errors.leaveType.message}</p>} 
 
 
                         </div>
@@ -252,8 +257,10 @@ function ApplyLeave() {
                                     onChange={handleChange}
                                     min={formData.startDate || new Date().toISOString().split('T')[0]}
                                     required
+                                    {...register("endDate")}
                                     className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 />
+                                {errors.endDate && <p className="text-red-500 text-sm mt-1" >{errors.endDate.message}</p>}
                             </div>
                         </div>
 
@@ -266,9 +273,11 @@ function ApplyLeave() {
                                 value={formData.leaveReason}
                                 onChange={handleChange}
                                 required
+                                {...register("leaveReason")}
                                 placeholder="e.g., Annual family vacation to the beach, scheduled dental surgery, etc."
                                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-3"
                             ></textarea>
+                            {errors.leaveReason && <p className="text-red-500 text-sm mt-1">{errors.leaveReason.message}</p>}
                         </div>
 
                         <div>
@@ -295,9 +304,9 @@ function ApplyLeave() {
 
                         <div className="pt-4 border-t border-gray-200">
                             <button
-                                type="button"
-                                disabled={isFormInvalid}
-                                onClick={handleapply}
+                                type="submit"
+                                // disabled={isFormInvalid}
+                                // onClick={handleapply}
                                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-xl transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 Submit Request for {duration} Days
