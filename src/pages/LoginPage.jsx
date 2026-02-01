@@ -209,6 +209,8 @@ export default function LoginPage() {
 
         } catch (error) {
             console.error(error);
+            console.log("LOGIN DATA:", data);
+
             alert("Login Failed: " + error.response.data.message);
         }
     };
