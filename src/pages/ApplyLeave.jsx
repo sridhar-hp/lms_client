@@ -25,16 +25,25 @@ const calculateWorkingDays = (start, end) => {
 };
 
 function ApplyLeave() {
-   
+
     const {
         register,
         handleSubmit,
+        watch,
         formState: { errors }
-    }=useForm({
-        resolver:yupResolver(applyLeaveSchema),
+    } = useForm({
+        resolver: yupResolver(applyLeaveSchema),
     });
+    const startDate = watch("startDate");
+    const endDate = watch("endDate");
+    const leaveType = watch("leaveType");
+    const name = watch("name");
+    const leaveReason = watch("leaveReason");
 
-    const onsubmit = async(data) =>{
+
+    // const leaveType = watch("leaveType");
+
+    const onsubmit = async (data) => {
         console.log(data);
     }
 
@@ -44,24 +53,44 @@ function ApplyLeave() {
     const [leaveBalance, setLeaveBalance] = useState({});
     const location = useLocation();
     const userId = location.state?.userId;
-    const requestedDays = calculateDays(formData.startDate, formData.endDate);
-    const availableDays = loadingBalance
-        ? null
-        : formData.leaveType
-            ? leaveBalance[formData.leaveType]
-            : null;
+    // const requestedDays = calculateDays(startDate, endDate);
+    // const availableDays = loadingBalance
+    //      null
+    //     : formData.leaveType
+    //          leaveBalance[formData.leaveType]
+    //         : null;
 
-    const remainingDays =
-        typeof availableDays === "number"
-            ? availableDays - requestedDays
-            : null;
+    // const remainingDays =
+    //     typeof availableDays === "number"
+    //          availableDays - requestedDays
+    //         : null;
 
-    const isFormInvalid =
-        !formData.name ||
-        !formData.leaveType ||
-        !formData.leaveReason ||
-        duration === 0 ||
+    // const isFormInvalid =
+    //     formData.name ||
+    //     formData.leaveType ||
+    //     formData.leaveReason ||
+    //     duration === 0 ||
+    //     remainingDays < 0;
+
+    const requestedDays = calculateDays(startDate, endDate);
+
+    const availableDays =
+        leaveType && leaveBalance[leaveType]
+            ? leaveBalance[leaveType]
+            : 0;
+
+    const remainingDays = availableDays - requestedDays;
+    const isApplyDisabled =
+        !name ||
+        !leaveType ||
+        !leaveReason ||
+        !startDate ||
+        !endDate ||
+        duration <= 0 ||
         remainingDays < 0;
+
+
+
 
     useEffect(() => {
         console.log("User ID:", userId);
@@ -107,18 +136,11 @@ function ApplyLeave() {
         setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
     };
 
-    const handleapply = async (e) => {
-            // e.preventDefault();
+    const handleapply = async (data) => {
+        // e.preventDefault();
 
         try {
             const res = await axios.post("http://localhost:5000/api/sapply", {
-                // userId: userId,
-                // name: formData.name,
-                // leaveType: formData.leaveType,
-                // startDate: formData.startDate,
-                // endDate: formData.endDate,
-                // leaveReason: formData.leaveReason,
-                // duration: duration,
                 userId,
                 ...data,
                 duration
@@ -138,6 +160,11 @@ function ApplyLeave() {
             console.log(err);
         }
     };
+
+    useEffect(() => {
+        setDuration(calculateWorkingDays(startDate, endDate));
+    }, [startDate, endDate]);
+
 
     return (
         <div className="min-h-screen bg-gray-50 p-6 md:p-10 font-sans">
@@ -195,14 +222,12 @@ function ApplyLeave() {
                                 type="text"
                                 id="name"
                                 name="name"
-                                value={formData.name}
-                                onChange={handleChange}
                                 required
                                 {...register("name")}
                                 placeholder="Enter your full name"
                                 className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             />
-                                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+                            {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
 
                         </div>
 
@@ -211,10 +236,8 @@ function ApplyLeave() {
                             <select
                                 id="leaveType"
                                 name="leaveType"
-                                value={formData.leaveType}
-                                onChange={handleChange}
                                 required
-                                {...request("leaveType")}
+                                {...register("leaveType")}
                                 className="mt-1 block w-full py-3 pl-3 pr-10 border border-gray-300 rounded-md"
                             >
                                 <option value="">-- Select Leave Type --</option>
@@ -225,7 +248,7 @@ function ApplyLeave() {
                                     </option>
                                 ))}
                             </select>
-                            {errors.leaveType && <p className="text-red-500 text-sm mt-1" >{errors.leaveType.message}</p>} 
+                            {errors.leaveType && <p className="text-red-500 text-sm mt-1" >{errors.leaveType.message}</p>}
 
 
                         </div>
@@ -237,14 +260,12 @@ function ApplyLeave() {
                                     type="date"
                                     id="startDate"
                                     name="startDate"
-                                    value={formData.startDate}
-                                    onChange={handleChange}
                                     min={new Date().toISOString().split('T')[0]}
                                     required
                                     {...register("startDate")}
                                     className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 />
-                                    {errors.startDate && <p className="text-red-500 text-sm mt-1">{errors.startDate.message}</p>}
+                                {errors.startDate && <p className="text-red-500 text-sm mt-1">{errors.startDate.message}</p>}
 
                             </div>
                             <div>
@@ -253,9 +274,7 @@ function ApplyLeave() {
                                     type="date"
                                     id="endDate"
                                     name="endDate"
-                                    value={formData.endDate}
-                                    onChange={handleChange}
-                                    min={formData.startDate || new Date().toISOString().split('T')[0]}
+                                    min={startDate || new Date().toISOString().split('T')[0]}
                                     required
                                     {...register("endDate")}
                                     className="mt-1 block w-full py-3 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -270,8 +289,6 @@ function ApplyLeave() {
                                 id="leaveReason"
                                 name="leaveReason"
                                 rows="4"
-                                value={formData.leaveReason}
-                                onChange={handleChange}
                                 required
                                 {...register("leaveReason")}
                                 placeholder="e.g., Annual family vacation to the beach, scheduled dental surgery, etc."
@@ -305,10 +322,12 @@ function ApplyLeave() {
                         <div className="pt-4 border-t border-gray-200">
                             <button
                                 type="submit"
-                                // disabled={isFormInvalid}
-                                // onClick={handleapply}
-                                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg shadow-xl transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
+                                disabled={isApplyDisabled}
+                                className={`w-full font-bold py-3 rounded-lg shadow-xl transition duration-300
+                                        ${isApplyDisabled
+                                        ? "bg-gray-400 cursor-not-allowed"
+                                        : "bg-indigo-600 hover:bg-indigo-700 text-white"}
+                                        `} >
                                 Submit Request for {duration} Days
                             </button>
                             <p className="text-xs text-gray-500 mt-2 text-center">
