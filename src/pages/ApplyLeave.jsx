@@ -158,6 +158,8 @@ function ApplyLeave() {
 
         } catch (err) {
             console.log(err);
+            console.log("LEAVE APPLY DATA:", data);
+
         }
     };
 
