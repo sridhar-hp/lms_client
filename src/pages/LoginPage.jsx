@@ -190,6 +190,8 @@ export default function LoginPage() {
             const res = await axios.post("http://localhost:5000/api/login", data);
             const Role = res.data.Role;
             console.log(res.data.Role);
+            const token = res.data.token;
+            sessionStorage.setItem("token",token);
 
             if (Role === "admin") {
                 navigate("/dashboard/admin");

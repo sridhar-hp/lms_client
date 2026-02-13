@@ -4,6 +4,7 @@ import { NavLink, Outlet, useParams, useLocation } from "react-router-dom";
 function DMenuBar() {
     const location = useLocation();
     const userId = location.state?.userId;
+    sessionStorage.setItem("userId", userId);
     const { Role } = useParams();   // role = "admin" OR "student"
 
     const adminMenus = [
@@ -18,7 +19,7 @@ function DMenuBar() {
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyLeave`, show: true },
         { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus/${userId}`, show: true },
-        { name: "Logout", path: `/..`, show: true },
+        { name: "Logout", path: `/`, show: true },
 
 
     ];
@@ -27,7 +28,7 @@ function DMenuBar() {
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyleave`, show: true },
         { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus/${userId}`, show: true },
-        { name: "Logout", path: `/..`, show: true },
+        { name: "Logout", path: `/`, show: true },
 
     ];
 

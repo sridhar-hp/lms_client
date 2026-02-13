@@ -43,7 +43,8 @@ function MyLeaveStatus() {
 
     useEffect(() => {
         const Lstatus = async () => {
-            const res = await axios.get(`http://localhost:5000/api/status/${userId}`);
+            const token = sessionStorage.getItem("token");
+            const res = await axios.get(`http://localhost:5000/api/status/${userId}`,{headers: {Authorization:`Bearer ${token}`}});
             setLeaves(res.data.leaves);
 
         }
