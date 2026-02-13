@@ -103,6 +103,7 @@ const SignUpForm = () => {
     });
 
     const onSubmit = async (data) => {
+        console.log("SUBMIT FIRED", data);
         try {
             const res = await axios.post(
                 "http://localhost:5000/api/register",
@@ -112,6 +113,7 @@ const SignUpForm = () => {
                 }
             );
 
+            console.log("RESPONSE:", res.data);
             if (res.data.success) {
                 alert("Account created successfully");
             } else {
@@ -185,37 +187,36 @@ export default function LoginPage() {
     const swapToLogIn = () => setIsLogInActive(true);
 
     const handleLogin = async (data) => {
-
         try {
             const res = await axios.post("http://localhost:5000/api/login", data);
-            const Role = res.data.Role;
-            console.log(res.data.Role);
+
             const token = res.data.token;
-            sessionStorage.setItem("token",token);
+            const Role = res.data.user.role;   // ✅ correct
+            const userId = res.data.user.Id;   // ✅ correct
+
+            console.log("ROLE:", Role);
+            console.log("USER ID:", userId);
+
+            sessionStorage.setItem("token", token);
 
             if (Role === "admin") {
                 navigate("/dashboard/admin");
-            }
-
-            else if (Role === "staff") {
+            } else if (Role === "staff") {
                 navigate("/dashboard/staff/applyleave", {
-                    state: { userId: res.data.Id }
+                    state: { userId }
                 });
-            }
-
-            else {
+            } else {
                 navigate("/dashboard/student/applyleave", {
-                    state: { userId: res.data.Id }
+                    state: { userId }
                 });
             }
 
         } catch (error) {
             console.error(error);
-            console.log("LOGIN DATA:", data);
-
-            alert("Login Failed: " + error.response.data.message);
+            alert("Login Failed: " + error.response?.data?.message || "Server error");
         }
     };
+
 
     const overlayTransform = isLogInActive ? 'translate-x-0' : 'translate-x-[-100%]';
     const contentTransform = isLogInActive ? 'translate-x-0' : '-translate-x-1/2';

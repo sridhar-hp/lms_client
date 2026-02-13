@@ -116,7 +116,7 @@ function ApplyLeave() {
         const fetchBalance = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:5000/api/leave-balance/${userId}`
+                    `http://localhost:5000/api/leave-balance/${userId}`,{headers:{authorization:`BEarer ${token}`}}
                 );
 
                 if (res.data.success) {
@@ -144,7 +144,7 @@ function ApplyLeave() {
                 userId,
                 ...data,
                 duration
-            });
+            },{headers:{authorization:`BEarer ${token}`}});
 
             if (res.data.success) {
                 alert("Applied successfully");
