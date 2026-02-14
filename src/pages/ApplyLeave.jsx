@@ -115,8 +115,15 @@ function ApplyLeave() {
 
         const fetchBalance = async () => {
             try {
+                const token = sessionStorage.getItem("token");
+
                 const res = await axios.get(
-                    `http://localhost:5000/api/leave-balance/${userId}`,{headers:{authorization:`BEarer ${token}`}}
+                    `http://localhost:5000/api/leave-balance/${userId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
                 );
 
                 if (res.data.success) {
@@ -140,17 +147,29 @@ function ApplyLeave() {
         // e.preventDefault();
 
         try {
+            const token = sessionStorage.getItem("token");
             const res = await axios.post("http://localhost:5000/api/sapply", {
                 userId,
                 ...data,
                 duration
-            },{headers:{authorization:`BEarer ${token}`}});
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
 
             if (res.data.success) {
                 alert("Applied successfully");
 
                 const balanceRes = await axios.get(
-                    `http://localhost:5000/api/leave-balance/${userId}`
+                    `http://localhost:5000/api/leave-balance/${userId}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}` // ✅ also here
+                        }
+                    }
                 );
 
                 setLeaveBalance(balanceRes.data.leaveBalance);
