@@ -140,7 +140,8 @@ const DataRegistryConsole = () => {
 
     useEffect(() => {
         const setting = async () => {
-            const res = await axios.get("http://localhost:5000/api/setting");
+            const token = sessionStorage.getItem("token");
+            const res = await axios.get("http://localhost:5000/api/setting",{ headers: { Authorization: `Bearer ${token}` }     });
             if (Array.isArray(res.data.users)) {
                 setUsers(res.data.users.filter(u => u && u._id));
             } else {

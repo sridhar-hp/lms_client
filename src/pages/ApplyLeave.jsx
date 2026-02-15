@@ -162,7 +162,7 @@ function ApplyLeave() {
 
             if (res.data.success) {
                 alert("Applied successfully");
-
+                const token = sessionStorage.getItem("token");
                 const balanceRes = await axios.get(
                     `http://localhost:5000/api/leave-balance/${userId}`,
                     {

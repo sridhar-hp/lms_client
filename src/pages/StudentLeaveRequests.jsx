@@ -26,9 +26,9 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
 
     const handlerejection = async (id) => {
         console.log("Reject Button Clicked, ID:", id);
-
+        const token = sessionStorage.getItem("token");
         try {
-            const res = await axios.put(`http://localhost:5000/api/rejection/${id}`);
+            const res = await axios.put(`http://localhost:5000/api/rejection/${id}`,{}, { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) {
                 alert("rejected ✅");
                 window.location.reload();
@@ -42,7 +42,8 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const handleaccepting = async (id) => {
 
         try {
-            const res = await axios.put(`http://localhost:5000/api/accept/${id}`);
+            const token = sessionStorage.getItem("token");
+            const res = await axios.put(`http://localhost:5000/api/accept/${id}`,{}, { headers: { Authorization: `Bearer ${token}` } });
             if (res.data.success) {
                 alert("accepted successfully ✅");
                 window.location.reload();
@@ -98,7 +99,8 @@ function StudentLeaveRequests() {
 
     useEffect(() => {
         const request = async () => {
-            const res = await axios.get("http://localhost:5000/api/request");
+            const token = sessionStorage.getItem("token");
+            const res = await axios.get("http://localhost:5000/api/request", { headers: { Authorization: `Bearer ${token}`, } });
             setLeaveRequest(res.data.leaveRequest);
             setSelectedRequest(res.data.leaveRequest[0] || null);
         }
