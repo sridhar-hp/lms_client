@@ -6,14 +6,14 @@ const CARD_BG = 'bg-white';
 const PRIMARY_ACCENT = 'teal-600';
 const DANGER_COLOR = 'red-600';
 
-const INITIAL_STUDENT_DATA = [
-    { id: 'S1001', name: 'Alice Chen', phone: '555-1234', email: 'a.chen@std.edu', major: 'Comp Sci' },
-    { id: 'S1002', name: 'Bob Davis', phone: '555-4567', email: 'b.davis@std.edu', major: 'History' },
-];
-const INITIAL_STAFF_DATA = [
-    { id: 'T2001', name: 'Dr. Emily Johnson', phone: '555-9012', email: 'e.johnson@staff.edu', department: 'Biology' },
-    { id: 'T2002', name: 'Mr. Frank White', phone: '555-3456', email: 'f.white@staff.edu', department: 'Admin' },
-];
+// const INITIAL_STUDENT_DATA = [
+//     { id: 'S1001', name: 'Alice Chen', phone: '555-1234', email: 'a.chen@std.edu', major: 'Comp Sci' },
+//     { id: 'S1002', name: 'Bob Davis', phone: '555-4567', email: 'b.davis@std.edu', major: 'History' },
+// ];
+// const INITIAL_STAFF_DATA = [
+//     { id: 'T2001', name: 'Dr. Emily Johnson', phone: '555-9012', email: 'e.johnson@staff.edu', department: 'Biology' },
+//     { id: 'T2002', name: 'Mr. Frank White', phone: '555-3456', email: 'f.white@staff.edu', department: 'Admin' },
+// ];
 
 const SettingsNav = ({ activeSection, setActiveSection }) => {
     const sections = [
@@ -75,7 +75,8 @@ const RegistryRow = ({
 
     return (
         <tr className={isEditing ? 'bg-teal-50' : 'hover:bg-gray-50 transition'}>
-            <td className="px-6 py-4">{item.Id}</td>
+            <td className="px-6 py-4">
+                {item.Id || item._id }</td>
             <td className="px-6 py-4">
                 {isEditing ? (
                     <input
@@ -89,8 +90,34 @@ const RegistryRow = ({
                     item.name
                 )}
             </td>
-            <td className="px-6 py-4">{item.email}</td>
-            <td className="px-6 py-4">{item.role}</td>
+            <td className="px-6 py-4">
+                {isEditing ? (
+                    <input name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="border p-1 rounded w-full"/>
+                    ):(
+                        item.email
+                    )}</td>
+            <td className="px-6 py-4">
+                {isEditing ? (
+                    <input name="role"
+                    value={formData.role}
+                    onChange={handleChange}
+                    className="border p-1 rounded w-full"/>
+                ):(
+                    item.role
+                )}</td>
+
+                 {/* <td className="px-6 py-4">
+                {isEditing ? (
+                    <input name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="border p-1 rounded w-full"/>
+                ):(
+                    item.pasword
+                )}</td> */}
 
             <td className="px-6 py-4 space-x-2">
                 {isEditing ? (
@@ -133,57 +160,82 @@ const RegistryRow = ({
 
 const DataRegistryConsole = () => {
     const [dataType, setDataType] = useState('student');
-    const [data, setData] = useState(INITIAL_STUDENT_DATA);
     const [searchQuery, setSearchQuery] = useState('');
     const [editId, setEditId] = useState(null);
     const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const setting = async () => {
-            const token = sessionStorage.getItem("token");
-            const res = await axios.get("http://localhost:5000/api/setting",{ headers: { Authorization: `Bearer ${token}` }     });
+    const fetchUsers = async () => {
+        setLoading(true);
+        setError(null);
+        const token = sessionStorage.getItem("token");
+        try {
+            const res = await axios.get("http://localhost:5000/api/setting", {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             if (Array.isArray(res.data.users)) {
                 setUsers(res.data.users.filter(u => u && u._id));
             } else {
                 setUsers([]);
             }
-
-            console.log(res.data.users);
+        } catch (err) {
+            console.error("Failed to fetch users:", err);
+            setError("Failed to load users from database");
+            setUsers([]);
+        } finally {
+            setLoading(false);
         }
-        setting();
+    };
+
+    useEffect(() => {
+        fetchUsers();
     }, []);
 
-    React.useEffect(() => {
-        setData(dataType === 'student' ? INITIAL_STUDENT_DATA : INITIAL_STAFF_DATA);
-        setSearchQuery('');
-    }, [dataType]);
+    const filteredData = users.filter(item => {
+        if (!item) return false;
 
-    const filteredData = data.filter(item =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.id.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+        const normalizedQuery = searchQuery.toLowerCase();
+        const matchesSearch =
+            item.name?.toLowerCase().includes(normalizedQuery) ||
+            item.Id?.toLowerCase().includes(normalizedQuery) ||
+            item.email?.toLowerCase().includes(normalizedQuery);
+
+        const matchesType = dataType === 'student'
+            ? item.role === 'student'
+            : item.role === 'staff' || item.role === 'faculty';
+
+        return matchesSearch && matchesType;
+    });
 
     const handleDelete = async (id) => {
         try {
-            const res = await axios.put(`http://localhost:5000/api/dusers/${id}`);
-
+            const token = sessionStorage.getItem("token");
+            const res = await axios.delete(`http://localhost:5000/api/dusers/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                        }
+    });
             if (res.data.success) {
                 alert("user deleted successfully");
+                fetchUsers();
             }
         }
         catch (err) {
             console.log(err);
+            alert("Failed to delete user");
         }
     };
 
     const handleSave = async (updatedItem) => {
         try {
-            const res = await axios.put(`http://localhost:5000/api/users/${updatedItem._id}`, updatedItem);
+            const token = sessionStorage.getItem("token");
+            const res = await axios.put(`http://localhost:5000/api/users/${updatedItem._id}`, updatedItem,{headers:{Authorization:`Bearer ${token}`}});
 
             if (res.data.success) {
-                setUsers(prev => prev.map(user => user._id === updatedItem._id ? res.data.user : user));
                 setEditId(null);
                 alert("user updated successfully");
+                fetchUsers();
             }
         }
         catch (err) {
@@ -230,19 +282,32 @@ const DataRegistryConsole = () => {
                             <th className="px-6 py-3 text-left font-semibold">Name</th>
                             <th className="px-6 py-3 text-left font-semibold">Email</th>
                             <th className="px-6 py-3 text-left font-semibold">Role</th>
+                            {/* <th className="px-6 py-3 text-left font-semibold">Password</th> */}
                             <th className="px-6 py-3 text-left font-semibold w-32">Actions</th>
                         </tr>
                     </thead>
 
                     <tbody className="divide-y divide-gray-100 px-6 py-3">
-                        {users.length === 0 ? (
+                        {loading ? (
+                            <tr>
+                                <td colSpan={5} className="text-center py-6 text-gray-500">
+                                    Loading users from database...
+                                </td>
+                            </tr>
+                        ) : error ? (
+                            <tr>
+                                <td colSpan={5} className="text-center py-6 text-red-500">
+                                    {error}
+                                </td>
+                            </tr>
+                        ) : filteredData.length === 0 ? (
                             <tr>
                                 <td colSpan={5} className="text-center py-6 text-gray-500">
                                     No users found
                                 </td>
                             </tr>
                         ) : (
-                            users.filter(item => item && item._id).map((item) => (
+                            filteredData.map((item) => (
                                 <RegistryRow
                                     key={item._id}
                                     item={item}
@@ -251,9 +316,7 @@ const DataRegistryConsole = () => {
                                     handleSave={handleSave}
                                     handleDelete={handleDelete}
                                 />
-
                             ))
-
                         )}
                     </tbody>
 

@@ -120,9 +120,15 @@ const SignUpForm = () => {
                 alert("Error in account creation");
             }
 
-        } catch (err) {
-            console.log(err);
         }
+        catch (err) {
+            if (err.response) {
+                alert(err.response.data.message);
+            } else {
+                alert("Something went wrong");
+            }
+        }
+
     };
 
     return (
@@ -171,7 +177,7 @@ const SignUpForm = () => {
             <AuthInput name="password" type="password" placeholder="Password" icon={LockIcon} register={register} error={errors.password} />
 
             <button
-                type="submit"
+                type="submit" 
                 className="w-full py-3 mt-4 bg-indigo-600 text-white font-bold rounded-lg shadow-lg hover:bg-indigo-700 hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5"
             >
                 SIGN UP
