@@ -19,6 +19,7 @@ function DMenuBar() {
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyLeave`, show: true },
         { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus/${userId}`, show: true },
+        { name: "Edit Profile", path: `/dashboard/${Role}/editprofile/${userId}`, show: true },
         { name: "Logout", path: `/`, show: true },
 
 
@@ -28,6 +29,7 @@ function DMenuBar() {
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Apply Leave", path: `/dashboard/${Role}/applyleave`, show: true },
         { name: "My Leave Status", path: `/dashboard/${Role}/myleavestatus/${userId}`, show: true },
+        { name: "Edit Profile", path: `/dashboard/${Role}/editprofile/${userId}`, show: true },
         { name: "Logout", path: `/`, show: true },
 
     ];

@@ -42,6 +42,7 @@ import MyLeaveStatus from "./pages/MyLeaveStatus.jsx";
 import Settings from "./pages/Settings.jsx";
 import StudentLeaveRequests from "./pages/StudentLeaveRequests.jsx";
 import PrivateRouter from "./pages/PrivateRouter.jsx";
+import Editpage from "./pages/Editpage.jsx";
 
 function App() {
   return (
@@ -109,6 +110,15 @@ function App() {
             element={
               <PrivateRouter>
                 <Settings />
+              </PrivateRouter>
+            }
+          />
+
+          <Route
+            path="editprofile/:userId"
+            element={
+              <PrivateRouter>
+                <Editpage />
               </PrivateRouter>
             }
           />
