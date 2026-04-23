@@ -51,9 +51,130 @@ const ProfileSettings = () => (
 const NotificationSettings = () => (
     <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔔 Notification Preferences</h2><p className="mt-4 text-gray-600">Notification settings interface...</p></div>
 );
-const SecuritySettings = () => (
-    <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔒 Security & Password</h2><p className="mt-4 text-gray-600">Security settings interface...</p></div>
-);
+// const SecuritySettings = () => (
+//     <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔒 Security & Password</h2><p className="mt-4 text-gray-600">Security settings interface...</p></div>
+// );
+
+const SecuritySettings = () => {
+    const [users, setUsers] = useState([]);
+    const [search, setSearch] = useState("");
+    const [editId, setEditId] = useState(null);
+    const [newPassword, setNewPassword] = useState("");
+
+    const fetchUsers = async () => {
+        const token = sessionStorage.getItem("token");
+
+        const res = await axios.get("http://localhost:5000/api/setting", {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setUsers(res.data.users);
+    };
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const filteredUsers = users.filter(u =>
+        u.name.toLowerCase().includes(search.toLowerCase()) ||
+        u.email.toLowerCase().includes(search.toLowerCase()) ||
+        (u.Id || "").toLowerCase().includes(search.toLowerCase())
+    );
+
+    const handleUpdatePassword = async (id) => {
+        try {
+            const token = sessionStorage.getItem("token");
+
+            const res = await axios.put(
+                `http://localhost:5000/api/admin/reset-password/${id}`,
+                { password: newPassword },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+
+            if (res.data.success) {
+                alert("Password updated ✅");
+                setEditId(null);
+                setNewPassword("");
+            }
+
+        } catch (err) {
+            alert("Failed ❌");
+        }
+    };
+
+    return (
+        <div className="bg-white p-8 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-6">🔒 Security & Password</h2>
+
+            {/* SEARCH */}
+            <input
+                type="text"
+                placeholder="Search users..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full p-3 border rounded mb-6"
+            />
+
+            <table className="w-full border">
+                <thead>
+                    <tr className="bg-gray-100">
+                        <th className="p-3">ID</th>
+                        <th className="p-3">Name</th>
+                        <th className="p-3">Email</th>
+                        <th className="p-3">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {filteredUsers.map(user => (
+                        <tr key={user._id} className="border-t">
+
+                            <td className="p-3">{user.Id}</td>
+                            <td className="p-3">{user.name}</td>
+                            <td className="p-3">{user.email}</td>
+
+                            <td className="p-3">
+                                {editId === user._id ? (
+                                    <>
+                                        <input
+                                            type="password"
+                                            placeholder="New Password"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            className="border p-1 mr-2"
+                                        />
+
+                                        <button
+                                            onClick={() => handleUpdatePassword(user._id)}
+                                            className="text-green-600 mr-2"
+                                        >
+                                            Save
+                                        </button>
+
+                                        <button
+                                            onClick={() => setEditId(null)}
+                                            className="text-gray-500"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        onClick={() => setEditId(user._id)}
+                                        className="text-teal-600"
+                                    >
+                                        Reset Password
+                                    </button>
+                                )}
+                            </td>
+
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
 
 const RegistryRow = ({
     item,
@@ -197,9 +318,9 @@ const DataRegistryConsole = () => {
 
         const normalizedQuery = searchQuery.toLowerCase();
         const matchesSearch =
-            item.name?.toLowerCase().includes(normalizedQuery) ||
-            item.Id?.toLowerCase().includes(normalizedQuery) ||
-            item.email?.toLowerCase().includes(normalizedQuery);
+            (item.name ?? '').toLowerCase().includes(normalizedQuery) ||
+            (item.Id ?? '').toLowerCase().includes(normalizedQuery) ||
+            (item.email ?? '').toLowerCase().includes(normalizedQuery);
 
         const matchesType = dataType === 'student'
             ? item.role === 'student'
