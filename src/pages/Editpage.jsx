@@ -177,7 +177,7 @@ export default function EditProfile() {
         </div>
       </div>
 
-      {/* STYLES */}
+      
       <style>{`
         .input {
           width: 100%;
