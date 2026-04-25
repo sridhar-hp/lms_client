@@ -54,28 +54,34 @@ export default function EditProfile() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-6 py-10">
+    <div className="min-h-screen bg-gray-100 p-8">
 
       {/* HEADER */}
-      <div className="max-w-5xl mx-auto mb-8">
-        <h1 className="text-2xl font-semibold text-gray-800">
+      <div className="max-w-6xl mx-auto mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">
           Account Settings
         </h1>
-        <p className="text-sm text-gray-500">
-          Manage your profile and security settings
+        <p className="text-gray-500">
+          Manage your profile and password
         </p>
       </div>
 
-      <div className="max-w-5xl mx-auto grid grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto grid grid-cols-12 gap-8">
 
-        {/* PROFILE SUMMARY */}
-        <div>
-          <div className="bg-white border rounded-xl p-6 shadow-sm">
-            <div className="w-14 h-14 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-semibold">
+        {/* LEFT PROFILE CARD */}
+        <div className="col-span-4">
+          <div className="bg-white rounded-2xl shadow-md p-6 text-center">
+
+            <div className="w-20 h-20 mx-auto flex items-center justify-center rounded-full bg-indigo-500 text-white text-2xl font-semibold">
               {profile.fullName.charAt(0)}
             </div>
-            <h2 className="mt-4 font-semibold">{profile.fullName}</h2>
-            <p className="text-sm text-gray-500">{profile.email}</p>
+
+            <h2 className="mt-4 text-lg font-semibold">
+              {profile.fullName}
+            </h2>
+
+            <p className="text-gray-500 text-sm">{profile.email}</p>
+
             <p className="text-xs text-gray-400 mt-2">
               Reg No: {profile.registerNumber}
             </p>
@@ -83,23 +89,25 @@ export default function EditProfile() {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="col-span-2 space-y-6">
+        <div className="col-span-8 space-y-6">
 
           {/* ALERT */}
           {(error || success) && (
-            <div className={`p-3 rounded-lg text-sm ${
-              error ? "bg-red-50 text-red-600" : "bg-green-50 text-green-600"
+            <div className={`p-3 rounded-lg text-sm font-medium ${
+              error
+                ? "bg-red-100 text-red-600"
+                : "bg-green-100 text-green-600"
             }`}>
               {error || success}
             </div>
           )}
 
-          {/* PROFILE SECTION */}
+          {/* PROFILE FORM */}
           <form
             onSubmit={handleProfileSubmit}
-            className="bg-white border rounded-xl p-6 shadow-sm space-y-4"
+            className="bg-white rounded-2xl shadow-md p-6 space-y-4"
           >
-            <h3 className="font-medium text-gray-800">
+            <h3 className="text-lg font-semibold text-gray-800">
               Profile Information
             </h3>
 
@@ -108,15 +116,16 @@ export default function EditProfile() {
                 name="fullName"
                 value={profile.fullName}
                 onChange={handleProfileChange}
-                className="input"
                 placeholder="Full Name"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
               />
+
               <input
                 name="registerNumber"
                 value={profile.registerNumber}
                 onChange={handleProfileChange}
-                className="input"
                 placeholder="Register Number"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
               />
             </div>
 
@@ -124,21 +133,21 @@ export default function EditProfile() {
               name="email"
               value={profile.email}
               onChange={handleProfileChange}
-              className="input"
-              placeholder="Email Address"
+              placeholder="Email"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
             />
 
-            <button className="btn-primary">
+            <button className="px-5 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition">
               {loading ? "Saving..." : "Save Profile"}
             </button>
           </form>
 
-          {/* PASSWORD SECTION */}
+          {/* PASSWORD FORM */}
           <form
             onSubmit={handlePasswordSubmit}
-            className="bg-white border rounded-xl p-6 shadow-sm space-y-4"
+            className="bg-white rounded-2xl shadow-md p-6 space-y-4"
           >
-            <h3 className="font-medium text-gray-800">
+            <h3 className="text-lg font-semibold text-gray-800">
               Change Password
             </h3>
 
@@ -147,56 +156,37 @@ export default function EditProfile() {
               name="current"
               value={password.current}
               onChange={handlePasswordChange}
-              className="input"
               placeholder="Current Password"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
             />
 
-            <input
-              type="password"
-              name="newPass"
-              value={password.newPass}
-              onChange={handlePasswordChange}
-              className="input"
-              placeholder="New Password"
-            />
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                type="password"
+                name="newPass"
+                value={password.newPass}
+                onChange={handlePasswordChange}
+                placeholder="New Password"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+              />
 
-            <input
-              type="password"
-              name="confirm"
-              value={password.confirm}
-              onChange={handlePasswordChange}
-              className="input"
-              placeholder="Confirm New Password"
-            />
+              <input
+                type="password"
+                name="confirm"
+                value={password.confirm}
+                onChange={handlePasswordChange}
+                placeholder="Confirm Password"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none"
+              />
+            </div>
 
-            <button className="btn-primary bg-green-600 hover:bg-green-500">
+            <button className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-500 transition">
               {loading ? "Updating..." : "Update Password"}
             </button>
           </form>
 
         </div>
       </div>
-
-      
-      <style>{`
-        .input {
-          width: 100%;
-          padding: 10px 12px;
-          border-radius: 8px;
-          border: 1px solid #e5e7eb;
-          outline: none;
-        }
-        .input:focus {
-          border-color: #6366f1;
-          box-shadow: 0 0 0 2px rgba(99,102,241,0.1);
-        }
-        .btn-primary {
-          padding: 10px 16px;
-          background: #6366f1;
-          color: white;
-          border-radius: 8px;
-        }
-      `}</style>
     </div>
   );
 }

@@ -93,17 +93,22 @@ const LogInForm = ({ onLogin }) => {
 
 const SignUpForm = () => {
     const [role, setRole] = useState('student');
-
+    
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors }
     } = useForm({
         resolver: yupResolver(RegisterSchema),
+        defaultValues: {
+            role: 'student'
+        }
     });
 
     const onSubmit = async (data) => {
         console.log("SUBMIT FIRED", data);
+        console.log("FINAL DATA:", data);
         try {
             const res = await axios.post(
                 "http://localhost:5000/api/register",
@@ -116,6 +121,7 @@ const SignUpForm = () => {
             console.log("RESPONSE:", res.data);
             if (res.data.success) {
                 alert("Account created successfully");
+                console.log("after created account, response:", res.data);
             } else {
                 alert("Error in account creation");
             }
@@ -135,11 +141,13 @@ const SignUpForm = () => {
         <form className="w-full max-w-xs sm:max-w-sm text-center" onSubmit={handleSubmit(onSubmit)}>
             <h1 className="text-3xl font-extrabold mb-2 text-gray-800">Create Account</h1>
             <p className="text-gray-500 mb-6 text-sm">Join us and start your journey.</p>
-
+            <input type="hidden" {...register("role")} value={role} />
             <div className="flex p-1 mb-6 bg-gray-100 rounded-xl relative shadow-inner">
                 <button
                     type="button"
-                    onClick={() => setRole('student')}
+                    onClick={() => {setRole('student')
+                        setValue("role", "student");
+                    }}
                     className={`flex-1 flex items-center justify-center py-2 text-sm font-bold rounded-lg transition-all duration-300 ${role === 'student'
                         ? 'bg-white text-indigo-600 shadow-sm ring-1 ring-black/5'
                         : 'text-gray-500 hover:text-gray-700'
@@ -151,7 +159,9 @@ const SignUpForm = () => {
 
                 <button
                     type="button"
-                    onClick={() => setRole('staff')}
+                    onClick={() => {setRole('staff')
+                        setValue("role", "staff");}
+                    }
                     className={`flex-1 flex items-center justify-center py-2 text-sm font-bold rounded-lg transition-all duration-300 ${role === 'staff'
                         ? 'bg-white text-indigo-600 shadow-sm ring-1 ring-black/5'
                         : 'text-gray-500 hover:text-gray-700'
