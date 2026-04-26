@@ -197,7 +197,7 @@ const RegistryRow = ({
     return (
         <tr className={isEditing ? 'bg-teal-50' : 'hover:bg-gray-50 transition'}>
             <td className="px-6 py-4">
-                {item.Id || item._id }</td>
+                {item.Id || item._id}</td>
             <td className="px-6 py-4">
                 {isEditing ? (
                     <input
@@ -214,23 +214,23 @@ const RegistryRow = ({
             <td className="px-6 py-4">
                 {isEditing ? (
                     <input name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="border p-1 rounded w-full"/>
-                    ):(
-                        item.email
-                    )}</td>
+                        value={formData.email}
+                        onChange={handleChange}
+                        className="border p-1 rounded w-full" />
+                ) : (
+                    item.email
+                )}</td>
             <td className="px-6 py-4">
                 {isEditing ? (
                     <input name="role"
-                    value={formData.role}
-                    onChange={handleChange}
-                    className="border p-1 rounded w-full"/>
-                ):(
+                        value={formData.role}
+                        onChange={handleChange}
+                        className="border p-1 rounded w-full" />
+                ) : (
                     item.role
                 )}</td>
 
-                 {/* <td className="px-6 py-4">
+            {/* <td className="px-6 py-4">
                 {isEditing ? (
                     <input name="password"
                     value={formData.password}
@@ -335,8 +335,8 @@ const DataRegistryConsole = () => {
             const res = await axios.delete(`http://localhost:5000/api/dusers/${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
-                        }
-    });
+                }
+            });
             if (res.data.success) {
                 alert("user deleted successfully");
                 fetchUsers();
@@ -351,7 +351,7 @@ const DataRegistryConsole = () => {
     const handleSave = async (updatedItem) => {
         try {
             const token = sessionStorage.getItem("token");
-            const res = await axios.put(`http://localhost:5000/api/users/${updatedItem._id}`, updatedItem,{headers:{Authorization:`Bearer ${token}`}});
+            const res = await axios.put(`http://localhost:5000/api/users/${updatedItem._id}`, updatedItem, { headers: { Authorization: `Bearer ${token}` } });
 
             if (res.data.success) {
                 setEditId(null);
