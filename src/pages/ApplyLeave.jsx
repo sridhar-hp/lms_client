@@ -1,9 +1,10 @@
-import axios from "axios";
 import React, { useState, useMemo, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import applyLeaveSchema from "../validations/ApplyLeaveSchema";
+import { useSelector } from "react-redux";
+import { applyLeave, balanceLeave, balanceUpdate } from "../services/leaveService.js";
 
 const calculateDays = (start, end) => {
     if (!start || !end) return 0;
@@ -39,6 +40,9 @@ function ApplyLeave() {
     const leaveType = watch("leaveType");
     const name = watch("name");
     const leaveReason = watch("leaveReason");
+    const user=useSelector(state =>state.auth.user);
+    const userId=user?.Id;
+    const token = useSelector(state => state.auth.token); // ✅ correct way to get token from Redux
 
 
     // const leaveType = watch("leaveType");
@@ -51,8 +55,8 @@ function ApplyLeave() {
     const [loadingBalance, setLoadingBalance] = useState(true);
     const [duration, setDuration] = useState(0);
     const [leaveBalance, setLeaveBalance] = useState({});
-    const location = useLocation();
-    const userId = location.state?.userId;
+    // const location = useLocation();
+    // const userId = location.state?.userId;
     // const requestedDays = calculateDays(startDate, endDate);
     // const availableDays = loadingBalance
     //      null
@@ -89,9 +93,6 @@ function ApplyLeave() {
         duration <= 0 ||
         remainingDays < 0;
 
-
-
-
     useEffect(() => {
         console.log("User ID:", userId);
     }, []);
@@ -115,16 +116,16 @@ function ApplyLeave() {
 
         const fetchBalance = async () => {
             try {
-                const token = sessionStorage.getItem("token");
-
-                const res = await axios.get(
-                    `http://localhost:5000/api/leave-balance/${userId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
-                    }
-                );
+                // const token = sessionStorage.getItem("token");
+                const res = await balanceLeave({userId}, token);
+                //  const res = await axios.get(
+                //     `http://localhost:5000/api/leave-balance/${userId}`,
+                //     {
+                //         headers: {
+                //             Authorization: `Bearer ${token}`
+                //         }
+                //     }
+                // );
 
                 if (res.data.success) {
                     setLeaveBalance(res.data.leaveBalance);
@@ -148,29 +149,32 @@ function ApplyLeave() {
 
         try {
             const token = sessionStorage.getItem("token");
-            const res = await axios.post("http://localhost:5000/api/sapply", {
-                userId,
-                ...data,
-                duration
-            },
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
+            const res = await applyLeave({...data,userId,duration}, token);
+            // const res = await axios.post("http://localhost:5000/api/sapply", {
+            //     userId,
+            //     ...data,
+            //     duration
+            // },
+            //     {
+            //         headers: {
+            //             Authorization: `Bearer ${token}`
+            //         }
+            //     }
+            // );
 
             if (res.data.success) {
                 alert("Applied successfully");
                 const token = sessionStorage.getItem("token");
-                const balanceRes = await axios.get(
-                    `http://localhost:5000/api/leave-balance/${userId}`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}` // ✅ also here
-                        }
-                    }
-                );
+                const balanceRes = await balanceUpdate({userId}, token);
+
+                // const balanceRes = await axios.get(
+                //     `http://localhost:5000/api/leave-balance/${userId}`,
+                //     {
+                //         headers: {
+                //             Authorization: `Bearer ${token}` // ✅ also here
+                //         }
+                //     }
+                // );
 
                 setLeaveBalance(balanceRes.data.leaveBalance);
             }

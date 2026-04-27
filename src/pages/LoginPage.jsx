@@ -300,7 +300,8 @@
 import React, { useState } from 'react';
 import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+// import axios from "axios";
+import { loginUser, registerUser } from "../services/authService";
 import { yupResolver } from "@hookform/resolvers/yup";
 import LoginSchema from '../validations/LoginSchema';
 import RegisterSchema from '../validations/RegisterSchema';
@@ -410,13 +411,17 @@ const SignUpForm = () => {
         console.log("SUBMIT FIRED", data);
         console.log("FINAL DATA:", data);
         try {
-            const res = await axios.post(
-                "http://localhost:5000/api/register",
-                {
-                    ...data,
-                    role
-                }
-            );
+            const res = await registerUser({
+                ...data,
+                role
+            });
+            // const res = await axios.post(
+            //     "http://localhost:5000/api/register",
+            //     {
+            //         ...data,
+            //         role
+            //     }
+           // );
 
             console.log("RESPONSE:", res.data);
             if (res.data.success) {
@@ -508,19 +513,20 @@ export default function LoginPage() {
 
     const handleLogin = async (data) => {
         try {
-            const res = await axios.post("http://localhost:5000/api/login", data);
+            const res = await loginUser(data);
+            // const res = await axios.post("http://localhost:5000/api/login", data);
 
             const token = res.data.token;
             const user = res.data.user;
-            const Role = res.data.user.role;   // ✅ correct
+            // const Role = res.data.user.role;   // ✅ correct
             // const userId = res.data.user.Id;   // ✅ correct
 
             // console.log("ROLE:", Role);
             // console.log("USER ID:", userId);
             dispatch(setUser({
                 user: user,
-                token: token,
-                Role: Role
+                token: token
+                // Role: Role
             }));
             sessionStorage.setItem("token", token);
 
