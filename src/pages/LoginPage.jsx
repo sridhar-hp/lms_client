@@ -512,14 +512,15 @@ export default function LoginPage() {
 
             const token = res.data.token;
             const user = res.data.user;
-            // const Role = res.data.user.role;   // ✅ correct
+            const Role = res.data.user.role;   // ✅ correct
             // const userId = res.data.user.Id;   // ✅ correct
 
             // console.log("ROLE:", Role);
             // console.log("USER ID:", userId);
             dispatch(setUser({
                 user: user,
-                token: token
+                token: token,
+                Role: Role
             }));
             sessionStorage.setItem("token", token);
 
