@@ -306,7 +306,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import LoginSchema from '../validations/LoginSchema';
 import RegisterSchema from '../validations/RegisterSchema';
 import { useDispatch } from "react-redux";
-import { setUser } from "../features/auth/authSlice.js";
+import { setUser, setToken } from "../features/auth/authSlice.js";
 
 const UserIcon = () => (
     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
@@ -421,7 +421,7 @@ const SignUpForm = () => {
             //         ...data,
             //         role
             //     }
-           // );
+            // );
 
             console.log("RESPONSE:", res.data);
             if (res.data.success) {
@@ -518,17 +518,19 @@ export default function LoginPage() {
 
             const token = res.data.token;
             const user = res.data.user;
+
+            sessionStorage.setItem("token", token);
+            sessionStorage.setItem("user", JSON.stringify(user));
+
+
             // const Role = res.data.user.role;   // ✅ correct
             // const userId = res.data.user.Id;   // ✅ correct
 
             // console.log("ROLE:", Role);
             // console.log("USER ID:", userId);
-            dispatch(setUser({
-                user: user,
-                token: token
-                // Role: Role
-            }));
-            sessionStorage.setItem("token", token);
+            dispatch(setUser(user));
+            dispatch(setToken(token));
+            // sessionStorage.setItem("token", token);
 
             // if (Role === "admin") {
             //     navigate("/dashboard/admin");

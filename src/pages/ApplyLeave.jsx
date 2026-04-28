@@ -40,8 +40,8 @@ function ApplyLeave() {
     const leaveType = watch("leaveType");
     const name = watch("name");
     const leaveReason = watch("leaveReason");
-    const user=useSelector(state =>state.auth.user);
-    const userId=user?.Id;
+    const user = useSelector(state => state.auth.user);
+    const userId = user?.Id;
     const token = useSelector(state => state.auth.token); // ✅ correct way to get token from Redux
 
 
@@ -50,7 +50,7 @@ function ApplyLeave() {
     const onsubmit = async (data) => {
         console.log(data);
     }
-
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [submissionStatus, setSubmissionStatus] = useState(null);
     const [loadingBalance, setLoadingBalance] = useState(true);
     const [duration, setDuration] = useState(0);
@@ -97,19 +97,19 @@ function ApplyLeave() {
         console.log("User ID:", userId);
     }, []);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => {
-            let newData = { ...prevData, [name]: value };
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setFormData((prevData) => {
+    //         let newData = { ...prevData, [name]: value };
 
-            if (name === "startDate" || name === "endDate" || name === "leaveType") {//=
-                const start = name === "startDate" ? value : prevData.startDate;
-                const end = name === "endDate" ? value : prevData.endDate;
-                setDuration(calculateWorkingDays(start, end));
-            }
-            return newData;
-        });
-    };
+    //         if (name === "startDate" || name === "endDate" || name === "leaveType") {//=
+    //             const start = name === "startDate" ? value : prevData.startDate;
+    //             const end = name === "endDate" ? value : prevData.endDate;
+    // setDuration(calculateWorkingDays(start, end));
+    //         }
+    //         return newData;
+    //     });
+    // };
 
     useEffect(() => {
         if (!userId) return;
@@ -117,7 +117,7 @@ function ApplyLeave() {
         const fetchBalance = async () => {
             try {
                 // const token = sessionStorage.getItem("token");
-                const res = await balanceLeave({userId}, token);
+                const res = await balanceLeave({ userId }, token);
                 //  const res = await axios.get(
                 //     `http://localhost:5000/api/leave-balance/${userId}`,
                 //     {
@@ -140,16 +140,27 @@ function ApplyLeave() {
         fetchBalance();
     }, [userId]);
 
-    const handleFileChange = (e) => {
-        setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
-    };
+    // const handleFileChange = (e) => {
+    //     setFormData((prevData) => ({ ...prevData, attachment: e.target.files[0] }));
+    // };
 
     const handleapply = async (data) => {
         // e.preventDefault();
-
+        if (isSubmitting) return;
+        setIsSubmitting(true);
         try {
-            const token = sessionStorage.getItem("token");
-            const res = await applyLeave({...data,userId,duration}, token);
+            // const token = sessionStorage.getItem("token");
+            const finalData = {
+                ...data,
+                userId,
+                duration,
+                startDate: new Date(data.startDate).toISOString(),
+                endDate: new Date(data.endDate).toISOString()
+            };
+
+            console.log("FINAL DATA:", finalData);
+
+            const res = await applyLeave(finalData, token);
             // const res = await axios.post("http://localhost:5000/api/sapply", {
             //     userId,
             //     ...data,
@@ -164,8 +175,8 @@ function ApplyLeave() {
 
             if (res.data.success) {
                 alert("Applied successfully");
-                const token = sessionStorage.getItem("token");
-                const balanceRes = await balanceUpdate({userId}, token);
+                // const token = sessionStorage.getItem("token");
+                const balanceRes = await balanceUpdate({ userId }, token);
 
                 // const balanceRes = await axios.get(
                 //     `http://localhost:5000/api/leave-balance/${userId}`,
@@ -184,6 +195,9 @@ function ApplyLeave() {
             console.log("LEAVE APPLY DATA:", data);
 
         }
+         finally {
+        setIsSubmitting(false);
+    }
     };
 
     useEffect(() => {
@@ -322,16 +336,16 @@ function ApplyLeave() {
                             {errors.leaveReason && <p className="text-red-500 text-sm mt-1">{errors.leaveReason.message}</p>}
                         </div>
 
-                        <div>
+                        {/* <div> FUTURE UPDATE 
                             <label htmlFor="attachment" className="block text-sm font-medium text-gray-700">6. Supporting Document (Optional, e.g., Doctor's Note)</label>
                             <input
                                 type="file"
                                 id="attachment"
                                 name="attachment"
-                                onChange={handleFileChange}
+                                {...register("attachment")}
                                 className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
                             />
-                        </div>
+                        </div> */}
 
                     </div>
 

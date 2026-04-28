@@ -1,35 +1,35 @@
-// // import React from "react";
-// // import LoginPage from "./pages/LoginPage.jsx";
-// // import DashBoard from "./pages/Dashboard.jsx";
-// // import DMenuBar from "./pages/DMenuBar.jsx";
-// // import ApplyLeave from "./pages/ApplyLeave.jsx";
-// // import MyLeaveStatus from "./pages/MyLeaveStatus.jsx";
-// // import Settings from "./pages/Settings.jsx";
-// // import StudentLeaveRequests from "./pages/StudentLeaveRequests.jsx";
-// // import { BrowserRouter, Routes, Route } from 'react-router-dom';
-// // import PrivateRouter from "./pages/PrivateRouter.jsx";
+// import React from "react";
+// import LoginPage from "./pages/LoginPage.jsx";
+// import DashBoard from "./pages/Dashboard.jsx";
+// import DMenuBar from "./pages/DMenuBar.jsx";
+// import ApplyLeave from "./pages/ApplyLeave.jsx";
+// import MyLeaveStatus from "./pages/MyLeaveStatus.jsx";
+// import Settings from "./pages/Settings.jsx";
+// import StudentLeaveRequests from "./pages/StudentLeaveRequests.jsx";
+// import { BrowserRouter, Routes, Route } from 'react-router-dom';
+// import PrivateRouter from "./pages/PrivateRouter.jsx";
 
-// // function App() {
-// //     return (
-// //         <BrowserRouter>
-// //             <Routes>
-// //                 <Route path="/" element={<LoginPage />} />
-// //                 <Route element={<PrivateRouter />}>
-// //                 <Route path="/dashboard/:Role" element={<DMenuBar />}>
-// //                     <Route path="home" element={<DashBoard />} />
-// //                     <Route index element={<DashBoard />} />
-// //                     <Route path="studentleaverequests" element={<StudentLeaveRequests />} />
-// //                     <Route path="applyleave" element={<ApplyLeave />} />
-// //                     <Route path="myleavestatus/:userId" element={<MyLeaveStatus />} />
-// //                     <Route path="setting" element={<Settings />} />
-// //                 </Route>
-// //                 </Route>
-// //             </Routes>
-// //         </BrowserRouter>
-// //     );
-// // }
+// function App() {
+//     return (
+//         <BrowserRouter>
+//             <Routes>
+//                 <Route path="/" element={<LoginPage />} />
+//                 <Route element={<PrivateRouter />}>
+//                 <Route path="/dashboard/:Role" element={<DMenuBar />}>
+//                     <Route path="home" element={<DashBoard />} />
+//                     <Route index element={<DashBoard />} />
+//                     <Route path="studentleaverequests" element={<StudentLeaveRequests />} />
+//                     <Route path="applyleave" element={<ApplyLeave />} />
+//                     <Route path="myleavestatus/:userId" element={<MyLeaveStatus />} />
+//                     <Route path="setting" element={<Settings />} />
+//                 </Route>
+//                 </Route>
+//             </Routes>
+//         </BrowserRouter>
+//     );
+// }
 
-// // export default App;
+// export default App;
 
 // import React from "react";
 // import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -133,7 +133,9 @@
 
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setToken, setUser } from "./features/auth/authSlice.js";
 import LoginPage from "./pages/LoginPage.jsx";
 import DashBoard from "./pages/Dashboard.jsx";
 import DMenuBar from "./pages/DMenuBar.jsx";
@@ -143,8 +145,26 @@ import Settings from "./pages/Settings.jsx";
 import StudentLeaveRequests from "./pages/StudentLeaveRequests.jsx";
 import PrivateRouter from "./pages/PrivateRouter.jsx";
 import Editpage from "./pages/Editpage.jsx";
+import { useState } from "react";
 
 function App() {
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+    const token = sessionStorage.getItem("token");
+    const user = sessionStorage.getItem("user");
+
+    if (token && user) {
+        dispatch(setToken(token));
+        dispatch(setUser(JSON.parse(user)));
+    }
+
+    setLoading(false);
+}, []);
+ if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <BrowserRouter>
       <Routes>
