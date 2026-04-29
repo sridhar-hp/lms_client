@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const userData = {
     name: "Aisha Sharma",
@@ -37,14 +38,16 @@ const StatusPill = ({ status }) => {
 
 function MyLeaveStatus() {
     const [filter, setFilter] = useState("all");
-    const { userId } = useParams();
+    // const { userId } = useParams();
     const [leaves, setLeaves] = useState([]);
     const [selectedLeave, setSelectedLeave] = useState(null);
+    const user = useSelector(state => state.auth.user);
+    const userId = user?.Id;
 
     useEffect(() => {
         const Lstatus = async () => {
             const token = sessionStorage.getItem("token");
-            const res = await axios.get(`http://localhost:5000/api/status/${userId}`,{headers: {Authorization:`Bearer ${token}`}});
+            const res = await axios.get(`http://localhost:5000/api/status/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
             setLeaves(res.data.leaves);
 
         }
@@ -65,42 +68,8 @@ function MyLeaveStatus() {
                     <h1 className="text-4xl font-extrabold text-gray-900">👋 Welcome back</h1>
 
                 </div>
-                {/* <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-                    🚀 Request New Leave
-                </button> */}
+
             </header>
-
-            {/* <section className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
-
-                <div className="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition duration-300 cursor-pointer"
-                    onClick={() => setFilter('rejected')} 
-                >
-                    <p className="text-sm font-semibold text-red-600 uppercase tracking-wider">
-                        Rejected Requests
-                    </p> 
-                     <div className="flex items-end justify-between mt-2">
-                        <span className="text-lg font-medium text-gray-500">View History</span>
-                    </div> 
-                    <p className="text-xs text-gray-500 mt-1">Click to view details below.</p>
-                </div>
-
-                {leaveSummary.map((item, index) => (
-                    <div key={index} className="bg-white p-6 rounded-xl shadow-lg border-t-4" style={{ borderColor: item.color }}>
-                        <p className="text-lg font-semibold text-gray-800">{item.type}</p>
-                        <div className="mt-2 text-2xl font-bold text-gray-900">
-                            {item.total - item.used} <span className="text-base font-normal text-gray-500"> / {item.total} Days Left</span>
-                        </div>
-                        <p className="text-sm text-gray-500 mt-1">Used: {item.used} days</p>
-                        Conceptual Progress Bar (Professional styling)
-                        <div className="w-full h-2 bg-gray-200 rounded-full mt-4">
-                            <div
-                                className={`h-2 rounded-full`}
-                                style={{ width: `${(item.used / item.total) * 100}%`, backgroundColor: item.color }}
-                            ></div>
-                        </div>
-                    </div>
-                ))}
-            </section> */}
 
             <section>
                 <div className="flex justify-between items-center mb-4">
