@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = "http://localhost:5000/api";
-
+//           
 export const balanceLeave = ({userId},token)=>{
     return axios.get(`${API}/leave-balance/${userId}`, {
         headers: {
@@ -20,6 +20,14 @@ export const applyLeave =(data, token)=>{
 
 export const balanceUpdate =({userId}, token)=>{
     return axios.get(`${API}/leave-balance/${userId}`, {
+        headers:{
+            Authorization: `Bearer ${token}`
+        }
+    });
+};
+
+export const leaveStatus = ({userId}, token)=>{
+    return axios.get(`${API}/status/${userId}`, {
         headers:{
             Authorization: `Bearer ${token}`
         }

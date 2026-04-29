@@ -44,7 +44,6 @@ function ApplyLeave() {
     const userId = user?.Id;
     const token = useSelector(state => state.auth.token); // ✅ correct way to get token from Redux
 
-
     // const leaveType = watch("leaveType");
 
     const onsubmit = async (data) => {
@@ -84,6 +83,8 @@ function ApplyLeave() {
             : 0;
 
     const remainingDays = availableDays - requestedDays;
+        const isOverused = requestedDays > availableDays;
+
     const isApplyDisabled =
         !name ||
         !leaveType ||
@@ -156,7 +157,7 @@ function ApplyLeave() {
                 duration,
                 startDate: new Date(data.startDate).toISOString(),
                 endDate: new Date(data.endDate).toISOString()
-            };
+            };;
 
             console.log("FINAL DATA:", finalData);
 
@@ -195,9 +196,9 @@ function ApplyLeave() {
             console.log("LEAVE APPLY DATA:", data);
 
         }
-         finally {
-        setIsSubmitting(false);
-    }
+        finally {
+            setIsSubmitting(false);
+        }
     };
 
     useEffect(() => {
@@ -354,6 +355,17 @@ function ApplyLeave() {
                         <div className="bg-white p-6 rounded-xl shadow-lg border-t-4 border-indigo-600">
                             <p className="text-sm font-medium text-gray-600">Calculated Duration:</p>
                             <span className="text-4xl font-extrabold text-gray-900">{duration}</span>
+                            {isOverused && (
+                                <p className="text-red-500 font-semibold mt-2">
+                                    ⚠️ You have exceeded your leave balance
+                                </p>
+                            )}
+                            <p className="text-sm mt-2">
+                                Remaining Days:{" "}
+                                <span className={remainingDays < 0 ? "text-red-500" : "text-green-600"}>
+                                    {remainingDays}
+                                </span>
+                            </p>
                             <span className="text-xl text-gray-500 ml-1">Days</span>
                             <p className="text-xs text-gray-500 mt-3">Approval Manager: **Admin**</p>
                         </div>

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { leaveStatus } from "../services/leaveService.js";
 
 const userData = {
     name: "Aisha Sharma",
@@ -43,11 +44,14 @@ function MyLeaveStatus() {
     const [selectedLeave, setSelectedLeave] = useState(null);
     const user = useSelector(state => state.auth.user);
     const userId = user?.Id;
+    const token = useSelector(state => state.auth.token);
 
     useEffect(() => {
         const Lstatus = async () => {
-            const token = sessionStorage.getItem("token");
-            const res = await axios.get(`http://localhost:5000/api/status/${userId}`, { headers: { Authorization: `Bearer ${token}` } });
+            const res = await leaveStatus({userId}, token);
+            // const token = sessionStorage.getItem("token");
+            // const res = await axios.get(`http://localhost:5000/api/status/${userId}`, 
+                // { headers: { Authorization: `Bearer ${token}` } });
             setLeaves(res.data.leaves);
 
         }
@@ -124,7 +128,7 @@ function MyLeaveStatus() {
                             }
                         </tbody>
                     </table>
-                    {selectedLeave && (
+                    {selectedLeave && (//doubt is heare
                         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                             <div className="bg-white rounded-xl p-6 w-[400px] shadow-xl">
                                 <h2 className="text-xl font-bold mb-4">Leave Details</h2>
