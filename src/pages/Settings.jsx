@@ -1,5 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { deleteUser, fetchUser, fetchUserData, saveUser, updatePassword } from "../services/editService.js";
 
 const BACKGROUND_COLOR = 'bg-gray-50';
 const CARD_BG = 'bg-white';
@@ -51,130 +53,132 @@ const ProfileSettings = () => (
 const NotificationSettings = () => (
     <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔔 Notification Preferences</h2><p className="mt-4 text-gray-600">Notification settings interface...</p></div>
 );
-// const SecuritySettings = () => (
-//     <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔒 Security & Password</h2><p className="mt-4 text-gray-600">Security settings interface...</p></div>
-// );
+const SecuritySettings = () => (
+    <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔒 Security & Password</h2><p className="mt-4 text-gray-600">Security settings interface...</p></div>
+);
 
-const SecuritySettings = () => {
-    const [users, setUsers] = useState([]);
-    const [search, setSearch] = useState("");
-    const [editId, setEditId] = useState(null);
-    const [newPassword, setNewPassword] = useState("");
+// const SecuritySettings = () => {this is drop idea
+//     const [users, setUsers] = useState([]);//
+//     const [search, setSearch] = useState("");
+//     const [editId, setEditId] = useState(null);
+//     const [newPassword, setNewPassword] = useState("");
+//  const token = useSelector((state) => state.auth.token);
+//     const fetchUsers = async () => {
+//         const res = await fetchUserData(token);
+//         // const token = sessionStorage.getItem("token");
 
-    const fetchUsers = async () => {
-        const token = sessionStorage.getItem("token");
+//         // const res = await axios.get("http://localhost:5000/api/setting", {
+//         //     headers: { Authorization: `Bearer ${token}` }
+//         // });
 
-        const res = await axios.get("http://localhost:5000/api/setting", {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+//         setUsers(res.data.users);
+//     };
 
-        setUsers(res.data.users);
-    };
+//     useEffect(() => {
+//         fetchUsers();
+//     }, []);
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
+//     const filteredUsers = users.filter(u =>
+//         u.name.toLowerCase().includes(search.toLowerCase()) ||
+//         u.email.toLowerCase().includes(search.toLowerCase()) ||
+//         (u.Id || "").toLowerCase().includes(search.toLowerCase())
+//     );
 
-    const filteredUsers = users.filter(u =>
-        u.name.toLowerCase().includes(search.toLowerCase()) ||
-        u.email.toLowerCase().includes(search.toLowerCase()) ||
-        (u.Id || "").toLowerCase().includes(search.toLowerCase())
-    );
+//     const handleUpdatePassword = async (id) => {
+//         try {
+//             const res = await updatePassword({ id, newPassword }, token);
+//             // const token = sessionStorage.getItem("token");
 
-    const handleUpdatePassword = async (id) => {
-        try {
-            const token = sessionStorage.getItem("token");
+//             // const res = await axios.put(
+//             //     `http://localhost:5000/api/admin/reset-password/${id}`,
+//             //     { password: newPassword },
+//             //     { headers: { Authorization: `Bearer ${token}` } }
+//             // );
 
-            const res = await axios.put(
-                `http://localhost:5000/api/admin/reset-password/${id}`,
-                { password: newPassword },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
+//             if (res.data.success) {
+//                 alert("Password updated ✅");
+//                 setEditId(null);
+//                 setNewPassword("");
+//             }
 
-            if (res.data.success) {
-                alert("Password updated ✅");
-                setEditId(null);
-                setNewPassword("");
-            }
+//         } catch (err) {
+//             alert("Failed ❌");
+//         }
+//     };
 
-        } catch (err) {
-            alert("Failed ❌");
-        }
-    };
+//     return (
+//         <div className="bg-white p-8 rounded-lg shadow-md">
+//             <h2 className="text-2xl font-bold mb-6">🔒 Security & Password</h2>
 
-    return (
-        <div className="bg-white p-8 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-6">🔒 Security & Password</h2>
+//             {/* SEARCH */}
+//             <input
+//                 type="text"
+//                 placeholder="Search users..."
+//                 value={search}
+//                 onChange={(e) => setSearch(e.target.value)}
+//                 className="w-full p-3 border rounded mb-6"
+//             />
 
-            {/* SEARCH */}
-            <input
-                type="text"
-                placeholder="Search users..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full p-3 border rounded mb-6"
-            />
+//             <table className="w-full border">
+//                 <thead>
+//                     <tr className="bg-gray-100">
+//                         <th className="p-3">ID</th>
+//                         <th className="p-3">Name</th>
+//                         <th className="p-3">Email</th>
+//                         <th className="p-3">Action</th>
+//                     </tr>
+//                 </thead>
 
-            <table className="w-full border">
-                <thead>
-                    <tr className="bg-gray-100">
-                        <th className="p-3">ID</th>
-                        <th className="p-3">Name</th>
-                        <th className="p-3">Email</th>
-                        <th className="p-3">Action</th>
-                    </tr>
-                </thead>
+//                 <tbody>
+//                     {filteredUsers.map(user => (
+//                         <tr key={user._id} className="border-t">
 
-                <tbody>
-                    {filteredUsers.map(user => (
-                        <tr key={user._id} className="border-t">
+//                             <td className="p-3">{user.Id}</td>
+//                             <td className="p-3">{user.name}</td>
+//                             <td className="p-3">{user.email}</td>
 
-                            <td className="p-3">{user.Id}</td>
-                            <td className="p-3">{user.name}</td>
-                            <td className="p-3">{user.email}</td>
+//                             <td className="p-3">
+//                                 {editId === user._id ? (
+//                                     <>
+//                                         <input
+//                                             type="password"
+//                                             placeholder="New Password"
+//                                             value={newPassword}
+//                                             onChange={(e) => setNewPassword(e.target.value)}
+//                                             className="border p-1 mr-2"
+//                                         />
 
-                            <td className="p-3">
-                                {editId === user._id ? (
-                                    <>
-                                        <input
-                                            type="password"
-                                            placeholder="New Password"
-                                            value={newPassword}
-                                            onChange={(e) => setNewPassword(e.target.value)}
-                                            className="border p-1 mr-2"
-                                        />
+//                                         <button
+//                                             onClick={() => handleUpdatePassword(user._id)}
+//                                             className="text-green-600 mr-2"
+//                                         >
+//                                             Save
+//                                         </button>
 
-                                        <button
-                                            onClick={() => handleUpdatePassword(user._id)}
-                                            className="text-green-600 mr-2"
-                                        >
-                                            Save
-                                        </button>
+//                                         <button
+//                                             onClick={() => setEditId(null)}
+//                                             className="text-gray-500"
+//                                         >
+//                                             Cancel
+//                                         </button>
+//                                     </>
+//                                 ) : (
+//                                     <button
+//                                         onClick={() => setEditId(user._id)}
+//                                         className="text-teal-600"
+//                                     >
+//                                         Reset Password
+//                                     </button>
+//                                 )}
+//                             </td>
 
-                                        <button
-                                            onClick={() => setEditId(null)}
-                                            className="text-gray-500"
-                                        >
-                                            Cancel
-                                        </button>
-                                    </>
-                                ) : (
-                                    <button
-                                        onClick={() => setEditId(user._id)}
-                                        className="text-teal-600"
-                                    >
-                                        Reset Password
-                                    </button>
-                                )}
-                            </td>
-
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
-};
+//                         </tr>
+//                     ))}
+//                 </tbody>
+//             </table>
+//         </div>
+//     );
+// };
 
 const RegistryRow = ({
     item,
@@ -286,15 +290,16 @@ const DataRegistryConsole = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+ const token = useSelector((state) => state.auth.token);
     const fetchUsers = async () => {
         setLoading(true);
         setError(null);
-        const token = sessionStorage.getItem("token");
+        // const token = sessionStorage.getItem("token");
         try {
-            const res = await axios.get("http://localhost:5000/api/setting", {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            const res = await fetchUser(token);
+            // const res = await axios.get("http://localhost:5000/api/setting", {
+            //     headers: { Authorization: `Bearer ${token}` }
+            // });
             if (Array.isArray(res.data.users)) {
                 setUsers(res.data.users.filter(u => u && u._id));
             } else {
@@ -331,12 +336,13 @@ const DataRegistryConsole = () => {
 
     const handleDelete = async (id) => {
         try {
-            const token = sessionStorage.getItem("token");
-            const res = await axios.delete(`http://localhost:5000/api/dusers/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+            const res = await deleteUser({ id }, token);
+            // const token = sessionStorage.getItem("token");
+            // const res = await axios.delete(`http://localhost:5000/api/dusers/${id}`, {
+            //     headers: {
+            //         Authorization: `Bearer ${token}`
+            //     }
+            // });
             if (res.data.success) {
                 alert("user deleted successfully");
                 fetchUsers();
@@ -350,8 +356,15 @@ const DataRegistryConsole = () => {
 
     const handleSave = async (updatedItem) => {
         try {
-            const token = sessionStorage.getItem("token");
-            const res = await axios.put(`http://localhost:5000/api/users/${updatedItem._id}`, updatedItem, { headers: { Authorization: `Bearer ${token}` } });
+            const updateid = updatedItem._id;
+            const res = await saveUser({ updateid, updatedItem }, token)
+            // const token = sessionStorage.getItem("token");
+            // const res = await axios.put(`http://localhost:5000/api/users/${updatedItem._id}`,
+            //     updatedItem, {
+            //     headers: {
+            //         Authorization: `Bearer ${token}`
+            //     }
+            // });
 
             if (res.data.success) {
                 setEditId(null);
@@ -450,6 +463,7 @@ const DataRegistryConsole = () => {
 function Settings() {
     const [activeSection, setActiveSection] = useState('registry');
     const [globalSearchTerm, setGlobalSearchTerm] = useState('');
+    const token = useSelector((state) => state.auth.token);
 
     const renderContent = () => {
         switch (activeSection) {
