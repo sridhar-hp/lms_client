@@ -121,11 +121,10 @@ export default function EditProfile() {
 
           {/* ALERT */}
           {(error || success) && (
-            <div className={`p-4 rounded-lg text-sm font-medium border ${
-              error
+            <div className={`p-4 rounded-lg text-sm font-medium border ${error
                 ? "bg-red-50 text-red-600 border-red-200"
                 : "bg-green-50 text-green-600 border-green-200"
-            }`}>
+              }`}>
               {error || success}
             </div>
           )}

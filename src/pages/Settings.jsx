@@ -56,7 +56,7 @@ const NotificationSettings = () => (
 const SecuritySettings = () => (
     <div className={`${CARD_BG} p-8 rounded-lg shadow-md`}><h2 className="text-2xl font-bold text-gray-900">🔒 Security & Password</h2><p className="mt-4 text-gray-600">Security settings interface...</p></div>
 );
-
+//the blow is the drop idea due to security concern, we can consider to move it to admin console in future if needed
 // const SecuritySettings = () => {this is drop idea
 //     const [users, setUsers] = useState([]);//
 //     const [search, setSearch] = useState("");
@@ -290,7 +290,7 @@ const DataRegistryConsole = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
- const token = useSelector((state) => state.auth.token);
+    const token = useSelector((state) => state.auth.token);
     const fetchUsers = async () => {
         setLoading(true);
         setError(null);

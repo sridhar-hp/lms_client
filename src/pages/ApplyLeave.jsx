@@ -83,7 +83,7 @@ function ApplyLeave() {
             : 0;
 
     const remainingDays = availableDays - requestedDays;
-        const isOverused = requestedDays > availableDays;
+    const isOverused = requestedDays > availableDays;
 
     const isApplyDisabled =
         !name ||

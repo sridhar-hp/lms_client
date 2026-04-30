@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { requestRejection, requestApproval, userRequests } from "../services/responsService.js";
 
 function formatDate(d) {
     if (!d) return "-";
@@ -23,12 +25,18 @@ const teamMetrics = {
 
 const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const isLowBalance = request.balance - request.days < 0;
+    const token = useSelector((state) => state.auth.token);
 
     const handlerejection = async (id) => {
         console.log("Reject Button Clicked, ID:", id);
-        const token = sessionStorage.getItem("token");
+        // const token = sessionStorage.getItem("token");
         try {
-            const res = await axios.put(`http://localhost:5000/api/rejection/${id}`,{}, { headers: { Authorization: `Bearer ${token}` } });
+            const res = await requestRejection({ id }, token);
+            // const res = await axios.put(`http://localhost:5000/api/rejection/${id}`, {}, { 
+            //     headers: { 
+            //         Authorization: `Bearer ${token}`
+            //      } 
+            //     });
             if (res.data.success) {
                 alert("rejected ✅");
                 window.location.reload();
@@ -42,8 +50,13 @@ const EmployeeContextPanel = ({ request, onAction, actionPending }) => {
     const handleaccepting = async (id) => {
 
         try {
-            const token = sessionStorage.getItem("token");
-            const res = await axios.put(`http://localhost:5000/api/accept/${id}`,{}, { headers: { Authorization: `Bearer ${token}` } });
+            const res = await requestApproval({ id }, token);
+            // const token = sessionStorage.getItem("token");
+            // const res = await axios.put(`http://localhost:5000/api/accept/${id}`, {}, { 
+            //     headers: {
+            //          Authorization: `Bearer ${token}` 
+            //         } 
+            //     });
             if (res.data.success) {
                 alert("accepted successfully ✅");
                 window.location.reload();
@@ -96,13 +109,21 @@ function StudentLeaveRequests() {
     const [leaveRequest, setLeaveRequest] = useState([])// state na [] vanum
     const [actionPending, setActionPending] = useState(false);
     const [ids, setIds] = useState();
+    const token = useSelector((state) => state.auth.token);
 
     useEffect(() => {
         const request = async () => {
-            const token = sessionStorage.getItem("token");
-            const res = await axios.get("http://localhost:5000/api/request", { headers: { Authorization: `Bearer ${token}`, } });
-            setLeaveRequest(res.data.leaveRequest);
-            setSelectedRequest(res.data.leaveRequest[0] || null);
+            if (token) {
+                const res = await userRequests(token);
+                // const token = sessionStorage.getItem("token");
+                // const res = await axios.get("http://localhost:5000/api/request", {
+                //     headers: {
+                //         Authorization: `Bearer ${token}`,
+                //     }
+                // });
+                setLeaveRequest(res.data.leaveRequest);
+                setSelectedRequest(res.data.leaveRequest[0] || null);
+            }
         }
         request();
     }, []);
@@ -116,7 +137,7 @@ function StudentLeaveRequests() {
             console.log(`Executing ${action} for ID: ${id}. Reason: ${reason || 'N/A'}`);
 
 
-            setLeaveRequest(prev => prev.filter(req => req.id !== id));
+            setLeaveRequest(prev => prev.filter(req => req._id !== id));
 
             const nextReq = leaveRequest.find(req => req.id !== id) || null;
             setSelectedRequest(nextReq);
