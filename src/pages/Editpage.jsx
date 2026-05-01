@@ -83,7 +83,7 @@ export default function EditProfile() {
         <div className="col-span-4">
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
 
-            {/* IMAGE */}
+            {/*IMAGE*/}
             <div className="relative w-24 h-24 mx-auto">
               <img
                 src={profile.image || "https://via.placeholder.com/100"}
