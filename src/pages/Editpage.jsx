@@ -79,7 +79,7 @@ export default function EditProfile() {
 
       <div className="max-w-6xl mx-auto grid grid-cols-12 gap-8">
 
-        {/* PROFILE CARD */}
+        {/*PROFILE CARD*/}
         <div className="col-span-4">
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
 
