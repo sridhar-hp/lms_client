@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { pdetails } from "../services/editProfilePage.js"
 
 interface Profile {
     fullName: string;
     registerNumber: string;
     email: string;
-    phoneNumber: string;
+    // phoneNumber: string;
     // image: string;
 }
 
@@ -29,7 +30,7 @@ export default function EditProfile() {
         fullName: "",
         registerNumber: "",
         email: "",
-        phoneNumber:"",
+        // phoneNumber:"",
         // image: "",
     });
 
@@ -46,7 +47,9 @@ export default function EditProfile() {
             const fetchDetails = async () =>{
                 try{
                     const res = await pdetails({userId}, token);
-                }
+                    console.log(res.data);
+                    setProfile(res.data);
+               }
 
                 catch(err){
 
@@ -67,7 +70,7 @@ export default function EditProfile() {
             const reader = new FileReader();
             reader.onload = () => {
                 if (typeof reader.result === 'string') {
-                    setProfile({ ...profile, image: reader.result });
+                    // setProfile({ ...profile, image: reader.result });
                 }
             };
             reader.readAsDataURL(file);
@@ -128,11 +131,11 @@ export default function EditProfile() {
 
                         {/*IMAGE*/}
                         <div className="relative w-24 h-24 mx-auto">
-                            <img
+                            {/* <img
                                 src={profile.image || "https://via.placeholder.com/100"}
                                 alt="profile"
                                 className="w-24 h-24 rounded-full object-cover border-4 border-white shadow"
-                            />
+                            /> */}
 
                             <label className="absolute bottom-0 right-0 bg-indigo-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-indigo-500">
                                 📷
@@ -209,7 +212,7 @@ export default function EditProfile() {
                                 />
                             </div>
 
-                            <div>
+                            {/* <div>
                                 <label className="text-sm font-medium text-slate-600">
                                     Phone Number
                                 </label>
@@ -220,7 +223,7 @@ export default function EditProfile() {
                                     className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
                   focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
                                 />
-                            </div>
+                            </div> */}
 
                         </div>
 
