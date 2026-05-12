@@ -144,7 +144,7 @@ import MyLeaveStatus from "./pages/MyLeaveStatus.jsx";
 import Settings from "./pages/Settings.jsx";
 import StudentLeaveRequests from "./pages/StudentLeaveRequests.jsx";
 import PrivateRouter from "./pages/PrivateRouter.jsx";
-import Editpage from "./pages/Editpage.jsx";
+import Editpage from "./pages/Editpage.tsx";
 import { useState } from "react";
 
 function App() {
