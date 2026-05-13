@@ -1,387 +1,386 @@
 // import React, { useState } from "react";
 
 // interface Profile {
-//   fullName: string;
-//   registerNumber: string;
-//   email: string;
-//   image: string;
+//     fullName: string;
+//     registerNumber: string;
+//     email: string;
+//     image: string;
 // }
 
 // interface Password {
-//   current: string;
-//   newPass: string;
-//   confirm: string;
+//     current: string;
+//     newPass: string;
+//     confirm: string;
 // }
 
 // // export default function EditProfile(): JSX.Element {
 // export default function EditProfile(): React.ReactElement {
-//   const [loading, setLoading] = useState<boolean>(false);
+//     const [loading, setLoading] = useState < boolean > (false);
 
-//   const [profile, setProfile] = useState<Profile>({
-//     fullName: "Alex Johnson",
-//     registerNumber: "25UCA202",
-//     email: "alex@gmail.com",
-//     image: "",
-//   });
-
-//   const [password, setPassword] = useState<Password>({
-//     current: "",
-//     newPass: "",
-//     confirm: "",
-//   });
-
-//   const [error, setError] = useState<string>("");
-//   const [success, setSuccess] = useState<string>("");
-
-//   // PROFILE INPUT CHANGE
-//   const handleProfileChange = (
-//     e: React.ChangeEvent<HTMLInputElement>
-//   ): void => {
-//     setProfile({
-//       ...profile,
-//       [e.target.name]: e.target.value,
+//     const [profile, setProfile] = useState < Profile > ({
+//         fullName: "Alex Johnson",
+//         registerNumber: "25UCA202",
+//         email: "alex@gmail.com",
+//         image: "",
 //     });
-//   };
 
-//   // PASSWORD INPUT CHANGE
-//   const handlePasswordChange = (
-//     e: React.ChangeEvent<HTMLInputElement>
-//   ): void => {
-//     setPassword({
-//       ...password,
-//       [e.target.name]: e.target.value,
-//     });
-//   };
-
-//   // IMAGE CHANGE
-//   const handleImageChange = (
-//     e: React.ChangeEvent<HTMLInputElement>
-//   ): void => {
-//     const file = e.target.files?.[0];
-
-//     if (file) {
-//       const reader = new FileReader();
-
-//       reader.onload = () => {
-//         setProfile({
-//           ...profile,
-//           image: reader.result as string,
-//         });
-//       };
-
-//       reader.readAsDataURL(file);
-//     }
-//   };
-
-//   // PROFILE SUBMIT
-//   const handleProfileSubmit = (
-//     e: React.FormEvent<HTMLFormElement>
-//   ): void => {
-//     e.preventDefault();
-
-//     setLoading(true);
-
-//     setTimeout(() => {
-//       setLoading(false);
-//       setSuccess("Profile updated successfully");
-//       setError("");
-//     }, 1000);
-//   };
-
-//   // PASSWORD SUBMIT
-//   const handlePasswordSubmit = (
-//     e: React.FormEvent<HTMLFormElement>
-//   ): void => {
-//     e.preventDefault();
-
-//     if (password.newPass !== password.confirm) {
-//       setError("Passwords do not match");
-//       setSuccess("");
-//       return;
-//     }
-
-//     if (password.newPass.length < 6) {
-//       setError("Password must be at least 6 characters");
-//       setSuccess("");
-//       return;
-//     }
-
-//     setError("");
-//     setLoading(true);
-
-//     setTimeout(() => {
-//       setLoading(false);
-//       setSuccess("Password updated successfully");
-
-//       setPassword({
+//     const [password, setPassword] = useState < Password > ({
 //         current: "",
 //         newPass: "",
 //         confirm: "",
-//       });
-//     }, 1000);
-//   };
+//     });
 
-//   return (
-//     <div className="min-h-screen bg-slate-100 px-6 py-10">
+//     const [error, setError] = useState < string > ("");
+//     const [success, setSuccess] = useState < string > ("");
 
-//       {/* HEADER */}
-//       <div className="max-w-6xl mx-auto mb-8">
-//         <h1 className="text-3xl font-semibold text-slate-800">
-//           Account Settings
-//         </h1>
+//     // PROFILE INPUT CHANGE
+//     const handleProfileChange = (
+//         e: React.ChangeEvent<HTMLInputElement>
+//     ): void => {
+//         setProfile({
+//             ...profile,
+//             [e.target.name]: e.target.value,
+//         });
+//     };
 
-//         <p className="text-slate-500">
-//           Manage your profile and security settings
-//         </p>
-//       </div>
+//     // PASSWORD INPUT CHANGE
+//     const handlePasswordChange = (
+//         e: React.ChangeEvent<HTMLInputElement>
+//     ): void => {
+//         setPassword({
+//             ...password,
+//             [e.target.name]: e.target.value,
+//         });
+//     };
 
-//       <div className="max-w-6xl mx-auto grid grid-cols-12 gap-8">
+//     // IMAGE CHANGE
+//     const handleImageChange = (
+//         e: React.ChangeEvent<HTMLInputElement>
+//     ): void => {
+//         const file = e.target.files?.[0];
 
-//         {/* PROFILE CARD */}
-//         <div className="col-span-4">
+//         if (file) {
+//             const reader = new FileReader();
 
-//           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
+//             reader.onload = () => {
+//                 setProfile({
+//                     ...profile,
+//                     image: reader.result as string,
+//                 });
+//             };
 
-//             {/* PROFILE IMAGE */}
-//             <div className="relative w-24 h-24 mx-auto">
+//             reader.readAsDataURL(file);
+//         }
+//     };
 
-//               <img
-//                 src={
-//                   profile.image ||
-//                   "https://via.placeholder.com/100"
-//                 }
-//                 alt="profile"
-//                 className="w-24 h-24 rounded-full object-cover border-4 border-white shadow"
-//               />
+//     // PROFILE SUBMIT
+//     const handleProfileSubmit = (
+//         e: React.FormEvent<HTMLFormElement>
+//     ): void => {
+//         e.preventDefault();
 
-//               <label className="absolute bottom-0 right-0 bg-indigo-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-indigo-500">
+//         setLoading(true);
 
-//                 📷
+//         setTimeout(() => {
+//             setLoading(false);
+//             setSuccess("Profile updated successfully");
+//             setError("");
+//         }, 1000);
+//     };
 
-//                 <input
-//                   type="file"
-//                   className="hidden"
-//                   onChange={handleImageChange}
-//                 />
+//     // PASSWORD SUBMIT
+//     const handlePasswordSubmit = (
+//         e: React.FormEvent<HTMLFormElement>
+//     ): void => {
+//         e.preventDefault();
 
-//               </label>
+//         if (password.newPass !== password.confirm) {
+//             setError("Passwords do not match");
+//             setSuccess("");
+//             return;
+//         }
 
+//         if (password.newPass.length < 6) {
+//             setError("Password must be at least 6 characters");
+//             setSuccess("");
+//             return;
+//         }
+
+//         setError("");
+//         setLoading(true);
+
+//         setTimeout(() => {
+//             setLoading(false);
+//             setSuccess("Password updated successfully");
+
+//             setPassword({
+//                 current: "",
+//                 newPass: "",
+//                 confirm: "",
+//             });
+//         }, 1000);
+//     };
+
+//     return (
+//         <div className="min-h-screen bg-slate-100 px-6 py-10">
+
+//             {/* HEADER */}
+//             <div className="max-w-6xl mx-auto mb-8">
+//                 <h1 className="text-3xl font-semibold text-slate-800">
+//                     Account Settings
+//                 </h1>
+
+//                 <p className="text-slate-500">
+//                     Manage your profile and security settings
+//                 </p>
 //             </div>
 
-//             <h2 className="mt-4 text-lg font-semibold text-slate-800">
-//               {profile.fullName}
-//             </h2>
+//             <div className="max-w-6xl mx-auto grid grid-cols-12 gap-8">
 
-//             <p className="text-sm text-slate-500">
-//               {profile.email}
-//             </p>
+//                 {/* PROFILE CARD */}
+//                 <div className="col-span-4">
 
-//             <p className="text-xs text-slate-400 mt-2">
-//               Reg No: {profile.registerNumber}
-//             </p>
+//                     <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm text-center">
 
-//           </div>
+//                         {/* PROFILE IMAGE */}
+//                         <div className="relative w-24 h-24 mx-auto">
 
-//         </div>
+//                             <img
+//                                 src={
+//                                     profile.image ||
+//                                     "https://via.placeholder.com/100"
+//                                 }
+//                                 alt="profile"
+//                                 className="w-24 h-24 rounded-full object-cover border-4 border-white shadow"
+//                             />
 
-//         {/* RIGHT SIDE */}
-//         <div className="col-span-8 space-y-6">
+//                             <label className="absolute bottom-0 right-0 bg-indigo-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-indigo-500">
 
-//           {/* ALERT MESSAGE */}
-//           {(error || success) && (
-//             <div
-//               className={`p-4 rounded-lg text-sm font-medium border ${
-//                 error
-//                   ? "bg-red-50 text-red-600 border-red-200"
-//                   : "bg-green-50 text-green-600 border-green-200"
-//               }`}
-//             >
-//               {error || success}
-//             </div>
-//           )}
+//                                 📷
 
-//           {/* PROFILE FORM */}
-//           <form
-//             onSubmit={handleProfileSubmit}
-//             className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition"
-//           >
+//                                 <input
+//                                     type="file"
+//                                     className="hidden"
+//                                     onChange={handleImageChange}
+//                                 />
 
-//             <h3 className="text-lg font-semibold text-slate-800 mb-6">
-//               Profile Information
-//             </h3>
+//                             </label>
 
-//             <div className="grid grid-cols-2 gap-5">
+//                         </div>
 
-//               {/* FULL NAME */}
-//               <div>
+//                         <h2 className="mt-4 text-lg font-semibold text-slate-800">
+//                             {profile.fullName}
+//                         </h2>
 
-//                 <label className="text-sm font-medium text-slate-600">
-//                   Full Name
-//                 </label>
+//                         <p className="text-sm text-slate-500">
+//                             {profile.email}
+//                         </p>
 
-//                 <input
-//                   type="text"
-//                   name="fullName"
-//                   value={profile.fullName}
-//                   onChange={handleProfileChange}
-//                   className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
+//                         <p className="text-xs text-slate-400 mt-2">
+//                             Reg No: {profile.registerNumber}
+//                         </p>
+
+//                     </div>
+
+//                 </div>
+
+//                 {/* RIGHT SIDE */}
+//                 <div className="col-span-8 space-y-6">
+
+//                     {/* ALERT MESSAGE */}
+//                     {(error || success) && (
+//                         <div
+//                             className={`p-4 rounded-lg text-sm font-medium border ${error
+//                                     ? "bg-red-50 text-red-600 border-red-200"
+//                                     : "bg-green-50 text-green-600 border-green-200"
+//                                 }`}
+//                         >
+//                             {error || success}
+//                         </div>
+//                     )}
+
+//                     {/* PROFILE FORM */}
+//                     <form
+//                         onSubmit={handleProfileSubmit}
+//                         className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition"
+//                     >
+
+//                         <h3 className="text-lg font-semibold text-slate-800 mb-6">
+//                             Profile Information
+//                         </h3>
+
+//                         <div className="grid grid-cols-2 gap-5">
+
+//                             {/* FULL NAME */}
+//                             <div>
+
+//                                 <label className="text-sm font-medium text-slate-600">
+//                                     Full Name
+//                                 </label>
+
+//                                 <input
+//                                     type="text"
+//                                     name="fullName"
+//                                     value={profile.fullName}
+//                                     onChange={handleProfileChange}
+//                                     className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
 //                   focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
-//                 />
+//                                 />
 
-//               </div>
+//                             </div>
 
-//               {/* REGISTER NUMBER */}
-//               <div>
+//                             {/* REGISTER NUMBER */}
+//                             <div>
 
-//                 <label className="text-sm font-medium text-slate-600">
-//                   Register Number
-//                 </label>
+//                                 <label className="text-sm font-medium text-slate-600">
+//                                     Register Number
+//                                 </label>
 
-//                 <input
-//                   type="text"
-//                   name="registerNumber"
-//                   value={profile.registerNumber}
-//                   onChange={handleProfileChange}
-//                   className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
+//                                 <input
+//                                     type="text"
+//                                     name="registerNumber"
+//                                     value={profile.registerNumber}
+//                                     onChange={handleProfileChange}
+//                                     className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
 //                   focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
-//                 />
+//                                 />
 
-//               </div>
+//                             </div>
 
-//             </div>
+//                         </div>
 
-//             {/* EMAIL */}
-//             <div className="mt-5">
+//                         {/* EMAIL */}
+//                         <div className="mt-5">
 
-//               <label className="text-sm font-medium text-slate-600">
-//                 Email Address
-//               </label>
+//                             <label className="text-sm font-medium text-slate-600">
+//                                 Email Address
+//                             </label>
 
-//               <input
-//                 type="email"
-//                 name="email"
-//                 value={profile.email}
-//                 onChange={handleProfileChange}
-//                 className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
+//                             <input
+//                                 type="email"
+//                                 name="email"
+//                                 value={profile.email}
+//                                 onChange={handleProfileChange}
+//                                 className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
 //                 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
-//               />
+//                             />
 
-//               <p className="text-xs text-slate-400 mt-1">
-//                 Changing your email requires verification
-//               </p>
+//                             <p className="text-xs text-slate-400 mt-1">
+//                                 Changing your email requires verification
+//                             </p>
 
-//             </div>
+//                         </div>
 
-//             {/* SAVE BUTTON */}
-//             <div className="mt-6 flex justify-end">
+//                         {/* SAVE BUTTON */}
+//                         <div className="mt-6 flex justify-end">
 
-//               <button
-//                 type="submit"
-//                 className="px-6 py-2.5 rounded-lg text-white font-medium 
-//                 bg-gradient-to-r from-indigo-600 to-indigo-500 
-//                 hover:from-indigo-500 hover:to-indigo-400 
+//                             <button
+//                                 type="submit"
+//                                 className="px-6 py-2.5 rounded-lg text-white font-medium
+//                 bg-gradient-to-r from-indigo-600 to-indigo-500
+//                 hover:from-indigo-500 hover:to-indigo-400
 //                 shadow-sm hover:shadow-md transition"
-//               >
-//                 {loading ? "Saving..." : "Save Profile"}
-//               </button>
+//                             >
+//                                 {loading ? "Saving..." : "Save Profile"}
+//                             </button>
 
-//             </div>
+//                         </div>
 
-//           </form>
+//                     </form>
 
-//           {/* PASSWORD FORM */}
-//           <form
-//             onSubmit={handlePasswordSubmit}
-//             className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition"
-//           >
+//                     {/* PASSWORD FORM */}
+//                     <form
+//                         onSubmit={handlePasswordSubmit}
+//                         className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition"
+//                     >
 
-//             <h3 className="text-lg font-semibold text-slate-800 mb-6">
-//               Change Password
-//             </h3>
+//                         <h3 className="text-lg font-semibold text-slate-800 mb-6">
+//                             Change Password
+//                         </h3>
 
-//             <div className="space-y-5">
+//                         <div className="space-y-5">
 
-//               {/* CURRENT PASSWORD */}
-//               <div>
+//                             {/* CURRENT PASSWORD */}
+//                             <div>
 
-//                 <label className="text-sm font-medium text-slate-600">
-//                   Current Password
-//                 </label>
+//                                 <label className="text-sm font-medium text-slate-600">
+//                                     Current Password
+//                                 </label>
 
-//                 <input
-//                   type="password"
-//                   name="current"
-//                   value={password.current}
-//                   onChange={handlePasswordChange}
-//                   className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
+//                                 <input
+//                                     type="password"
+//                                     name="current"
+//                                     value={password.current}
+//                                     onChange={handlePasswordChange}
+//                                     className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
 //                   focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
-//                 />
+//                                 />
 
-//               </div>
+//                             </div>
 
-//               <div className="grid grid-cols-2 gap-5">
+//                             <div className="grid grid-cols-2 gap-5">
 
-//                 {/* NEW PASSWORD */}
-//                 <div>
+//                                 {/* NEW PASSWORD */}
+//                                 <div>
 
-//                   <label className="text-sm font-medium text-slate-600">
-//                     New Password
-//                   </label>
+//                                     <label className="text-sm font-medium text-slate-600">
+//                                         New Password
+//                                     </label>
 
-//                   <input
-//                     type="password"
-//                     name="newPass"
-//                     value={password.newPass}
-//                     onChange={handlePasswordChange}
-//                     className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
+//                                     <input
+//                                         type="password"
+//                                         name="newPass"
+//                                         value={password.newPass}
+//                                         onChange={handlePasswordChange}
+//                                         className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
 //                     focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
-//                   />
+//                                     />
 
-//                 </div>
+//                                 </div>
 
-//                 {/* CONFIRM PASSWORD */}
-//                 <div>
+//                                 {/* CONFIRM PASSWORD */}
+//                                 <div>
 
-//                   <label className="text-sm font-medium text-slate-600">
-//                     Confirm Password
-//                   </label>
+//                                     <label className="text-sm font-medium text-slate-600">
+//                                         Confirm Password
+//                                     </label>
 
-//                   <input
-//                     type="password"
-//                     name="confirm"
-//                     value={password.confirm}
-//                     onChange={handlePasswordChange}
-//                     className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
+//                                     <input
+//                                         type="password"
+//                                         name="confirm"
+//                                         value={password.confirm}
+//                                         onChange={handlePasswordChange}
+//                                         className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
 //                     focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
-//                   />
+//                                     />
 
-//                 </div>
+//                                 </div>
 
-//               </div>
+//                             </div>
 
-//             </div>
+//                         </div>
 
-//             {/* UPDATE BUTTON */}
-//             <div className="mt-6 flex justify-end">
+//                         {/* UPDATE BUTTON */}
+//                         <div className="mt-6 flex justify-end">
 
-//               <button
-//                 type="submit"
-//                 className="px-6 py-2.5 rounded-lg text-white font-medium 
-//                 bg-gradient-to-r from-emerald-600 to-emerald-500 
-//                 hover:from-emerald-500 hover:to-emerald-400 
+//                             <button
+//                                 type="submit"
+//                                 className="px-6 py-2.5 rounded-lg text-white font-medium
+//                 bg-gradient-to-r from-emerald-600 to-emerald-500
+//                 hover:from-emerald-500 hover:to-emerald-400
 //                 shadow-sm hover:shadow-md transition"
-//               >
-//                 {loading ? "Updating..." : "Update Password"}
-//               </button>
+//                             >
+//                                 {loading ? "Updating..." : "Update Password"}
+//                             </button>
+
+//                         </div>
+
+//                     </form>
+
+//                 </div>
 
 //             </div>
-
-//           </form>
 
 //         </div>
-
-//       </div>
-
-//     </div>
-//   );
+//     );
 // }
