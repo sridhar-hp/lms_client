@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { pdetails } from "../services/editProfilePage.js"
+import { pdetails } from "../services/editProfilePage.js";
 
 interface Profile {
     fullName: string;
@@ -10,7 +10,7 @@ interface Profile {
     // image: string;
 }
 
-interface Image{
+interface Image {
     image: string;
 }
 
@@ -22,9 +22,9 @@ interface Password {
 
 export default function EditProfile() {
     const [loading, setLoading] = useState<boolean>(false);
-    const user = useSelector((state: any) => state.auth.user);
-    const userId = user?.id;
-    const token = useSelector((State: any) => State.auth.token);
+    const user: any = useSelector((state: any) => state.auth.user);
+    const userId: any = user?.Id;
+    const token: any = useSelector((state: any) => state.auth.token);
 
     const [profile, setProfile] = useState<Profile>({
         fullName: "",
@@ -43,21 +43,30 @@ export default function EditProfile() {
     const [error, setError] = useState<string>("");
     const [success, setSuccess] = useState<string>("");
 
-    useEffect(() =>{
-            const fetchDetails = async () =>{
-                try{
-                    const res = await pdetails({userId}, token);
-                    console.log(res.data);
-                    setProfile(res.data);
-               }
-
-                catch(err){
-
-                }
+    useEffect(() => {
+        if (!userId) {
+            console.error("User ID or token is missing");
+            return;
+        }
+        const fetchDetails = async () => {
+            try {
+                console.log("Fetching profile details for userId:", userId);
+                const res = await pdetails(userId, token);
+                // console.log(res.data);
+                setProfile({
+                    fullName: res.data.profiledetails.name || "",
+                    registerNumber: res.data.profiledetails.Id || "",
+                    email: res.data.profiledetails.email || "",
+                });
             }
-            fetchDetails();
-        },[]);
-    
+
+            catch (err) {
+                console.error("Error fetching profile details:", err);
+            }
+        }
+        fetchDetails();
+    }, [userId, token]);
+
     const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         setProfile({ ...profile, [e.target.name]: e.target.value });
 
@@ -82,7 +91,7 @@ export default function EditProfile() {
         e.preventDefault();
         setLoading(true);
 
-        
+
 
         setTimeout(() => {
             setLoading(false);
