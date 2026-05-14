@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { pdetails } from "../services/editProfilePage.js";
+import { pdetails,Pbioupdate } from "../services/editProfilePage.js";
 
 interface Profile {
     fullName: string;
     registerNumber: string;
     email: string;
-    // phoneNumber: string;
-    // image: string;
+    phoneNumber: string;
 }
 
 interface Image {
@@ -30,8 +29,7 @@ export default function EditProfile() {
         fullName: "",
         registerNumber: "",
         email: "",
-        // phoneNumber:"",
-        // image: "",
+        phoneNumber:"",
     });
 
     const [password, setPassword] = useState<Password>({
@@ -57,6 +55,14 @@ export default function EditProfile() {
                     fullName: res.data.profiledetails.name || "",
                     registerNumber: res.data.profiledetails.Id || "",
                     email: res.data.profiledetails.email || "",
+                    phoneNumber: res.data.profiledetails.phoneNumber || "",
+                });
+
+                console.log("Profile details set:", {
+                    fullName: res.data.profiledetails.name,
+                    registerNumber: res.data.profiledetails.Id,
+                    email: res.data.profiledetails.email,
+                    phoneNumber: res.data.profiledetails.phoneNumber,
                 });
             }
 
@@ -67,8 +73,10 @@ export default function EditProfile() {
         fetchDetails();
     }, [userId, token]);
 
-    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         setProfile({ ...profile, [e.target.name]: e.target.value });
+        console.log(profile);
+    };
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         setPassword({ ...password, [e.target.name]: e.target.value });
@@ -86,12 +94,19 @@ export default function EditProfile() {
         }
     };
 
-    const handleProfileSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleProfileSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
         console.log(profile);
         e.preventDefault();
         setLoading(true);
+            try{
+                const res = await Pbioupdate(userId, token, profile);
+                console.log("Profile update response:", res.data);
 
-
+            }
+            catch(err){
+                console.error("Error updating profile:", err);
+            }
+        
 
         setTimeout(() => {
             setLoading(false);
@@ -221,7 +236,7 @@ export default function EditProfile() {
                                 />
                             </div>
 
-                            {/* <div>
+                            <div>
                                 <label className="text-sm font-medium text-slate-600">
                                     Phone Number
                                 </label>
@@ -232,7 +247,7 @@ export default function EditProfile() {
                                     className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
                   focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
                                 />
-                            </div> */}
+                            </div>
 
                         </div>
 
