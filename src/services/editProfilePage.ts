@@ -10,7 +10,7 @@ export const pdetails = (userId: any, token: any) => {
     });
 };
 
-export const Pbioupdate = (userId: any, token: any, profile: any) => {
+export const Pbioupdate = (userId: any, profile: any, token: any) => {
     return axios.put(`${API}/profileupdate/${userId}`, profile, {
         headers: {
             Authorization: `Bearer ${token}`

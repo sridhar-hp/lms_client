@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { pdetails,Pbioupdate } from "../services/editProfilePage.js";
+import { pdetails, Pbioupdate } from "../services/editProfilePage.js";
 
 interface Profile {
-    fullName: string;
+    name: string;
     registerNumber: string;
     email: string;
     phoneNumber: string;
@@ -26,10 +26,10 @@ export default function EditProfile() {
     const token: any = useSelector((state: any) => state.auth.token);
 
     const [profile, setProfile] = useState<Profile>({
-        fullName: "",
+        name: "",
         registerNumber: "",
         email: "",
-        phoneNumber:"",
+        phoneNumber: "",
     });
 
     const [password, setPassword] = useState<Password>({
@@ -52,14 +52,14 @@ export default function EditProfile() {
                 const res = await pdetails(userId, token);
                 // console.log(res.data);
                 setProfile({
-                    fullName: res.data.profiledetails.name || "",
+                    name: res.data.profiledetails.name || "",
                     registerNumber: res.data.profiledetails.Id || "",
                     email: res.data.profiledetails.email || "",
                     phoneNumber: res.data.profiledetails.phoneNumber || "",
                 });
 
                 console.log("Profile details set:", {
-                    fullName: res.data.profiledetails.name,
+                    name: res.data.profiledetails.name,
                     registerNumber: res.data.profiledetails.Id,
                     email: res.data.profiledetails.email,
                     phoneNumber: res.data.profiledetails.phoneNumber,
@@ -73,7 +73,7 @@ export default function EditProfile() {
         fetchDetails();
     }, [userId, token]);
 
-    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
+    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProfile({ ...profile, [e.target.name]: e.target.value });
         console.log(profile);
     };
@@ -94,19 +94,24 @@ export default function EditProfile() {
         }
     };
 
-    const handleProfileSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
+    const handleProfileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         console.log(profile);
         e.preventDefault();
-        setLoading(true);
-            try{
-                const res = await Pbioupdate(userId, token, profile);
-                console.log("Profile update response:", res.data);
 
+        try {
+            const res = await Pbioupdate(userId, profile, token);
+            console.log("Profile update response:", res.data.updatedProfile);
+
+            if(res.data.success) {
+                        setLoading(true);
             }
-            catch(err){
-                console.error("Error updating profile:", err);
-            }
-        
+        }
+        catch (err) {
+            console.error("Error updating profile:", err);
+        }
+        finally {
+            setLoading(false);
+        }
 
         setTimeout(() => {
             setLoading(false);
@@ -172,7 +177,7 @@ export default function EditProfile() {
                         </div>
 
                         <h2 className="mt-4 text-lg font-semibold text-slate-800">
-                            {profile.fullName}
+                            {profile.name}
                         </h2>
 
                         <p className="text-sm text-slate-500">
@@ -215,8 +220,8 @@ export default function EditProfile() {
                                     Full Name
                                 </label>
                                 <input
-                                    name="fullName"
-                                    value={profile.fullName}
+                                    name="name"
+                                    value={profile.name}
                                     onChange={handleProfileChange}
                                     className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
                   focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
