@@ -145,26 +145,20 @@ import Settings from "./pages/Settings.jsx";
 import StudentLeaveRequests from "./pages/StudentLeaveRequests.jsx";
 import PrivateRouter from "./pages/PrivateRouter.jsx";
 import Editpage from "./pages/Editpage.tsx";
-import { useState } from "react";
 
 function App() {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+  useEffect(() => {
     const token = sessionStorage.getItem("token");
     const user = sessionStorage.getItem("user");
 
     if (token && user) {
-        dispatch(setToken(token));
-        dispatch(setUser(JSON.parse(user)));
+      dispatch(setToken(token));
+      dispatch(setUser(JSON.parse(user)));
     }
+  }, [dispatch]);
 
-    setLoading(false);
-}, []);
- if (loading) {
-    return <div>Loading...</div>;
-  }
   return (
     <BrowserRouter>
       <Routes>

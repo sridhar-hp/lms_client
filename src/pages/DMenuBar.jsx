@@ -89,6 +89,7 @@ function DMenuBar() {
     const adminMenus = [
         { name: "Dashboard", path: `/dashboard/${Role}/home`, show: true },
         { name: "Leave Requests", path: `/dashboard/${Role}/studentleaverequests/`, show: true },
+        { name: "Edit Profile", path: `/dashboard/${Role}/editprofile`, show: true },
         { name: "Setting", path: `/dashboard/${Role}/setting`, show: true },
         { name: "Logout", path: `/`, show: true },
 
