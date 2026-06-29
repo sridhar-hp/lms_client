@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { pdetails, Pbioupdate } from "../services/editProfilePage.js";
+import { useDispatch, useSelector } from "react-redux";
+import { pdetails, Pbioupdate, uploadProfileImage } from "../services/editProfilePage.js";
+import { setUser } from "../features/auth/authSlice.js";
 
 interface Profile {
     name: string;
     registerNumber: string;
     email: string;
     phoneNumber: string;
-}
-
-interface Image {
-    image: string;
+    department: string;
+    designation: string;
+    profileImage?: string;
 }
 
 interface Password {
@@ -22,15 +22,20 @@ interface Password {
 export default function EditProfile() {
     const [loading, setLoading] = useState<boolean>(false);
     const user: any = useSelector((state: any) => state.auth.user);
-    const userId: any = user?.Id;
     const token: any = useSelector((state: any) => state.auth.token);
+    const dispatch = useDispatch();
 
     const [profile, setProfile] = useState<Profile>({
         name: "",
         registerNumber: "",
         email: "",
         phoneNumber: "",
+        department: "",
+        designation: "",
+        profileImage: "",
     });
+    const [imagePreview, setImagePreview] = useState<string>("");
+    const [imageLoading, setImageLoading] = useState<boolean>(false);
 
     const [password, setPassword] = useState<Password>({
         current: "",
@@ -42,36 +47,38 @@ export default function EditProfile() {
     const [success, setSuccess] = useState<string>("");
 
     useEffect(() => {
-        if (!userId) {
-            console.error("User ID or token is missing");
+        if (!token) {
+            console.error("Token is missing");
             return;
         }
+
         const fetchDetails = async () => {
             try {
-                console.log("Fetching profile details for userId:", userId);
-                const res = await pdetails(userId, token);
-                // console.log(res.data);
+                const res = await pdetails(token);
                 setProfile({
                     name: res.data.profiledetails.name || "",
                     registerNumber: res.data.profiledetails.Id || "",
                     email: res.data.profiledetails.email || "",
                     phoneNumber: res.data.profiledetails.phoneNumber || "",
+                    department: res.data.profiledetails.department || "",
+                    designation: res.data.profiledetails.designation || "",
+                    profileImage: res.data.profiledetails.profileImage || "",
                 });
-
+                setImagePreview("");
                 console.log("Profile details set:", {
                     name: res.data.profiledetails.name,
                     registerNumber: res.data.profiledetails.Id,
                     email: res.data.profiledetails.email,
                     phoneNumber: res.data.profiledetails.phoneNumber,
                 });
-            }
-
-            catch (err) {
+            } catch (err) {
                 console.error("Error fetching profile details:", err);
+                setError("Unable to load profile details");
             }
-        }
+        };
+
         fetchDetails();
-    }, [userId, token]);
+    }, [token]);
 
     const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProfile({ ...profile, [e.target.name]: e.target.value });
@@ -81,42 +88,79 @@ export default function EditProfile() {
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         setPassword({ ...password, [e.target.name]: e.target.value });
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                if (typeof reader.result === 'string') {
-                    // setProfile({ ...profile, image: reader.result });
-                }
-            };
-            reader.readAsDataURL(file);
+        if (!file || !token) return;
+
+        setError("");
+        setSuccess("");
+        setImageLoading(true);
+        setImagePreview(URL.createObjectURL(file));
+
+        try {
+            const res = await uploadProfileImage(file, token);
+            setProfile((prev) => ({
+                ...prev,
+                profileImage: res.data.profileImage || prev.profileImage,
+            }));
+            setSuccess("Profile image updated successfully");
+        } catch (err: any) {
+            console.error("Error uploading profile image:", err);
+            setError(err.response?.data?.message || "Failed to upload image");
+        } finally {
+            setImageLoading(false);
         }
     };
 
     const handleProfileSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        console.log(profile);
         e.preventDefault();
+        setError("");
+        setSuccess("");
 
+        if (!token) {
+            setError("Unable to update profile: missing authentication details.");
+            return;
+        }
+
+        setLoading(true);
         try {
-            const res = await Pbioupdate(userId, profile, token);
-            console.log("Profile update response:", res.data.updatedProfile);
+            const payload = {
+                name: profile.name,
+                email: profile.email,
+                phoneNumber: profile.phoneNumber,
+                department: profile.department,
+                designation: profile.designation,
+            };
 
-            if(res.data.success) {
-                        setLoading(true);
+            const res = await Pbioupdate(payload, token);
+
+            if (res.data.success) {
+                setSuccess("Profile updated successfully");
+                setProfile((prev) => ({
+                    ...prev,
+                    name: res.data.updatedProfile.name || prev.name,
+                    email: res.data.updatedProfile.email || prev.email,
+                    phoneNumber: res.data.updatedProfile.phoneNumber || prev.phoneNumber,
+                    department: res.data.updatedProfile.department || prev.department,
+                    designation: res.data.updatedProfile.designation || prev.designation,
+                    registerNumber: res.data.updatedProfile.Id || prev.registerNumber,
+                }));
+
+                const updatedUser = {
+                    ...user,
+                    name: res.data.updatedProfile.name || user?.name,
+                };
+                dispatch(setUser(updatedUser));
+                sessionStorage.setItem("user", JSON.stringify(updatedUser));
+            } else {
+                setError(res.data.message || "Unable to update profile");
             }
-        }
-        catch (err) {
+        } catch (err: any) {
             console.error("Error updating profile:", err);
-        }
-        finally {
+            setError(err.response?.data?.message || "Error updating profile");
+        } finally {
             setLoading(false);
         }
-
-        setTimeout(() => {
-            setLoading(false);
-            setSuccess("Profile updated successfully");
-        }, 1000);
     };
 
     const handlePasswordSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -160,14 +204,20 @@ export default function EditProfile() {
 
                         {/*IMAGE*/}
                         <div className="relative w-24 h-24 mx-auto">
-                            {/* <img
-                                src={profile.image || "https://via.placeholder.com/100"}
+                            <img
+                                src={
+                                    imagePreview
+                                        ? imagePreview
+                                        : profile.profileImage
+                                            ? `http://localhost:5000${profile.profileImage}`
+                                            : "https://via.placeholder.com/100"
+                                }
                                 alt="profile"
                                 className="w-24 h-24 rounded-full object-cover border-4 border-white shadow"
-                            /> */}
+                            />
 
                             <label className="absolute bottom-0 right-0 bg-indigo-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-indigo-500">
-                                📷
+                                {imageLoading ? "..." : "📷"}
                                 <input
                                     type="file"
                                     className="hidden"
@@ -182,6 +232,14 @@ export default function EditProfile() {
 
                         <p className="text-sm text-slate-500">
                             {profile.email}
+                        </p>
+
+                        <p className="text-xs text-slate-400 mt-2">
+                            Department: {profile.department || "N/A"}
+                        </p>
+
+                        <p className="text-xs text-slate-400 mt-2">
+                            Designation: {profile.designation || "N/A"}
                         </p>
 
                         <p className="text-xs text-slate-400 mt-2">
@@ -235,9 +293,8 @@ export default function EditProfile() {
                                 <input
                                     name="registerNumber"
                                     value={profile.registerNumber}
-                                    onChange={handleProfileChange}
-                                    className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
-                  focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                                    readOnly
+                                    className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-100 text-slate-600 cursor-not-allowed"
                                 />
                             </div>
 
@@ -254,6 +311,31 @@ export default function EditProfile() {
                                 />
                             </div>
 
+                            <div>
+                                <label className="text-sm font-medium text-slate-600">
+                                    Department
+                                </label>
+                                <input
+                                    name="department"
+                                    value={profile.department}
+                                    onChange={handleProfileChange}
+                                    className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
+                  focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                                />
+                            </div>
+
+                            <div>
+                                <label className="text-sm font-medium text-slate-600">
+                                    Designation
+                                </label>
+                                <input
+                                    name="designation"
+                                    value={profile.designation}
+                                    onChange={handleProfileChange}
+                                    className="w-full mt-1 px-4 py-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-800
+                  focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none transition"
+                                />
+                            </div>
                         </div>
 
                         <div className="mt-5">
